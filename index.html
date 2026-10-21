@@ -89,18 +89,14 @@
         }
 
         /* CARD BURST FLIP REVEALS */
-        .reveal-legend-burst {
-            animation: legendBurst 0.8s ease-out forwards;
-        }
+        .reveal-legend-burst { animation: legendBurst 0.8s ease-out forwards; }
         @keyframes legendBurst {
             0% { transform: scale(0.8) rotateY(180deg); box-shadow: 0 0 0 rgba(234, 179, 8, 0); }
             50% { transform: scale(1.15) rotateY(180deg); box-shadow: 0 0 60px rgba(234, 179, 8, 1), 0 0 100px rgba(239, 68, 68, 0.8); }
             100% { transform: scale(1) rotateY(180deg); box-shadow: 0 0 25px rgba(234, 179, 8, 0.8); }
         }
 
-        .reveal-sr-burst {
-            animation: srBurst 0.8s ease-out forwards;
-        }
+        .reveal-sr-burst { animation: srBurst 0.8s ease-out forwards; }
         @keyframes srBurst {
             0% { transform: scale(0.8) rotateY(180deg); box-shadow: 0 0 0 rgba(236, 72, 153, 0); }
             50% { transform: scale(1.1) rotateY(180deg); box-shadow: 0 0 50px rgba(236, 72, 153, 1), 0 0 80px rgba(168, 85, 247, 0.8); }
@@ -403,43 +399,64 @@
                 </div>
             </section>
 
-            <!-- GAME SIMULATOR VIEW -->
+            <!-- ESPN GAMECAST SIMULATOR VIEW -->
             <section id="view-sim" class="hidden space-y-6">
-                <div class="text-center max-w-2xl mx-auto mb-6">
-                    <h2 class="text-4xl font-sports tracking-wide uppercase text-white">NFL Game Simulator</h2>
-                    <p class="text-xs text-slate-400">Test your full 16-player lineup against NFL opponents for big gold rewards!</p>
+                <div class="text-center max-w-2xl mx-auto mb-4">
+                    <h2 class="text-4xl font-sports tracking-wide uppercase text-white">ESPN GameCast Simulator</h2>
+                    <p class="text-xs text-slate-400">Live 2D interactive gridiron visual tracking drive position, downs & yards-to-gain!</p>
                 </div>
 
-                <div class="max-w-4xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6">
-                    <div class="grid grid-cols-3 items-center bg-slate-950 p-6 rounded-xl border border-slate-800 text-center">
-                        <div class="flex flex-col items-center">
-                            <div id="simMyTeamBadge" class="w-16 h-16 rounded-full bg-slate-800 border-2 border-amber-400 flex items-center justify-center font-sports text-3xl text-white mb-2"></div>
-                            <h3 id="simMyTeamName" class="font-sports text-2xl text-white">Your Team</h3>
-                            <span id="simMyOvr" class="text-xs text-amber-400 font-bold">OVR: --</span>
-                            <div id="simMyScore" class="font-sports text-6xl text-white mt-2">0</div>
+                <div class="max-w-5xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
+                    
+                    <!-- ESPN BROADCAST SCOREBUG -->
+                    <div class="bg-slate-950 border-2 border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-xl relative overflow-hidden">
+                        
+                        <!-- MY TEAM -->
+                        <div class="flex items-center gap-3">
+                            <div id="simMyTeamBadge" class="w-12 h-12 rounded-full bg-slate-800 border-2 border-amber-400 flex items-center justify-center font-sports text-2xl text-white"></div>
+                            <div>
+                                <h3 id="simMyTeamName" class="font-sports text-2xl text-white leading-none">YOUR TEAM</h3>
+                                <div class="text-[10px] text-amber-400 font-bold" id="simMyOvr">OVR: --</div>
+                            </div>
+                            <div id="simMyScore" class="font-sports text-5xl font-black text-white ml-2">0</div>
                         </div>
 
+                        <!-- ESPN GAME STATUS CENTER -->
                         <div class="flex flex-col items-center">
-                            <span id="simQuarter" class="font-sports text-2xl text-nflRed uppercase">PRE-GAME</span>
-                            <span class="text-xs text-slate-500">VS</span>
-                            <div id="simClock" class="font-mono text-xl text-slate-300 my-1">15:00</div>
-                            <button id="startSimBtn" onclick="runGameSimulation()" class="mt-3 px-6 py-2.5 bg-nflRed hover:bg-red-600 font-sports tracking-wider text-white text-xl rounded-xl shadow-lg transition">
-                                SIMULATE GAME
-                            </button>
+                            <div class="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-widest flex items-center gap-1 mb-1">
+                                <i class="fa-solid fa-circle text-[6px] animate-pulse"></i> ESPN LIVE
+                            </div>
+                            <span id="simQuarter" class="font-sports text-xl text-amber-400 uppercase leading-none">PRE-GAME</span>
+                            <div id="simDownAndDist" class="font-sports text-lg text-slate-300 leading-none">1st & 10 at 25</div>
                         </div>
 
-                        <div class="flex flex-col items-center">
-                            <div id="simOppBadge" class="w-16 h-16 rounded-full bg-slate-800 border-2 border-slate-600 flex items-center justify-center font-sports text-3xl text-white mb-2">
+                        <!-- OPPONENT TEAM -->
+                        <div class="flex items-center gap-3">
+                            <div id="simOppScore" class="font-sports text-5xl font-black text-white mr-2">0</div>
+                            <div class="text-right">
+                                <h3 id="simOppName" class="font-sports text-2xl text-white leading-none">OPPONENT</h3>
+                                <div class="text-[10px] text-slate-400 font-bold" id="simOppOvr">OVR: --</div>
+                            </div>
+                            <div id="simOppBadge" class="w-12 h-12 rounded-full bg-slate-800 border-2 border-slate-600 flex items-center justify-center font-sports text-2xl text-white">
                                 <i class="fa-solid fa-helmet-safety"></i>
                             </div>
-                            <h3 id="simOppName" class="font-sports text-2xl text-white">Opponent</h3>
-                            <span id="simOppOvr" class="text-xs text-slate-400 font-bold">OVR: --</span>
-                            <div id="simOppScore" class="font-sports text-6xl text-white mt-2">0</div>
                         </div>
                     </div>
 
-                    <div class="bg-slate-950 rounded-xl p-4 border border-slate-800 h-64 overflow-y-auto font-mono text-xs space-y-2" id="simPlayLog">
-                        <div class="text-slate-500 text-center py-8">Press "SIMULATE GAME" to kickoff...</div>
+                    <!-- ESPN GAMECAST 2D CANVAS FOOTBALL FIELD -->
+                    <div class="relative w-full rounded-xl overflow-hidden border-2 border-slate-700 bg-emerald-950 shadow-2xl" style="height: 220px;">
+                        <canvas id="espnFieldCanvas" class="w-full h-full block"></canvas>
+                    </div>
+
+                    <!-- CONTROL BUTTONS & LIVE DRIVE LOG -->
+                    <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                        <button id="startSimBtn" onclick="runGameSimulation()" class="w-full sm:w-auto px-8 py-3 bg-nflRed hover:bg-red-600 font-sports tracking-wider text-white text-2xl font-bold rounded-xl shadow-lg transition">
+                            SIMULATE GAME
+                        </button>
+
+                        <div class="w-full flex-grow bg-slate-950 rounded-xl p-3 border border-slate-800 h-28 overflow-y-auto font-mono text-xs space-y-1" id="simPlayLog">
+                            <div class="text-slate-500 text-center py-6">Press "SIMULATE GAME" to kickoff on the ESPN field...</div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -471,7 +488,6 @@
             { id: "fred_warner", name: "Fred Warner", team: "San Francisco 49ers", position: "LB", overall: 97, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 9000, color: "#AA0000" },
             { id: "chris_jones", name: "Chris Jones", team: "Kansas City Chiefs", position: "DL", overall: 97, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 8800, color: "#E31837" },
             { id: "sauce_sr", name: "Sauce Gardner", team: "New York Jets", position: "CB", overall: 96, rarity: "Super Rare", isSuperRare: true, variantName: "Island Edition", basePrice: 38000, color: "#125740" },
-            { id: "smith_njigba", name: "Jaxon Smith-Njigba", team: "Seattle Seahawks", position: "WR", overall: 96, rarity: "Legendary", isSuperRare: false, variantName: "Breakout", basePrice: 8000, color: "#002244" },
 
             { id: "drake_maye", name: "Drake Maye", team: "New England Patriots", position: "QB", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Phenom", basePrice: 5800, color: "#002244" },
             { id: "lamar_epic", name: "Lamar Jackson", team: "Baltimore Ravens", position: "QB", overall: 95, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 6000, color: "#241773" },
@@ -480,8 +496,6 @@
             { id: "kelce_epic", name: "Travis Kelce", team: "Kansas City Chiefs", position: "TE", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 5200, color: "#E31837" },
             { id: "parsons_epic", name: "Micah Parsons", team: "Dallas Cowboys", position: "LB", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 5500, color: "#003594" },
             { id: "bosa_epic", name: "Nick Bosa", team: "San Francisco 49ers", position: "DL", overall: 93, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 4800, color: "#AA0000" },
-            { id: "lane_johnson", name: "Lane Johnson", team: "Philadelphia Eagles", position: "OL", overall: 93, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 4500, color: "#004C54" },
-            { id: "tj_watt", name: "T.J. Watt", team: "Pittsburgh Steelers", position: "LB", overall: 95, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 6200, color: "#FFB612" },
 
             { id: "stroud_rare", name: "C.J. Stroud", team: "Houston Texans", position: "QB", overall: 89, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2500, color: "#03202F" },
             { id: "barkley_rare", name: "Saquon Barkley", team: "Philadelphia Eagles", position: "RB", overall: 90, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2800, color: "#004C54" },
@@ -492,12 +506,9 @@
             { id: "puka_common", name: "Puka Nacua", team: "Los Angeles Rams", position: "WR", overall: 85, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 950, color: "#003594" },
             { id: "love_common", name: "Jordan Love", team: "Green Bay Packers", position: "QB", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 800, color: "#203731" },
             { id: "williams_common", name: "Caleb Williams", team: "Chicago Bears", position: "QB", overall: 82, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 700, color: "#0B162A" },
-            { id: "mendoza_rookie", name: "Fernando Mendoza", team: "Las Vegas Raiders", position: "QB", overall: 81, rarity: "Common", isSuperRare: false, variantName: "Rookie", basePrice: 650, color: "#000000" },
             { id: "harrison_common", name: "Marvin Harrison Jr", team: "Arizona Cardinals", position: "WR", overall: 83, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 750, color: "#97233F" },
             { id: "common_ol_1", name: "Tyler Smith", team: "Dallas Cowboys", position: "OL", overall: 83, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 600, color: "#003594" },
             { id: "common_dl_1", name: "Jalen Carter", team: "Philadelphia Eagles", position: "DL", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 700, color: "#004C54" },
-            { id: "common_lb_1", name: "Patrick Queen", team: "Pittsburgh Steelers", position: "LB", overall: 82, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 650, color: "#FFB612" },
-            { id: "common_s_1", name: "Kyle Hamilton", team: "Baltimore Ravens", position: "S", overall: 85, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 900, color: "#241773" },
             { id: "butker_common", name: "Harrison Butker", team: "Kansas City Chiefs", position: "K", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 600, color: "#E31837" }
         ];
 
@@ -555,6 +566,11 @@
         let binderFilter = 'ALL';
         let tempSelectedTeam = null;
 
+        // ESPN GameCast Canvas Variables
+        let simBallYard = 25;
+        let simFirstDownYard = 35;
+        let simOppTeamObj = null;
+
         window.onload = function() {
             renderTeamSelectModal();
             if (loadSavedGame() && gameState.selectedTeam) {
@@ -562,6 +578,7 @@
                 initMainApp();
             }
             startAIBiddingLoop();
+            window.addEventListener('resize', drawESPNField);
         };
 
         function renderTeamSelectModal() {
@@ -788,10 +805,8 @@
             return "mut-card-common text-slate-300";
         }
 
-        // MADDEN ULTIMATE TEAM (MUT) REALISTIC CARD ART RENDERER
         function renderCardHTML(card) {
             return `
-                <!-- TOP HEADER BAR: OVR SHIELD & POSITION -->
                 <div class="flex justify-between items-start w-full relative z-10 px-1 pt-1">
                     <div class="flex flex-col items-center">
                         <span class="font-sports text-4xl font-extrabold leading-none text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">${card.overall}</span>
@@ -802,7 +817,6 @@
                     </div>
                 </div>
                 
-                <!-- CENTER PLAYER AVATAR & SPECIAL BADGES -->
                 <div class="flex-grow flex flex-col items-center justify-center my-1 relative z-10">
                     <div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl font-sports font-bold text-white shadow-2xl border-2 border-white/20 relative" style="background-color:${card.color}">
                         ${card.name.split(' ').map(n=>n[0]).join('')}
@@ -814,7 +828,6 @@
                     ` : ''}
                 </div>
 
-                <!-- BOTTOM FOOTER: TEAM & PLAYER NAME BANNER -->
                 <div class="w-full bg-slate-950/90 border-t border-slate-800 rounded-b-lg p-1.5 text-center relative z-10">
                     <h4 class="font-sports text-xl leading-none truncate uppercase font-bold text-white tracking-wide">${card.name}</h4>
                     <div class="flex justify-between items-center text-[8px] text-slate-400 mt-1 font-semibold uppercase">
@@ -1124,19 +1137,112 @@
             }, 6000);
         }
 
+        // ==========================================
+        // ESPN GAMECAST GRAPHIC SIMULATOR
+        // ==========================================
         function renderSimView() {
             document.getElementById('simMyTeamBadge').style.backgroundColor = gameState.selectedTeam.color;
             document.getElementById('simMyTeamBadge').innerText = gameState.selectedTeam.abbr;
             document.getElementById('simMyTeamName').innerText = gameState.selectedTeam.name;
             document.getElementById('simMyOvr').innerText = `OVR: ${calculateTeamOVR()}`;
 
-            const opp = NFL_TEAMS.filter(t => t.name !== gameState.selectedTeam.name)[Math.floor(Math.random() * 31)];
-            document.getElementById('simOppBadge').style.backgroundColor = opp.color;
-            document.getElementById('simOppBadge').innerText = opp.abbr;
-            document.getElementById('simOppName').innerText = opp.name;
+            simOppTeamObj = NFL_TEAMS.filter(t => t.name !== gameState.selectedTeam.name)[Math.floor(Math.random() * 31)];
+            document.getElementById('simOppBadge').style.backgroundColor = simOppTeamObj.color;
+            document.getElementById('simOppBadge').innerText = simOppTeamObj.abbr;
+            document.getElementById('simOppName').innerText = simOppTeamObj.name;
             
             const oppOvr = Math.min(100, Math.max(70, calculateTeamOVR() + Math.floor(Math.random() * 12) - 6));
             document.getElementById('simOppOvr').innerText = `OVR: ${oppOvr}`;
+
+            drawESPNField();
+        }
+
+        function drawESPNField() {
+            const canvas = document.getElementById('espnFieldCanvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Turf Background
+            ctx.fillStyle = '#064e3b';
+            ctx.fillRect(0, 0, w, h);
+
+            // Alternating Field Grass Stripes
+            const fieldXStart = 60;
+            const fieldXEnd = w - 60;
+            const fieldWidth = fieldXEnd - fieldXStart;
+
+            for (let i = 0; i < 10; i++) {
+                if (i % 2 === 0) {
+                    ctx.fillStyle = 'rgba(16, 185, 129, 0.15)';
+                    ctx.fillRect(fieldXStart + (i * fieldWidth / 10), 0, fieldWidth / 10, h);
+                }
+            }
+
+            // Endzones
+            ctx.fillStyle = gameState ? gameState.selectedTeam.color : '#003594';
+            ctx.fillRect(0, 0, fieldXStart, h);
+            ctx.fillStyle = simOppTeamObj ? simOppTeamObj.color : '#AA0000';
+            ctx.fillRect(fieldXEnd, 0, 60, h);
+
+            // Endzone Labels
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 16px Teko';
+            ctx.textAlign = 'center';
+            ctx.fillText(gameState ? gameState.selectedTeam.abbr : 'HOME', 30, h / 2 + 5);
+            ctx.fillText(simOppTeamObj ? simOppTeamObj.abbr : 'AWAY', w - 30, h / 2 + 5);
+
+            // Yard Line Numbers & White Lines
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.lineWidth = 2;
+
+            for (let i = 0; i <= 10; i++) {
+                const x = fieldXStart + (i * fieldWidth / 10);
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, h);
+                ctx.stroke();
+
+                if (i > 0 && i < 10) {
+                    const yardNum = i <= 5 ? i * 10 : (10 - i) * 10;
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                    ctx.font = '12px Teko';
+                    ctx.fillText(yardNum, x, 20);
+                    ctx.fillText(yardNum, x, h - 10);
+                }
+            }
+
+            // ESPN LINE OF SCRIMMAGE (BLUE LINE)
+            const ballX = fieldXStart + (simBallYard / 100 * fieldWidth);
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(ballX, 0);
+            ctx.lineTo(ballX, h);
+            ctx.stroke();
+
+            // ESPN 1ST DOWN MARKER LINE (YELLOW LINE)
+            const firstX = fieldXStart + (simFirstDownYard / 100 * fieldWidth);
+            ctx.strokeStyle = '#facc15';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(firstX, 0);
+            ctx.lineTo(firstX, h);
+            ctx.stroke();
+
+            // ANIMATED FOOTBALL MARKER ICON
+            ctx.fillStyle = '#b45309';
+            ctx.beginPath();
+            ctx.ellipse(ballX, h / 2, 12, 8, Math.PI / 4, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
         }
 
         function runGameSimulation() {
@@ -1147,6 +1253,9 @@
             const oppOvr = parseInt(document.getElementById('simOppOvr').innerText.replace('OVR: ', '')) || 80;
 
             let myScore = 0, oppScore = 0;
+            simBallYard = 25;
+            simFirstDownYard = 35;
+
             const log = document.getElementById('simPlayLog');
             log.innerHTML = '';
 
@@ -1158,6 +1267,7 @@
             };
 
             addLog("--- KICKOFF ---");
+            drawESPNField();
 
             let q = 1;
             const simInterval = setInterval(() => {
@@ -1165,17 +1275,35 @@
                 
                 const myChance = 0.5 + (myOvr - oppOvr) * 0.02;
                 if (Math.random() < myChance) {
-                    const pts = Math.random() > 0.3 ? 7 : 3;
-                    myScore += pts;
-                    addLog(`Q${q}: ${gameState.selectedTeam.name} scored ${pts === 7 ? 'TOUCHDOWN!' : 'FIELD GOAL!'}`);
+                    const yardsGained = Math.floor(Math.random() * 25) + 5;
+                    simBallYard = Math.min(99, simBallYard + yardsGained);
+                    
+                    if (simBallYard >= 99) {
+                        myScore += 7;
+                        addLog(`Q${q}: TOUCHDOWN ${gameState.selectedTeam.name}! (+7 PTS)`);
+                        simBallYard = 25;
+                    } else {
+                        addLog(`Q${q}: ${gameState.selectedTeam.name} gain +${yardsGained} YDS to ${simBallYard} yd line!`);
+                    }
+                    simFirstDownYard = Math.min(99, simBallYard + 10);
                 } else {
-                    const pts = Math.random() > 0.3 ? 7 : 3;
-                    oppScore += pts;
-                    addLog(`Q${q}: Opponent scored ${pts === 7 ? 'TOUCHDOWN!' : 'FIELD GOAL!'}`);
+                    const yardsGained = Math.floor(Math.random() * 20) + 3;
+                    simBallYard = Math.max(1, simBallYard - yardsGained);
+                    if (simBallYard <= 5) {
+                        oppScore += 7;
+                        addLog(`Q${q}: Opponent scored TOUCHDOWN! (+7 PTS)`);
+                        simBallYard = 25;
+                    } else {
+                        addLog(`Q${q}: Opponent defense stop! Ball at ${simBallYard} yd line.`);
+                    }
+                    simFirstDownYard = Math.min(99, simBallYard + 10);
                 }
 
+                document.getElementById('simDownAndDist').innerText = `Ball at ${simBallYard} YD Line`;
                 document.getElementById('simMyScore').innerText = myScore;
                 document.getElementById('simOppScore').innerText = oppScore;
+
+                drawESPNField();
 
                 q++;
                 if (q > 4) {
@@ -1198,7 +1326,7 @@
                     updateUIHeader();
                     btn.disabled = false;
                 }
-            }, 1000);
+            }, 1200);
         }
 
         function saveGameState() {
