@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFL Card Dynasty & Game Simulator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sports: ['Teko', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif']
+                    },
+                    colors: {
+                        nflBlue: '#013369',
+                        nflRed: '#D50A0A',
+                        gold: '#FFD700'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Card Sparkle & Holographic Animations */
+        .card-super-rare {
+            background: linear-gradient(135deg, #ff007f, #7f00ff, #00f0ff, #ff007f);
+            background-size: 300% 300%;
+            animation: holoShift 4s ease infinite;
+        }
+        @keyframes holoShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .gold-glow {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+        .purple-glow {
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+        }
+        .sr-glow {
+            box-shadow: 0 0 25px rgba(255, 0, 127, 0.9);
+        }
+
+        /* Card Flip Animation */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-nflRed selection:text-white flex flex-col justify-between">
+
+    <!-- TEAM SELECTION MODAL (Initial Boot) -->
+    <div id="teamSelectModal" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full p-6 shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="text-center mb-6">
+                <i class="fa-solid fa-football text-nflRed text-5xl mb-2"></i>
+                <h1 class="text-4xl font-sports tracking-wider uppercase text-white">Choose Your Franchise</h1>
+                <p class="text-slate-400 text-sm">Select your NFL team to begin your Ultimate Card Dynasty.</p>
+            </div>
+            
+            <div id="teamGrid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3 overflow-y-auto p-2 flex-grow">
+                <!-- Teams rendered dynamically -->
+            </div>
+
+            <div class="mt-6 text-center">
+                <button id="confirmTeamBtn" disabled onclick="confirmTeamSelection()" class="bg-nflRed disabled:opacity-40 disabled:cursor-not-allowed hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl transition duration-200 uppercase tracking-widest text-lg font-sports shadow-lg">
+                    Start Franchise
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="mainApp" class="hidden min-h-screen flex flex-col">
+        
+        <!-- HEADER / NAVBAR -->
+        <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+                <!-- Brand & Selected Team -->
+                <div class="flex items-center gap-3">
+                    <div id="myTeamBadge" class="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold font-sports text-white border-2 border-amber-400 bg-slate-800">
+                        <!-- Logo / Initials -->
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-sports tracking-wider uppercase text-white leading-none">NFL DYNASTY</h1>
+                        <p id="myTeamName" class="text-xs font-semibold text-slate-400 uppercase">Selected Team</p>
+                    </div>
+                </div>
+
+                <!-- Currency & Stats Bar -->
+                <div class="flex items-center gap-6 bg-slate-950 px-4 py-2 rounded-xl border border-slate-800">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-coins text-amber-400 text-lg"></i>
+                        <span id="goldDisplay" class="font-sports text-2xl text-amber-400">1,000</span>
+                    </div>
+                    <div class="h-6 w-px bg-slate-800"></div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-nflRed text-lg"></i>
+                        <span id="teamOvrDisplay" class="font-sports text-2xl text-white">60 OVR</span>
+                    </div>
+                    <div class="h-6 w-px bg-slate-800"></div>
+                    <div class="text-xs text-slate-400">
+                        Record: <span id="recordDisplay" class="text-white font-bold">0-0</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs & Actions -->
+                <div class="flex items-center gap-2">
+                    <nav class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-sm">
+                        <button onclick="switchTab('packs')" id="tab-packs" class="px-3 py-1.5 rounded-lg font-semibold transition active-tab text-amber-400 bg-slate-800">Packs</button>
+                        <button onclick="switchTab('roster')" id="tab-roster" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white">Roster</button>
+                        <button onclick="switchTab('market')" id="tab-market" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white">Marketplace</button>
+                        <button onclick="switchTab('sim')" id="tab-sim" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white">Sim Game</button>
+                    </nav>
+
+                    <button onclick="manualSave()" title="Save Game State" class="bg-slate-800 hover:bg-slate-700 text-slate-300 p-2 rounded-xl border border-slate-700 transition">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                    </button>
+                    <button onclick="exportSave()" title="Export JSON Save" class="bg-slate-800 hover:bg-slate-700 text-slate-300 p-2 rounded-xl border border-slate-700 transition">
+                        <i class="fa-solid fa-download"></i>
+                    </button>
+                    <button onclick="resetGame()" title="Reset Game" class="bg-red-950/60 hover:bg-red-900 text-red-400 p-2 rounded-xl border border-red-900/50 transition">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENT VIEWPORTS -->
+        <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+
+            <!-- PACK STORE VIEW -->
+            <section id="view-packs" class="space-y-6">
+                <div class="text-center max-w-xl mx-auto mb-8">
+                    <h2 class="text-4xl font-sports tracking-wide uppercase text-white">Card Store</h2>
+                    <p class="text-slate-400 text-sm">Rip packs to pull active superstars, legendaries, and holographic Super Rare variants.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <!-- Bronze Pack -->
+                    <div class="bg-slate-900 border border-amber-900/40 rounded-2xl p-5 flex flex-col items-center text-center relative overflow-hidden group hover:border-amber-600 transition">
+                        <div class="w-32 h-44 bg-gradient-to-br from-amber-900 to-slate-900 border-2 border-amber-700/60 rounded-xl flex flex-col items-center justify-center p-3 my-4 shadow-lg group-hover:scale-105 transition transform">
+                            <i class="fa-solid fa-box-open text-4xl text-amber-600 mb-2"></i>
+                            <span class="font-sports text-xl text-amber-200">BRONZE PACK</span>
+                            <span class="text-[10px] text-amber-400/80">3 Players (Common/Rare)</span>
+                        </div>
+                        <h3 class="font-sports text-2xl text-amber-400">Rookie Pack</h3>
+                        <p class="text-xs text-slate-400 mb-4">Great for building early depth.</p>
+                        <button onclick="buyPack('bronze')" class="mt-auto w-full py-2.5 bg-amber-700 hover:bg-amber-600 font-sports tracking-wider text-white text-xl rounded-xl transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-coins"></i> 250 GOLD
+                        </button>
+                    </div>
+
+                    <!-- Silver Pack -->
+                    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 flex flex-col items-center text-center relative overflow-hidden group hover:border-slate-400 transition">
+                        <div class="w-32 h-44 bg-gradient-to-br from-slate-600 to-slate-900 border-2 border-slate-400 rounded-xl flex flex-col items-center justify-center p-3 my-4 shadow-lg group-hover:scale-105 transition transform">
+                            <i class="fa-solid fa-box-open text-4xl text-slate-300 mb-2"></i>
+                            <span class="font-sports text-xl text-slate-200">SILVER PACK</span>
+                            <span class="text-[10px] text-slate-300">3 Players (Rare Guaranteed)</span>
+                        </div>
+                        <h3 class="font-sports text-2xl text-slate-200">Pro Pack</h3>
+                        <p class="text-xs text-slate-400 mb-4">Higher chance for Epic stars.</p>
+                        <button onclick="buyPack('silver')" class="mt-auto w-full py-2.5 bg-slate-700 hover:bg-slate-600 font-sports tracking-wider text-white text-xl rounded-xl transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-coins"></i> 750 GOLD
+                        </button>
+                    </div>
+
+                    <!-- Gold Pack -->
+                    <div class="bg-slate-900 border border-amber-500/50 rounded-2xl p-5 flex flex-col items-center text-center relative overflow-hidden group hover:border-amber-400 transition gold-glow">
+                        <div class="w-32 h-44 bg-gradient-to-br from-amber-500 to-slate-900 border-2 border-amber-400 rounded-xl flex flex-col items-center justify-center p-3 my-4 shadow-lg group-hover:scale-105 transition transform">
+                            <i class="fa-solid fa-box-open text-4xl text-amber-300 mb-2"></i>
+                            <span class="font-sports text-xl text-amber-200">GOLD PACK</span>
+                            <span class="text-[10px] text-amber-300">4 Players (Epic Guaranteed)</span>
+                        </div>
+                        <h3 class="font-sports text-2xl text-amber-300">All-Pro Pack</h3>
+                        <p class="text-xs text-slate-400 mb-4">Premium drop rates for top tier talent.</p>
+                        <button onclick="buyPack('gold')" class="mt-auto w-full py-2.5 bg-amber-500 hover:bg-amber-400 font-sports tracking-wider text-slate-950 font-bold text-xl rounded-xl transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-coins"></i> 2,000 GOLD
+                        </button>
+                    </div>
+
+                    <!-- Hall of Fame Super Rare Pack -->
+                    <div class="bg-slate-900 border border-purple-500/60 rounded-2xl p-5 flex flex-col items-center text-center relative overflow-hidden group hover:border-purple-400 transition purple-glow">
+                        <div class="w-32 h-44 bg-gradient-to-br from-purple-700 via-pink-600 to-slate-900 border-2 border-purple-400 rounded-xl flex flex-col items-center justify-center p-3 my-4 shadow-lg group-hover:scale-105 transition transform">
+                            <i class="fa-solid fa-gem text-4xl text-pink-300 mb-2"></i>
+                            <span class="font-sports text-xl text-purple-200">HOF DYNASTY</span>
+                            <span class="text-[10px] text-pink-200">5 Players (High Super Rare %)</span>
+                        </div>
+                        <h3 class="font-sports text-2xl text-purple-300">Dynasty Collector</h3>
+                        <p class="text-xs text-slate-400 mb-4">Maximum legendary & holo SR rates.</p>
+                        <button onclick="buyPack('hof')" class="mt-auto w-full py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 font-sports tracking-wider text-white text-xl rounded-xl transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-coins"></i> 5,000 GOLD
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PACK OPENING ANIMATION OVERLAY -->
+            <div id="packRevealOverlay" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl hidden flex flex-col items-center justify-center p-4">
+                <h2 class="text-3xl font-sports text-slate-400 uppercase tracking-widest mb-2" id="packOpeningTitle">Opening Pack...</h2>
+                <p class="text-slate-500 text-sm mb-6">Click cards to reveal your pulled players</p>
+
+                <!-- Cards Reveal Container -->
+                <div id="revealedCardsContainer" class="flex flex-wrap justify-center gap-6 max-w-6xl w-full my-6">
+                    <!-- Inserted dynamically -->
+                </div>
+
+                <button id="closePackBtn" onclick="closePackModal()" class="hidden mt-8 px-8 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-sports text-2xl font-bold rounded-xl shadow-xl transition">
+                    Collect All Cards
+                </button>
+            </div>
+
+            <!-- ROSTER & LINEUP VIEW -->
+            <section id="view-roster" class="hidden space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-3xl font-sports tracking-wide uppercase text-white">Active Starting Lineup</h2>
+                        <p class="text-xs text-slate-400">Best player in each starting slot determines your overall rating for game simulations.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="autoSetBestLineup()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Set Best Lineup
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Active Lineup Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4" id="starterLineupGrid">
+                    <!-- Starter cards rendered dynamically -->
+                </div>
+
+                <!-- Full Collection / Binder -->
+                <div class="pt-6 border-t border-slate-800">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                        <h3 class="text-2xl font-sports text-white">Card Binder (<span id="totalCardsCount">0</span>)</h3>
+                        <!-- Filter Bar -->
+                        <div class="flex flex-wrap items-center gap-2 text-xs">
+                            <button onclick="filterBinder('ALL')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold active-filter">ALL</button>
+                            <button onclick="filterBinder('QB')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">QB</button>
+                            <button onclick="filterBinder('RB')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">RB</button>
+                            <button onclick="filterBinder('WR')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">WR</button>
+                            <button onclick="filterBinder('TE')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">TE</button>
+                            <button onclick="filterBinder('DEF')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">DEF</button>
+                            <button onclick="filterBinder('K')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">K</button>
+                        </div>
+                    </div>
+
+                    <div id="binderGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 min-h-[200px]">
+                        <!-- Binder Cards Rendered Dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- MARKETPLACE VIEW -->
+            <section id="view-market" class="hidden space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-3xl font-sports tracking-wide uppercase text-white">Marketplace & Auctions</h2>
+                        <p class="text-xs text-slate-400">Buy specific players directly or compete in live auction bids against simulated AI managers.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="renderMarketplace()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-xl text-slate-300">
+                            <i class="fa-solid fa-arrows-rotate mr-1"></i> Refresh List
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <!-- Marketplace Cards Grid -->
+                    <div class="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="marketListingsGrid">
+                        <!-- Dynamic Auctions -->
+                    </div>
+
+                    <!-- Sell Sidebar -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 h-fit space-y-4">
+                        <h3 class="font-sports text-2xl text-white">Quick Sell / List Card</h3>
+                        <p class="text-xs text-slate-400">Select a duplicate or bench card from your binder to list for auction or quick sell for gold.</p>
+                        
+                        <div id="sellCardSelector" class="space-y-3">
+                            <label class="text-xs text-slate-400 block font-semibold">Select Card from Roster:</label>
+                            <select id="userCardSelectInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-200">
+                                <option value="">-- Choose a Player --</option>
+                            </select>
+                            
+                            <div class="pt-2 flex gap-2">
+                                <button onclick="quickSellSelected()" class="w-1/2 py-2 bg-amber-600 hover:bg-amber-500 text-white font-sports tracking-wider rounded-xl text-lg transition">
+                                    Quick Sell
+                                </button>
+                                <button onclick="listCardOnMarket()" class="w-1/2 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-sports tracking-wider rounded-xl text-lg transition">
+                                    Post Auction
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GAME SIMULATOR VIEW -->
+            <section id="view-sim" class="hidden space-y-6">
+                <div class="text-center max-w-2xl mx-auto mb-6">
+                    <h2 class="text-4xl font-sports tracking-wide uppercase text-white">NFL Game Simulator</h2>
+                    <p class="text-xs text-slate-400">Match up your team against computer opponents. Wins award gold bonuses based on total roster OVR ratings!</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-6">
+                    <!-- Scoreboard View -->
+                    <div class="grid grid-cols-3 items-center bg-slate-950 p-6 rounded-xl border border-slate-800 text-center">
+                        <!-- User Team -->
+                        <div class="flex flex-col items-center">
+                            <div id="simMyTeamBadge" class="w-16 h-16 rounded-full bg-slate-800 border-2 border-amber-400 flex items-center justify-center font-sports text-3xl text-white mb-2">
+                                <!-- Logo -->
+                            </div>
+                            <h3 id="simMyTeamName" class="font-sports text-2xl text-white">Your Team</h3>
+                            <span id="simMyOvr" class="text-xs text-amber-400 font-bold">OVR: --</span>
+                            <div id="simMyScore" class="font-sports text-6xl text-white mt-2">0</div>
+                        </div>
+
+                        <!-- VS & Quarter Info -->
+                        <div class="flex flex-col items-center">
+                            <span id="simQuarter" class="font-sports text-2xl text-nflRed uppercase">PRE-GAME</span>
+                            <span class="text-xs text-slate-500">VS</span>
+                            <div id="simClock" class="font-mono text-xl text-slate-300 my-1">15:00</div>
+                            <button id="startSimBtn" onclick="runGameSimulation()" class="mt-3 px-6 py-2.5 bg-nflRed hover:bg-red-600 font-sports tracking-wider text-white text-xl rounded-xl shadow-lg transition">
+                                SIMULATE GAME
+                            </button>
+                        </div>
+
+                        <!-- Opponent Team -->
+                        <div class="flex flex-col items-center">
+                            <div id="simOppBadge" class="w-16 h-16 rounded-full bg-slate-800 border-2 border-slate-600 flex items-center justify-center font-sports text-3xl text-white mb-2">
+                                <i class="fa-solid fa-helmet-safety"></i>
+                            </div>
+                            <h3 id="simOppName" class="font-sports text-2xl text-white">Opponent</h3>
+                            <span id="simOppOvr" class="text-xs text-slate-400 font-bold">OVR: --</span>
+                            <div id="simOppScore" class="font-sports text-6xl text-white mt-2">0</div>
+                        </div>
+                    </div>
+
+                    <!-- Drive & Play-by-play Log -->
+                    <div class="bg-slate-950 rounded-xl p-4 border border-slate-800 h-64 overflow-y-auto font-mono text-xs space-y-2" id="simPlayLog">
+                        <div class="text-slate-500 text-center py-8">Press "SIMULATE GAME" to kickoff the match...</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
+            <p>NFL Card Dynasty & Game Simulator &bull; Stored locally in your web browser</p>
+        </footer>
+    </div>
+
+    <!-- MAIN JAVASCRIPT LOGIC -->
+    <script>
+        // ==========================================
+        // 1. EMBEDDED REAL NFL PLAYER DATABASE (cards.json format)
+        // ==========================================
+        const CARDS_DATABASE = [
+            { id: "mahomes_base", name: "Patrick Mahomes", team: "Kansas City Chiefs", position: "QB", overall: 99, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 10000, color: "#E31837" },
+            { id: "mahomes_sr_galaxy", name: "Patrick Mahomes", team: "Kansas City Chiefs", position: "QB", overall: 99, rarity: "Super Rare", isSuperRare: true, variantName: "Galaxy Animated", basePrice: 50000, color: "#E31837" },
+            { id: "jefferson_base", name: "Justin Jefferson", team: "Minnesota Vikings", position: "WR", overall: 97, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 8500, color: "#4F2683" },
+            { id: "jefferson_sr_griddy", name: "Justin Jefferson", team: "Minnesota Vikings", position: "WR", overall: 98, rarity: "Super Rare", isSuperRare: true, variantName: "Griddy Holo", basePrice: 42000, color: "#4F2683" },
+            { id: "mccaffrey_base", name: "Christian McCaffrey", team: "San Francisco 49ers", position: "RB", overall: 98, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 9000, color: "#AA0000" },
+            { id: "lamar_epic", name: "Lamar Jackson", team: "Baltimore Ravens", position: "QB", overall: 95, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 5000, color: "#241773" },
+            { id: "lamar_sr_electric", name: "Lamar Jackson", team: "Baltimore Ravens", position: "QB", overall: 97, rarity: "Super Rare", isSuperRare: true, variantName: "Electric Velocity", basePrice: 38000, color: "#241773" },
+            { id: "hill_epic", name: "Tyreek Hill", team: "Miami Dolphins", position: "WR", overall: 95, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 4800, color: "#008E97" },
+            { id: "chase_epic", name: "Ja'Marr Chase", team: "Cincinnati Bengals", position: "WR", overall: 93, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 4000, color: "#FB4F14" },
+            { id: "kelce_epic", name: "Travis Kelce", team: "Kansas City Chiefs", position: "TE", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 4200, color: "#E31837" },
+            { id: "sauce_rare", name: "Sauce Gardner", team: "New York Jets", position: "DEF", overall: 89, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2200, color: "#125740" },
+            { id: "parsons_epic", name: "Micah Parsons", team: "Dallas Cowboys", position: "DEF", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 4500, color: "#003594" },
+            { id: "stroud_rare", name: "C.J. Stroud", team: "Houston Texans", position: "QB", overall: 88, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2000, color: "#03202F" },
+            { id: "stroud_sr_rookie", name: "C.J. Stroud", team: "Houston Texans", position: "QB", overall: 92, rarity: "Super Rare", isSuperRare: true, variantName: "Rising Star Foil", basePrice: 22000, color: "#03202F" },
+            { id: "bosa_rare", name: "Nick Bosa", team: "San Francisco 49ers", position: "DEF", overall: 91, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 3500, color: "#AA0000" },
+            { id: "henry_rare", name: "Derrick Henry", team: "Baltimore Ravens", position: "RB", overall: 89, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2100, color: "#241773" },
+            { id: "barkley_rare", name: "Saquon Barkley", team: "Philadelphia Eagles", position: "RB", overall: 90, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2600, color: "#004C54" },
+            { id: "tucker_rare", name: "Justin Tucker", team: "Baltimore Ravens", position: "K", overall: 89, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 1800, color: "#241773" },
+            { id: "purdy_common", name: "Brock Purdy", team: "San Francisco 49ers", position: "QB", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 800, color: "#AA0000" },
+            { id: "puka_common", name: "Puka Nacua", team: "Los Angeles Rams", position: "WR", overall: 85, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 900, color: "#003594" },
+            { id: "love_common", name: "Jordan Love", team: "Green Bay Packers", position: "QB", overall: 83, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 700, color: "#203731" },
+            { id: "kittle_rare", name: "George Kittle", team: "San Francisco 49ers", position: "TE", overall: 91, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2800, color: "#AA0000" },
+            { id: "williams_common", name: "Caleb Williams", team: "Chicago Bears", position: "QB", overall: 81, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 650, color: "#0B162A" },
+            { id: "harrison_common", name: "Marvin Harrison Jr", team: "Arizona Cardinals", position: "WR", overall: 82, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 600, color: "#97233F" },
+            { id: "butker_common", name: "Harrison Butker", team: "Kansas City Chiefs", position: "K", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 500, color: "#E31837" },
+            { id: "eagles_def", name: "Philly Defense", team: "Philadelphia Eagles", position: "DEF", overall: 85, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 800, color: "#004C54" },
+            { id: "brown_epic", name: "A.J. Brown", team: "Philadelphia Eagles", position: "WR", overall: 93, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 4100, color: "#004C54" }
+        ];
+
+        // NFL 32 TEAMS LIST
+        const NFL_TEAMS = [
+            { name: "Arizona Cardinals", abbr: "ARI", color: "#97233F" },
+            { name: "Atlanta Falcons", abbr: "ATL", color: "#A71930" },
+            { name: "Baltimore Ravens", abbr: "BAL", color: "#241773" },
+            { name: "Buffalo Bills", abbr: "BUF", color: "#00338D" },
+            { name: "Carolina Panthers", abbr: "CAR", color: "#0085CA" },
+            { name: "Chicago Bears", abbr: "CHI", color: "#0B162A" },
+            { name: "Cincinnati Bengals", abbr: "CIN", color: "#FB4F14" },
+            { name: "Cleveland Browns", abbr: "CLE", color: "#311D00" },
+            { name: "Dallas Cowboys", abbr: "DAL", color: "#003594" },
+            { name: "Denver Broncos", abbr: "DEN", color: "#FB4F14" },
+            { name: "Detroit Lions", abbr: "DET", color: "#0076B6" },
+            { name: "Green Bay Packers", abbr: "GB", color: "#203731" },
+            { name: "Houston Texans", abbr: "HOU", color: "#03202F" },
+            { name: "Indianapolis Colts", abbr: "IND", color: "#002C5F" },
+            { name: "Jacksonville Jaguars", abbr: "JAX", color: "#006778" },
+            { name: "Kansas City Chiefs", abbr: "KC", color: "#E31837" },
+            { name: "Las Vegas Raiders", abbr: "LV", color: "#000000" },
+            { name: "Los Angeles Chargers", abbr: "LAC", color: "#0080C6" },
+            { name: "Los Angeles Rams", abbr: "LAR", color: "#003594" },
+            { name: "Miami Dolphins", abbr: "MIA", color: "#008E97" },
+            { name: "Minnesota Vikings", abbr: "MIN", color: "#4F2683" },
+            { name: "New England Patriots", abbr: "NE", color: "#002244" },
+            { name: "New Orleans Saints", abbr: "NO", color: "#D3BC8D" },
+            { name: "New York Giants", abbr: "NYG", color: "#0B2265" },
+            { name: "New York Jets", abbr: "NYJ", color: "#125740" },
+            { name: "Philadelphia Eagles", abbr: "PHI", color: "#004C54" },
+            { name: "Pittsburgh Steelers", abbr: "PIT", color: "#FFB612" },
+            { name: "San Francisco 49ers", abbr: "SF", color: "#AA0000" },
+            { name: "Seattle Seahawks", abbr: "SEA", color: "#002244" },
+            { name: "Tampa Bay Buccaneers", abbr: "TB", color: "#D50A0A" },
+            { name: "Tennessee Titans", abbr: "TEN", color: "#4B92DB" },
+            { name: "Washington Commanders", abbr: "WAS", color: "#5A1414" }
+        ];
+
+        // ==========================================
+        // 2. GAME STATE MANAGEMENT
+        // ==========================================
+        let gameState = {
+            selectedTeam: null,
+            gold: 1000,
+            wins: 0,
+            losses: 0,
+            inventory: [], // User's card collection
+            starters: {
+                QB: null,
+                RB: null,
+                WR: null,
+                TE: null,
+                DEF: null,
+                K: null
+            },
+            marketAuctions: []
+        };
+
+        let activeTab = 'packs';
+        let binderFilter = 'ALL';
+        let tempSelectedTeam = null;
+
+        // Initialize App on DOM Load
+        window.addEventListener('DOMContentLoaded', () => {
+            const loaded = loadSavedGame();
+            if (!loaded) {
+                renderTeamSelectModal();
+            } else {
+                initMainApp();
+            }
+        });
+
+        // ==========================================
+        // 3. TEAM SELECTION MODAL
+        // ==========================================
+        function renderTeamSelectModal() {
+            const grid = document.getElementById('teamGrid');
+            grid.innerHTML = '';
+
+            NFL_TEAMS.forEach(team => {
+                const btn = document.createElement('button');
+                btn.className = `team-select-card border border-slate-800 bg-slate-950 hover:border-slate-500 rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition`;
+                btn.onclick = () => selectTeamOption(team, btn);
+                btn.innerHTML = `
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-sports text-white text-lg border font-bold" style="background-color:${team.color}">
+                        ${team.abbr}
+                    </div>
+                    <span class="text-[11px] font-semibold text-slate-300 text-center leading-tight">${team.name}</span>
+                `;
+                grid.appendChild(btn);
+            });
+            document.getElementById('teamSelectModal').classList.remove('hidden');
+        }
+
+        function selectTeamOption(team, element) {
+            document.querySelectorAll('.team-select-card').forEach(el => el.classList.remove('border-amber-400', 'bg-slate-800'));
+            element.classList.add('border-amber-400', 'bg-slate-800');
+            tempSelectedTeam = team;
+            document.getElementById('confirmTeamBtn').disabled = false;
+        }
+
+        function confirmTeamSelection() {
+            if (!tempSelectedTeam) return;
+            gameState.selectedTeam = tempSelectedTeam;
+            
+            // Give starting starter pack
+            giveStarterPack();
+            
+            document.getElementById('teamSelectModal').classList.add('hidden');
+            saveGameState();
+            initMainApp();
+        }
+
+        function giveStarterPack() {
+            // Give standard commons for starter lineup
+            const starterQBs = CARDS_DATABASE.filter(c => c.position === 'QB' && c.rarity === 'Common');
+            const starterRBs = CARDS_DATABASE.filter(c => c.position === 'RB' && c.rarity === 'Common');
+            const starterWRs = CARDS_DATABASE.filter(c => c.position === 'WR' && c.rarity === 'Common');
+            const starterTEs = CARDS_DATABASE.filter(c => c.position === 'TE' && c.rarity === 'Epic');
+            const starterDEFs = CARDS_DATABASE.filter(c => c.position === 'DEF');
+            const starterKs = CARDS_DATABASE.filter(c => c.position === 'K');
+
+            const given = [
+                starterQBs[0] || CARDS_DATABASE[18],
+                starterWRs[0] || CARDS_DATABASE[19],
+                CARDS_DATABASE[22] || CARDS_DATABASE[0]
+            ];
+
+            given.forEach(c => {
+                const copy = JSON.parse(JSON.stringify(c));
+                copy.instanceId = 'card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                gameState.inventory.push(copy);
+            });
+
+            autoSetBestLineup();
+        }
+
+        // ==========================================
+        // 4. MAIN INTERFACE RENDERERS
+        // ==========================================
+        function initMainApp() {
+            document.getElementById('mainApp').classList.remove('hidden');
+            
+            // Update Header Info
+            document.getElementById('myTeamBadge').style.backgroundColor = gameState.selectedTeam.color;
+            document.getElementById('myTeamBadge').innerText = gameState.selectedTeam.abbr;
+            document.getElementById('myTeamName').innerText = gameState.selectedTeam.name;
+
+            updateUIHeader();
+            generateMarketplaceAuctions();
+            switchTab(activeTab);
+        }
+
+        function updateUIHeader() {
+            document.getElementById('goldDisplay').innerText = gameState.gold.toLocaleString();
+            document.getElementById('recordDisplay').innerText = `${gameState.wins}-${gameState.losses}`;
+            
+            const ovr = calculateTeamOVR();
+            document.getElementById('teamOvrDisplay').innerText = `${ovr} OVR`;
+        }
+
+        function calculateTeamOVR() {
+            const slots = Object.values(gameState.starters);
+            let sum = 0;
+            let count = 0;
+            slots.forEach(card => {
+                if (card) {
+                    sum += card.overall;
+                    count++;
+                }
+            });
+            if (count === 0) return 60;
+            return Math.round(sum / count);
+        }
+
+        function switchTab(tab) {
+            activeTab = tab;
+            ['packs', 'roster', 'market', 'sim'].forEach(t => {
+                const view = document.getElementById(`view-${t}`);
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tab) {
+                    view.classList.remove('hidden');
+                    btn.classList.add('text-amber-400', 'bg-slate-800');
+                    btn.classList.remove('text-slate-400');
+                } else {
+                    view.classList.add('hidden');
+                    btn.classList.remove('text-amber-400', 'bg-slate-800');
+                    btn.classList.add('text-slate-400');
+                }
+            });
+
+            if (tab === 'roster') renderRosterView();
+            if (tab === 'market') renderMarketplace();
+            if (tab === 'sim') renderSimView();
+        }
+
+        // ==========================================
+        // 5. PACK OPENING SYSTEM
+        // ==========================================
+        function buyPack(type) {
+            let cost = 0;
+            let cardCount = 3;
+            let chances = { common: 0.70, rare: 0.25, epic: 0.04, legendary: 0.01, sr: 0.005 };
+
+            if (type === 'bronze') {
+                cost = 250;
+                cardCount = 3;
+                chances = { common: 0.80, rare: 0.18, epic: 0.02, legendary: 0.00, sr: 0.00 };
+            } else if (type === 'silver') {
+                cost = 750;
+                cardCount = 3;
+                chances = { common: 0.40, rare: 0.50, epic: 0.08, legendary: 0.02, sr: 0.01 };
+            } else if (type === 'gold') {
+                cost = 2000;
+                cardCount = 4;
+                chances = { common: 0.10, rare: 0.50, epic: 0.32, legendary: 0.06, sr: 0.02 };
+            } else if (type === 'hof') {
+                cost = 5000;
+                cardCount = 5;
+                chances = { common: 0.00, rare: 0.20, epic: 0.50, legendary: 0.20, sr: 0.10 };
+            }
+
+            if (gameState.gold < cost) {
+                alert("Not enough gold to purchase this card pack!");
+                return;
+            }
+
+            gameState.gold -= cost;
+            updateUIHeader();
+
+            // Generate pulled cards
+            const pulledCards = [];
+            for (let i = 0; i < cardCount; i++) {
+                pulledCards.push(rollRandomCard(chances));
+            }
+
+            // Save to inventory
+            pulledCards.forEach(c => {
+                const copy = JSON.parse(JSON.stringify(c));
+                copy.instanceId = 'card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+                gameState.inventory.push(copy);
+            });
+
+            saveGameState();
+            triggerPackRevealAnimation(pulledCards, type.toUpperCase());
+        }
+
+        function rollRandomCard(chances) {
+            const rand = Math.random();
+            let targetRarity = 'Common';
+
+            if (rand < chances.sr) targetRarity = 'Super Rare';
+            else if (rand < chances.sr + chances.legendary) targetRarity = 'Legendary';
+            else if (rand < chances.sr + chances.legendary + chances.epic) targetRarity = 'Epic';
+            else if (rand < chances.sr + chances.legendary + chances.epic + chances.rare) targetRarity = 'Rare';
+
+            let pool = CARDS_DATABASE.filter(c => c.rarity === targetRarity);
+            if (pool.length === 0) pool = CARDS_DATABASE;
+
+            return pool[Math.floor(Math.random() * pool.length)];
+        }
+
+        function triggerPackRevealAnimation(cards, packTitle) {
+            const overlay = document.getElementById('packRevealOverlay');
+            const container = document.getElementById('revealedCardsContainer');
+            const title = document.getElementById('packOpeningTitle');
+            const closeBtn = document.getElementById('closePackBtn');
+
+            title.innerText = `${packTitle} REVEAL`;
+            container.innerHTML = '';
+            closeBtn.classList.add('hidden');
+            overlay.classList.remove('hidden');
+
+            cards.forEach((card, idx) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = `perspective-1000 w-44 h-64 cursor-pointer my-2`;
+                cardEl.innerHTML = `
+                    <div class="relative w-full h-full duration-500 transform-style-3d transition-transform card-flip-inner" id="revealCard_${idx}">
+                        <!-- Card Back -->
+                        <div class="absolute inset-0 bg-slate-900 border-2 border-amber-400 rounded-xl flex flex-col items-center justify-center p-4 shadow-xl backface-hidden">
+                            <i class="fa-solid fa-shield-halved text-5xl text-nflRed mb-2"></i>
+                            <span class="font-sports text-xl text-amber-400">NFL CARD</span>
+                            <span class="text-[10px] text-slate-500">Tap to Reveal</span>
+                        </div>
+                        <!-- Card Front -->
+                        <div class="absolute inset-0 rounded-xl backface-hidden rotate-y-180 flex flex-col p-3 border-2 ${getCardBorderClass(card)} shadow-2xl">
+                            ${renderCardHTML(card)}
+                        </div>
+                    </div>
+                `;
+
+                cardEl.onclick = () => {
+                    const inner = document.getElementById(`revealCard_${idx}`);
+                    inner.classList.add('rotate-y-180');
+                    checkAllCardsRevealed();
+                };
+
+                container.appendChild(cardEl);
+            });
+        }
+
+        function checkAllCardsRevealed() {
+            setTimeout(() => {
+                document.getElementById('closePackBtn').classList.remove('hidden');
+            }, 500);
+        }
+
+        function closePackModal() {
+            document.getElementById('packRevealOverlay').classList.add('hidden');
+        }
+
+        // ==========================================
+        // 6. CARD RENDERING HELPER
+        // ==========================================
+        function getCardBorderClass(card) {
+            if (card.isSuperRare) return "border-pink-500 card-super-rare sr-glow text-white";
+            if (card.rarity === 'Legendary') return "border-amber-400 bg-slate-900 gold-glow text-amber-300";
+            if (card.rarity === 'Epic') return "border-purple-500 bg-slate-900 purple-glow text-purple-300";
+            if (card.rarity === 'Rare') return "border-blue-400 bg-slate-900 text-blue-200";
+            return "border-slate-700 bg-slate-900 text-slate-300";
+        }
+
+        function renderCardHTML(card) {
+            return `
+                <div class="flex justify-between items-center mb-1">
+                    <span class="font-sports text-3xl font-bold leading-none">${card.overall}</span>
+                    <span class="font-sports text-lg uppercase px-1.5 py-0.5 rounded bg-slate-950/80">${card.position}</span>
+                </div>
+                
+                <div class="flex-grow flex flex-col items-center justify-center my-1 relative">
+                    <div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl font-sports text-white shadow-md border" style="background-color:${card.color}">
+                        ${card.name.split(' ').map(n=>n[0]).join('')}
+                    </div>
+                    ${card.isSuperRare ? `<span class="mt-1 text-[9px] font-bold px-1.5 py-0.5 rounded bg-pink-600 text-white tracking-widest uppercase">${card.variantName}</span>` : ''}
+                </div>
+
+                <div class="text-center mt-auto">
+                    <h4 class="font-sports text-xl leading-tight truncate uppercase font-bold">${card.name}</h4>
+                    <p class="text-[9px] opacity-80 truncate">${card.team}</p>
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 7. ROSTER & BINDER SYSTEM
+        // ==========================================
+        function renderRosterView() {
+            // Render Starters
+            const starterGrid = document.getElementById('starterLineupGrid');
+            starterGrid.innerHTML = '';
+            
+            const positions = ['QB', 'RB', 'WR', 'TE', 'DEF', 'K'];
+            positions.forEach(pos => {
+                const starterCard = gameState.starters[pos];
+                const slot = document.createElement('div');
+                slot.className = `bg-slate-900 border ${starterCard ? getCardBorderClass(starterCard) : 'border-dashed border-slate-800'} rounded-xl p-3 flex flex-col justify-between min-h-[180px]`;
+                
+                if (starterCard) {
+                    slot.innerHTML = `
+                        <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">STARTER ${pos}</div>
+                        ${renderCardHTML(starterCard)}
+                    `;
+                } else {
+                    slot.innerHTML = `
+                        <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">SLOT: ${pos}</div>
+                        <div class="flex-grow flex flex-col items-center justify-center text-slate-600 gap-2">
+                            <i class="fa-solid fa-user-plus text-2xl"></i>
+                            <span class="text-xs font-semibold">EMPTY</span>
+                        </div>
+                    `;
+                }
+                starterGrid.appendChild(slot);
+            });
+
+            // Render Binder
+            renderBinderCards();
+        }
+
+        function filterBinder(pos) {
+            binderFilter = pos;
+            document.querySelectorAll('#view-roster button').forEach(btn => {
+                if (btn.innerText === pos) btn.classList.add('bg-slate-700', 'text-white');
+                else btn.classList.remove('bg-slate-700');
+            });
+            renderBinderCards();
+        }
+
+        function renderBinderCards() {
+            const grid = document.getElementById('binderGrid');
+            grid.innerHTML = '';
+
+            let cards = gameState.inventory;
+            if (binderFilter !== 'ALL') {
+                cards = cards.filter(c => c.position === binderFilter);
+            }
+
+            document.getElementById('totalCardsCount').innerText = gameState.inventory.length;
+
+            if (cards.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 text-sm">No cards available in this section. Open packs in the store!</div>`;
+                return;
+            }
+
+            cards.forEach(card => {
+                const isStarting = Object.values(gameState.starters).some(s => s && s.instanceId === card.instanceId);
+                const cardEl = document.createElement('div');
+                cardEl.className = `rounded-xl p-3 border ${getCardBorderClass(card)} flex flex-col justify-between relative group shadow-md`;
+                
+                cardEl.innerHTML = `
+                    ${isStarting ? `<span class="absolute -top-2 -right-2 bg-amber-400 text-slate-950 text-[9px] font-bold px-2 py-0.5 rounded-full shadow">STARTER</span>` : ''}
+                    ${renderCardHTML(card)}
+                    
+                    <div class="mt-2 pt-2 border-t border-slate-800/80 flex gap-1">
+                        <button onclick="setAsStarter('${card.instanceId}')" class="flex-grow py-1 bg-indigo-600 hover:bg-indigo-500 text-[10px] font-bold rounded text-white transition">
+                            ${isStarting ? 'STARTER' : 'START'}
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(cardEl);
+            });
+        }
+
+        function setAsStarter(instanceId) {
+            const card = gameState.inventory.find(c => c.instanceId === instanceId);
+            if (!card) return;
+
+            gameState.starters[card.position] = card;
+            saveGameState();
+            updateUIHeader();
+            renderRosterView();
+        }
+
+        function autoSetBestLineup() {
+            const positions = ['QB', 'RB', 'WR', 'TE', 'DEF', 'K'];
+            positions.forEach(pos => {
+                const best = gameState.inventory
+                    .filter(c => c.position === pos)
+                    .sort((a,b) => b.overall - a.overall)[0];
+                if (best) gameState.starters[pos] = best;
+            });
+            saveGameState();
+            updateUIHeader();
+            if (activeTab === 'roster') renderRosterView();
+        }
+
+        // ==========================================
+        // 8. MARKETPLACE & AUCTION SYSTEM
+        // ==========================================
+        function generateMarketplaceAuctions() {
+            if (gameState.marketAuctions.length > 0) return;
+
+            // Generate 6 random market cards
+            for (let i = 0; i < 6; i++) {
+                const randomCard = CARDS_DATABASE[Math.floor(Math.random() * CARDS_DATABASE.length)];
+                const copy = JSON.parse(JSON.stringify(randomCard));
+                copy.instanceId = 'mkt_' + Date.now() + '_' + i;
+                
+                gameState.marketAuctions.push({
+                    card: copy,
+                    currentBid: Math.round(copy.basePrice * 0.7),
+                    buyoutPrice: copy.basePrice,
+                    highBidder: "AI_Manager_" + Math.floor(Math.random() * 99)
+                });
+            }
+        }
+
+        function renderMarketplace() {
+            const grid = document.getElementById('marketListingsGrid');
+            grid.innerHTML = '';
+
+            gameState.marketAuctions.forEach((auction, idx) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = `bg-slate-900 border ${getCardBorderClass(auction.card)} rounded-2xl p-4 flex flex-col justify-between shadow-xl`;
+                
+                cardEl.innerHTML = `
+                    <div>
+                        <div class="flex justify-between text-xs text-slate-400 mb-2">
+                            <span>Bidder: ${auction.highBidder}</span>
+                            <span class="text-amber-400 font-bold"><i class="fa-solid fa-coins"></i> ${auction.currentBid.toLocaleString()}</span>
+                        </div>
+                        ${renderCardHTML(auction.card)}
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-800 space-y-2">
+                        <button onclick="placeMarketBid(${idx})" class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-white font-sports tracking-wider rounded-xl text-lg transition">
+                            Bid +${Math.round(auction.currentBid * 0.1)} Gold
+                        </button>
+                        <button onclick="buyoutMarketCard(${idx})" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-semibold rounded-xl transition">
+                            Buyout: ${auction.buyoutPrice.toLocaleString()} Gold
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(cardEl);
+            });
+
+            // Populate sell dropdown
+            const select = document.getElementById('userCardSelectInput');
+            select.innerHTML = '<option value="">-- Choose a Player --</option>';
+            gameState.inventory.forEach(c => {
+                const isStarter = Object.values(gameState.starters).some(s => s && s.instanceId === c.instanceId);
+                if (!isStarter) {
+                    select.innerHTML += `<option value="${c.instanceId}">${c.name} (${c.position} - ${c.overall} OVR)</option>`;
+                }
+            });
+        }
+
+        function placeMarketBid(idx) {
+            const auction = gameState.marketAuctions[idx];
+            const increment = Math.round(auction.currentBid * 0.1) || 50;
+            const nextBid = auction.currentBid + increment;
+
+            if (gameState.gold < nextBid) {
+                alert("You don't have enough gold to make this bid!");
+                return;
+            }
+
+            gameState.gold -= increment;
+            auction.currentBid = nextBid;
+            auction.highBidder = "YOU";
+
+            updateUIHeader();
+            renderMarketplace();
+
+            // AI Outbid Chance
+            setTimeout(() => {
+                if (Math.random() > 0.4 && auction.highBidder === "YOU") {
+                    auction.currentBid += Math.round(increment * 1.2);
+                    auction.highBidder = "AI_Manager_" + Math.floor(Math.random() * 99);
+                    if (activeTab === 'market') renderMarketplace();
+                }
+            }, 3000);
+        }
+
+        function buyoutMarketCard(idx) {
+            const auction = gameState.marketAuctions[idx];
+            if (gameState.gold < auction.buyoutPrice) {
+                alert("Insufficient gold for direct buyout!");
+                return;
+            }
+
+            gameState.gold -= auction.buyoutPrice;
+            gameState.inventory.push(auction.card);
+            
+            // Remove from market
+            gameState.marketAuctions.splice(idx, 1);
+            
+            saveGameState();
+            updateUIHeader();
+            renderMarketplace();
+            alert(`Purchased ${auction.card.name}! Check your Card Binder.`);
+        }
+
+        function quickSellSelected() {
+            const select = document.getElementById('userCardSelectInput');
+            const instanceId = select.value;
+            if (!instanceId) return;
+
+            const cardIdx = gameState.inventory.findIndex(c => c.instanceId === instanceId);
+            if (cardIdx === -1) return;
+
+            const card = gameState.inventory[cardIdx];
+            const sellPrice = Math.round(card.basePrice * 0.4) || 200;
+
+            gameState.gold += sellPrice;
+            gameState.inventory.splice(cardIdx, 1);
+
+            saveGameState();
+            updateUIHeader();
+            renderMarketplace();
+            alert(`Quick sold ${card.name} for ${sellPrice} Gold!`);
+        }
+
+        function listCardOnMarket() {
+            const select = document.getElementById('userCardSelectInput');
+            const instanceId = select.value;
+            if (!instanceId) return;
+
+            const cardIdx = gameState.inventory.findIndex(c => c.instanceId === instanceId);
+            if (cardIdx === -1) return;
+
+            const card = gameState.inventory[cardIdx];
+            gameState.inventory.splice(cardIdx, 1);
+
+            gameState.marketAuctions.push({
+                card: card,
+                currentBid: Math.round(card.basePrice * 0.5),
+                buyoutPrice: card.basePrice,
+                highBidder: "YOU"
+            });
+
+            saveGameState();
+            updateUIHeader();
+            renderMarketplace();
+            alert(`Listed ${card.name} on the Marketplace!`);
+        }
+
+        // ==========================================
+        // 9. GAME SIMULATOR
+        // ==========================================
+        function renderSimView() {
+            document.getElementById('simMyTeamBadge').style.backgroundColor = gameState.selectedTeam.color;
+            document.getElementById('simMyTeamBadge').innerText = gameState.selectedTeam.abbr;
+            document.getElementById('simMyTeamName').innerText = gameState.selectedTeam.name;
+            document.getElementById('simMyOvr').innerText = `OVR: ${calculateTeamOVR()}`;
+
+            // Random opponent
+            const opp = NFL_TEAMS.filter(t => t.name !== gameState.selectedTeam.name)[Math.floor(Math.random() * 31)];
+            document.getElementById('simOppBadge').style.backgroundColor = opp.color;
+            document.getElementById('simOppBadge').innerText = opp.abbr;
+            document.getElementById('simOppName').innerText = opp.name;
+            
+            const oppOvr = Math.min(99, Math.max(70, calculateTeamOVR() + Math.floor(Math.random() * 10) - 5));
+            document.getElementById('simOppOvr').innerText = `OVR: ${oppOvr}`;
+        }
+
+        function runGameSimulation() {
+            const btn = document.getElementById('startSimBtn');
+            btn.disabled = true;
+
+            const myOvr = calculateTeamOVR();
+            const oppOvr = parseInt(document.getElementById('simOppOvr').innerText.replace('OVR: ', '')) || 80;
+
+            let myScore = 0;
+            let oppScore = 0;
+            const log = document.getElementById('simPlayLog');
+            log.innerHTML = '';
+
+            const addLog = (txt) => {
+                const line = document.createElement('div');
+                line.innerText = txt;
+                log.appendChild(line);
+                log.scrollTop = log.scrollHeight;
+            };
+
+            addLog("--- KICKOFF ---");
+
+            let q = 1;
+            const simInterval = setInterval(() => {
+                document.getElementById('simQuarter').innerText = `QUARTER ${q}`;
+                
+                // Quarter logic
+                const myChance = 0.5 + (myOvr - oppOvr) * 0.02;
+                if (Math.random() < myChance) {
+                    const pts = Math.random() > 0.3 ? 7 : 3;
+                    myScore += pts;
+                    addLog(`Q${q}: ${gameState.selectedTeam.name} scored ${pts === 7 ? 'TOUCHDOWN!' : 'FIELD GOAL!'}`);
+                } else {
+                    const pts = Math.random() > 0.3 ? 7 : 3;
+                    oppScore += pts;
+                    addLog(`Q${q}: Opponent scored ${pts === 7 ? 'TOUCHDOWN!' : 'FIELD GOAL!'}`);
+                }
+
+                document.getElementById('simMyScore').innerText = myScore;
+                document.getElementById('simOppScore').innerText = oppScore;
+
+                q++;
+                if (q > 4) {
+                    clearInterval(simInterval);
+                    document.getElementById('simQuarter').innerText = "FINAL";
+                    
+                    if (myScore >= oppScore) {
+                        gameState.wins++;
+                        const reward = 500 + (myOvr * 5);
+                        gameState.gold += reward;
+                        addLog(`\n🎉 VICTORY! Earned +${reward} Gold reward!`);
+                    } else {
+                        gameState.losses++;
+                        const reward = 150;
+                        gameState.gold += reward;
+                        addLog(`\n❌ LOSS. Consolation reward: +${reward} Gold.`);
+                    }
+
+                    saveGameState();
+                    updateUIHeader();
+                    btn.disabled = false;
+                }
+            }, 1000);
+        }
+
+        // ==========================================
+        // 10. SAVE / LOAD / EXPORT SYSTEM
+        // ==========================================
+        function saveGameState() {
+            localStorage.setItem('nfl_card_game_save', JSON.stringify(gameState));
+        }
+
+        function loadSavedGame() {
+            const saved = localStorage.getItem('nfl_card_game_save');
+            if (saved) {
+                try {
+                    gameState = JSON.parse(saved);
+                    return true;
+                } catch(e) {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        function manualSave() {
+            saveGameState();
+            alert("Game progress saved to local browser storage!");
+        }
+
+        function exportSave() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(gameState));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `nfl_card_save_${Date.now()}.json`);
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+        }
+
+        function resetGame() {
+            if (confirm("Are you sure you want to reset your franchise and start over?")) {
+                localStorage.removeItem('nfl_card_game_save');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
