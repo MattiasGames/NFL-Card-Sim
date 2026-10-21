@@ -72,7 +72,7 @@
                 <p class="text-slate-400 text-sm">Select your NFL team to begin building your card dynasty.</p>
             </div>
             
-            <div id="teamGrid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3 overflow-y-auto p-2 flex-grow"></div>
+            <div id="teamGrid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3 overflow-y-auto p-2 flex-grow min-h-[300px]"></div>
 
             <div class="mt-6 text-center">
                 <button id="confirmTeamBtn" disabled onclick="confirmTeamSelection()" class="bg-nflRed disabled:opacity-40 disabled:cursor-not-allowed hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl transition uppercase tracking-widest text-lg font-sports shadow-lg">
@@ -99,7 +99,7 @@
                 <div class="flex items-center gap-6 bg-slate-950 px-4 py-2 rounded-xl border border-slate-800">
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-coins text-amber-400 text-lg"></i>
-                        <span id="goldDisplay" class="font-sports text-2xl text-amber-400">1,000</span>
+                        <span id="goldDisplay" class="font-sports text-2xl text-amber-400">1,500</span>
                     </div>
                     <div class="h-6 w-px bg-slate-800"></div>
                     <div class="flex items-center gap-2">
@@ -137,89 +137,103 @@
             <section id="view-packs" class="space-y-6">
                 <div class="text-center max-w-xl mx-auto mb-8">
                     <h2 class="text-4xl font-sports tracking-wide uppercase text-white">Card Store</h2>
-                    <p class="text-slate-400 text-sm">Pull current stars, Special Edition releases, and All-Time Hall of Fame Legends.</p>
+                    <p class="text-slate-400 text-sm">Open specialized packs to build your defense, offense, and pull 100 OVR GOATs!</p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    <!-- Bronze Pack -->
-                    <div class="bg-slate-900 border border-amber-900/40 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-amber-600 transition">
-                        <div class="w-28 h-36 bg-gradient-to-br from-amber-900 to-slate-900 border-2 border-amber-700/60 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-lg group-hover:scale-105 transition">
-                            <i class="fa-solid fa-box-open text-3xl text-amber-600 mb-1"></i>
-                            <span class="font-sports text-lg text-amber-200 leading-none">BRONZE</span>
-                            <span class="text-[9px] text-amber-400/80">3 Players</span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Wildcard Gamble Pack -->
+                    <div class="bg-slate-900 border border-emerald-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-emerald-400 transition">
+                        <div class="w-28 h-36 bg-gradient-to-br from-emerald-800 to-slate-900 border-2 border-emerald-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-lg group-hover:scale-105 transition">
+                            <i class="fa-solid fa-dice text-3xl text-emerald-300 mb-1"></i>
+                            <span class="font-sports text-lg text-emerald-100 leading-none">GAMBLE</span>
+                            <span class="text-[9px] text-emerald-200">1 Player</span>
                         </div>
-                        <h3 class="font-sports text-xl text-amber-400">Rookie Pack</h3>
-                        <p class="text-[11px] text-slate-400 mb-3">Starter common players.</p>
-                        <button onclick="buyPack('bronze')" class="mt-auto w-full py-2 bg-amber-700 hover:bg-amber-600 font-sports tracking-wider text-white text-lg rounded-xl transition">
-                            <i class="fa-solid fa-coins"></i> 250 GOLD
+                        <h3 class="font-sports text-xl text-emerald-300">Wildcard Gamble</h3>
+                        <p class="text-[11px] text-slate-400 mb-3">Super cheap! Tiny chance for a 100 OVR GOAT!</p>
+                        <button onclick="buyPack('wildcard')" class="mt-auto w-full py-2 bg-emerald-600 hover:bg-emerald-500 font-sports tracking-wider text-white text-lg rounded-xl transition">
+                            <i class="fa-solid fa-coins"></i> 100 GOLD
                         </button>
                     </div>
 
-                    <!-- Silver Pack -->
+                    <!-- Lock Down Defense Pack -->
+                    <div class="bg-slate-900 border border-cyan-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-cyan-400 transition">
+                        <div class="w-28 h-36 bg-gradient-to-br from-cyan-800 to-slate-900 border-2 border-cyan-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-lg group-hover:scale-105 transition">
+                            <i class="fa-solid fa-lock text-3xl text-cyan-300 mb-1"></i>
+                            <span class="font-sports text-lg text-cyan-100 leading-none">DEFENSE</span>
+                            <span class="text-[9px] text-cyan-200">3 Players</span>
+                        </div>
+                        <h3 class="font-sports text-xl text-cyan-300">Lock Down Pack</h3>
+                        <p class="text-[11px] text-slate-400 mb-3">100% Defensive players (DL, LB, CB, S).</p>
+                        <button onclick="buyPack('lockdown')" class="mt-auto w-full py-2 bg-cyan-600 hover:bg-cyan-500 font-sports tracking-wider text-white text-lg rounded-xl transition">
+                            <i class="fa-solid fa-coins"></i> 1,200 GOLD
+                        </button>
+                    </div>
+
+                    <!-- Ice Pack (WRs / TEs) -->
+                    <div class="bg-slate-900 border border-sky-400 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-sky-300 transition">
+                        <div class="w-28 h-36 bg-gradient-to-br from-sky-600 to-slate-900 border-2 border-sky-300 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-lg group-hover:scale-105 transition">
+                            <i class="fa-solid fa-snowflake text-3xl text-sky-200 mb-1"></i>
+                            <span class="font-sports text-lg text-sky-100 leading-none">ICE PACK</span>
+                            <span class="text-[9px] text-sky-200">3 Players</span>
+                        </div>
+                        <h3 class="font-sports text-xl text-sky-300">Ice Receivers Pack</h3>
+                        <p class="text-[11px] text-slate-400 mb-3">Targeted WR & TE pass catchers.</p>
+                        <button onclick="buyPack('ice')" class="mt-auto w-full py-2 bg-sky-500 hover:bg-sky-400 font-sports tracking-wider text-slate-950 font-bold text-lg rounded-xl transition">
+                            <i class="fa-solid fa-coins"></i> 1,800 GOLD
+                        </button>
+                    </div>
+
+                    <!-- Trench Pack (OL / RB) -->
+                    <div class="bg-slate-900 border border-orange-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-orange-400 transition">
+                        <div class="w-28 h-36 bg-gradient-to-br from-orange-800 to-slate-900 border-2 border-orange-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-lg group-hover:scale-105 transition">
+                            <i class="fa-solid fa-shield text-3xl text-orange-300 mb-1"></i>
+                            <span class="font-sports text-lg text-orange-100 leading-none">TRENCHES</span>
+                            <span class="text-[9px] text-orange-200">3 Players</span>
+                        </div>
+                        <h3 class="font-sports text-xl text-orange-300">Trench Warfare</h3>
+                        <p class="text-[11px] text-slate-400 mb-3">Offensive Linemen & Power Backs.</p>
+                        <button onclick="buyPack('trench')" class="mt-auto w-full py-2 bg-orange-600 hover:bg-orange-500 font-sports tracking-wider text-white text-lg rounded-xl transition">
+                            <i class="fa-solid fa-coins"></i> 1,500 GOLD
+                        </button>
+                    </div>
+
+                    <!-- Standard Pro Pack -->
                     <div class="bg-slate-900 border border-slate-700 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-slate-400 transition">
                         <div class="w-28 h-36 bg-gradient-to-br from-slate-600 to-slate-900 border-2 border-slate-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-lg group-hover:scale-105 transition">
                             <i class="fa-solid fa-box-open text-3xl text-slate-300 mb-1"></i>
-                            <span class="font-sports text-lg text-slate-200 leading-none">SILVER</span>
+                            <span class="font-sports text-lg text-slate-200 leading-none">PRO PACK</span>
                             <span class="text-[9px] text-slate-300">3 Players</span>
                         </div>
-                        <h3 class="font-sports text-xl text-slate-200">Pro Pack</h3>
+                        <h3 class="font-sports text-xl text-slate-200">Standard Pro</h3>
                         <p class="text-[11px] text-slate-400 mb-3">Guaranteed Rare player.</p>
                         <button onclick="buyPack('silver')" class="mt-auto w-full py-2 bg-slate-700 hover:bg-slate-600 font-sports tracking-wider text-white text-lg rounded-xl transition">
                             <i class="fa-solid fa-coins"></i> 750 GOLD
                         </button>
                     </div>
 
-                    <!-- Gold Pack -->
+                    <!-- All-Pro Pack -->
                     <div class="bg-slate-900 border border-amber-500/50 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-amber-400 transition gold-glow">
                         <div class="w-28 h-36 bg-gradient-to-br from-amber-500 to-slate-900 border-2 border-amber-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-lg group-hover:scale-105 transition">
                             <i class="fa-solid fa-box-open text-3xl text-amber-300 mb-1"></i>
-                            <span class="font-sports text-lg text-amber-200 leading-none">GOLD</span>
+                            <span class="font-sports text-lg text-amber-200 leading-none">ALL-PRO</span>
                             <span class="text-[9px] text-amber-300">4 Players</span>
                         </div>
                         <h3 class="font-sports text-xl text-amber-300">All-Pro Pack</h3>
-                        <p class="text-[11px] text-slate-400 mb-3">Guaranteed Epic player.</p>
+                        <p class="text-[11px] text-slate-400 mb-3">Guaranteed Epic or Legendary.</p>
                         <button onclick="buyPack('gold')" class="mt-auto w-full py-2 bg-amber-500 hover:bg-amber-400 font-sports tracking-wider text-slate-950 font-bold text-lg rounded-xl transition">
-                            <i class="fa-solid fa-coins"></i> 2,000 GOLD
+                            <i class="fa-solid fa-coins"></i> 2,500 GOLD
                         </button>
                     </div>
 
-                    <!-- Gridiron Heroes Special Edition -->
-                    <div class="bg-slate-900 border border-blue-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-blue-400 transition">
-                        <div class="w-28 h-36 bg-gradient-to-br from-blue-700 via-indigo-800 to-slate-900 border-2 border-blue-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-lg group-hover:scale-105 transition">
-                            <i class="fa-solid fa-shield text-3xl text-blue-300 mb-1"></i>
-                            <span class="font-sports text-lg text-blue-100 leading-none">HEROES</span>
-                            <span class="text-[9px] text-blue-200">4 Players</span>
-                        </div>
-                        <h3 class="font-sports text-xl text-blue-300">Gridiron Heroes</h3>
-                        <p class="text-[11px] text-slate-400 mb-3">High Epic & Legendary rates.</p>
-                        <button onclick="buyPack('heroes')" class="mt-auto w-full py-2 bg-blue-600 hover:bg-blue-500 font-sports tracking-wider text-white text-lg rounded-xl transition">
-                            <i class="fa-solid fa-coins"></i> 3,500 GOLD
-                        </button>
-                    </div>
-
-                    <!-- Dynasty HOF Pack -->
-                    <div class="bg-slate-900 border border-purple-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-purple-400 transition purple-glow">
-                        <div class="w-28 h-36 bg-gradient-to-br from-purple-700 via-pink-600 to-slate-900 border-2 border-purple-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-lg group-hover:scale-105 transition">
-                            <i class="fa-solid fa-gem text-3xl text-pink-300 mb-1"></i>
-                            <span class="font-sports text-lg text-purple-200 leading-none">DYNASTY</span>
-                            <span class="text-[9px] text-pink-200">5 Players</span>
-                        </div>
-                        <h3 class="font-sports text-xl text-purple-300">Dynasty HOF</h3>
-                        <p class="text-[11px] text-slate-400 mb-3">High Super Rare chance.</p>
-                        <button onclick="buyPack('hof')" class="mt-auto w-full py-2 bg-gradient-to-r from-purple-600 to-pink-600 font-sports tracking-wider text-white text-lg rounded-xl transition">
-                            <i class="fa-solid fa-coins"></i> 5,000 GOLD
-                        </button>
-                    </div>
-
-                    <!-- All-Time Legends Special Pack -->
-                    <div class="bg-slate-900 border border-amber-400 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-amber-300 transition legend-glow">
+                    <!-- All-Time Legends GOAT Pack -->
+                    <div class="bg-slate-900 border border-amber-400 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-amber-300 transition legend-glow col-span-1 sm:col-span-2">
                         <div class="w-28 h-36 card-legend border-2 border-amber-300 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-lg group-hover:scale-105 transition">
                             <i class="fa-solid fa-crown text-3xl text-amber-200 mb-1"></i>
                             <span class="font-sports text-lg text-amber-100 leading-none">ALL-TIME</span>
                             <span class="text-[9px] text-amber-200 font-bold">5 Players</span>
                         </div>
-                        <h3 class="font-sports text-xl text-amber-300">All-Time Legends</h3>
-                        <p class="text-[11px] text-slate-400 mb-3">Insanely rare 99-100 GOATs!</p>
+                        <h3 class="font-sports text-xl text-amber-300">All-Time Legends Pack</h3>
+                        <p class="text-[11px] text-slate-400 mb-3">Highest odds for Brady, Rice, Lawrence Taylor & GOAT variants!</p>
                         <button onclick="buyPack('legends')" class="mt-auto w-full py-2 bg-amber-500 hover:bg-amber-400 font-sports tracking-wider text-slate-950 font-bold text-lg rounded-xl transition">
                             <i class="fa-solid fa-coins"></i> 10,000 GOLD
                         </button>
@@ -239,31 +253,28 @@
                 </button>
             </div>
 
-            <!-- ROSTER & LINEUP VIEW -->
+            <!-- ROSTER VIEW -->
             <section id="view-roster" class="hidden space-y-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-4">
                     <div>
                         <h2 class="text-3xl font-sports tracking-wide uppercase text-white">Active Starting Lineup</h2>
-                        <p class="text-xs text-slate-400">Offense, Defense, and Special Teams determine overall simulation rating.</p>
+                        <p class="text-xs text-slate-400">Slots across Offense, Defense, and Kicker determine simulation power.</p>
                     </div>
                     <button onclick="autoSetBestLineup()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded-xl transition flex items-center gap-2">
                         <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Set Best Lineup
                     </button>
                 </div>
 
-                <!-- OFFENSE -->
                 <div>
                     <h3 class="text-xl font-sports text-amber-400 mb-3 uppercase tracking-wider"><i class="fa-solid fa-football"></i> Offense Lineup</h3>
                     <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3" id="offenseLineupGrid"></div>
                 </div>
 
-                <!-- DEFENSE -->
                 <div>
                     <h3 class="text-xl font-sports text-blue-400 mb-3 uppercase tracking-wider"><i class="fa-solid fa-shield-halved"></i> Defense & Special Teams</h3>
                     <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3" id="defenseLineupGrid"></div>
                 </div>
 
-                <!-- FULL BINDER -->
                 <div class="pt-6 border-t border-slate-800">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                         <h3 class="text-2xl font-sports text-white">Card Binder (<span id="totalCardsCount">0</span>)</h3>
@@ -291,7 +302,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-4">
                     <div>
                         <h2 class="text-3xl font-sports tracking-wide uppercase text-white">Marketplace & Auctions</h2>
-                        <p class="text-xs text-slate-400">Buy players, bid on dynamic auctions, or list your cards where AI buyers will place competing bids!</p>
+                        <p class="text-xs text-slate-400">Buy players, bid on live auctions, or list bench cards for AI buyers to outbid each other!</p>
                     </div>
                     <button onclick="renderMarketplace()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-xl text-slate-300">
                         <i class="fa-solid fa-arrows-rotate mr-1"></i> Refresh Market
@@ -301,10 +312,9 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div class="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="marketListingsGrid"></div>
 
-                    <!-- Sell Sidebar -->
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 h-fit space-y-4">
                         <h3 class="font-sports text-2xl text-white">List or Quick-Sell Card</h3>
-                        <p class="text-xs text-slate-400">Post bench cards to auction. AI buyers will actively outbid each other on your listings over time!</p>
+                        <p class="text-xs text-slate-400">Post bench cards to auction. AI buyers will place bids on your listings!</p>
                         
                         <div id="sellCardSelector" class="space-y-3">
                             <label class="text-xs text-slate-400 block font-semibold">Select Bench Player:</label>
@@ -373,31 +383,28 @@
 
     <script>
         // ==========================================
-        // 1. EXPANDED DATABASE & ALL-TIME LEGENDS
+        // 1. DATABASE (50+ REAL PLAYERS & GOATS)
         // ==========================================
         const CARDS_DATABASE = [
-            // ALL-TIME LEGENDS (100 - 98 OVR)
+            // GOATS (100 OVR)
             { id: "rice_goat", name: "Jerry Rice", team: "San Francisco 49ers", position: "WR", overall: 100, rarity: "All-Time Legend", isSuperRare: true, variantName: "GOAT Edition", basePrice: 100000, color: "#AA0000" },
             { id: "brady_goat", name: "Tom Brady", team: "New England Patriots", position: "QB", overall: 100, rarity: "All-Time Legend", isSuperRare: true, variantName: "GOAT Edition", basePrice: 100000, color: "#002244" },
             { id: "lt_goat", name: "Lawrence Taylor", team: "New York Giants", position: "LB", overall: 100, rarity: "All-Time Legend", isSuperRare: true, variantName: "GOAT Edition", basePrice: 100000, color: "#0B2265" },
             { id: "moss_legend", name: "Randy Moss", team: "Minnesota Vikings", position: "WR", overall: 99, rarity: "All-Time Legend", isSuperRare: true, variantName: "Freak Edition", basePrice: 85000, color: "#4F2683" },
             { id: "sanders_barry", name: "Barry Sanders", team: "Detroit Lions", position: "RB", overall: 99, rarity: "All-Time Legend", isSuperRare: true, variantName: "Hall of Fame", basePrice: 85000, color: "#0076B6" },
             { id: "manning_peyton", name: "Peyton Manning", team: "Indianapolis Colts", position: "QB", overall: 99, rarity: "All-Time Legend", isSuperRare: false, variantName: "Hall of Fame", basePrice: 75000, color: "#002C5F" },
-            { id: "white_reggie", name: "Reggie White", team: "Green Bay Packers", position: "DL", overall: 99, rarity: "All-Time Legend", isSuperRare: false, variantName: "Minister of Defense", basePrice: 75000, color: "#203731" },
             { id: "deion_sanders", name: "Deion Sanders", team: "Dallas Cowboys", position: "CB", overall: 99, rarity: "All-Time Legend", isSuperRare: true, variantName: "Prime Time", basePrice: 85000, color: "#003594" },
-            { id: "munoz_anthony", name: "Anthony Muñoz", team: "Cincinnati Bengals", position: "OL", overall: 99, rarity: "All-Time Legend", isSuperRare: false, variantName: "Hall of Fame", basePrice: 70000, color: "#FB4F14" },
             { id: "lewis_ray", name: "Ray Lewis", team: "Baltimore Ravens", position: "LB", overall: 99, rarity: "All-Time Legend", isSuperRare: false, variantName: "Hall of Fame", basePrice: 75000, color: "#241773" },
             { id: "gronkowski_rob", name: "Rob Gronkowski", team: "New England Patriots", position: "TE", overall: 98, rarity: "All-Time Legend", isSuperRare: false, variantName: "Gronk Spike", basePrice: 65000, color: "#002244" },
-            { id: "vinatieri_adam", name: "Adam Vinatieri", team: "Indianapolis Colts", position: "K", overall: 96, rarity: "All-Time Legend", isSuperRare: false, variantName: "Clutch Legend", basePrice: 40000, color: "#002C5F" },
 
-            // CURRENT SUPERSTARS & LEGENDARIES (99 - 96 OVR)
+            // LEGENDARIES & SUPER RARES (99 - 96 OVR)
             { id: "mahomes_base", name: "Patrick Mahomes", team: "Kansas City Chiefs", position: "QB", overall: 99, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 12000, color: "#E31837" },
             { id: "mahomes_sr_galaxy", name: "Patrick Mahomes", team: "Kansas City Chiefs", position: "QB", overall: 99, rarity: "Super Rare", isSuperRare: true, variantName: "Galaxy Animated", basePrice: 55000, color: "#E31837" },
             { id: "jefferson_base", name: "Justin Jefferson", team: "Minnesota Vikings", position: "WR", overall: 98, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 10000, color: "#4F2683" },
-            { id: "jefferson_sr_griddy", name: "Justin Jefferson", team: "Minnesota Vikings", position: "WR", overall: 98, rarity: "Super Rare", isSuperRare: true, variantName: "Griddy Holo", basePrice: 45000, color: "#4F2683" },
             { id: "mccaffrey_base", name: "Christian McCaffrey", team: "San Francisco 49ers", position: "RB", overall: 98, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 10500, color: "#AA0000" },
             { id: "trent_williams", name: "Trent Williams", team: "San Francisco 49ers", position: "OL", overall: 98, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 9500, color: "#AA0000" },
             { id: "fred_warner", name: "Fred Warner", team: "San Francisco 49ers", position: "LB", overall: 97, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 9000, color: "#AA0000" },
+            { id: "chris_jones", name: "Chris Jones", team: "Kansas City Chiefs", position: "DL", overall: 97, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 8800, color: "#E31837" },
             { id: "sauce_sr", name: "Sauce Gardner", team: "New York Jets", position: "CB", overall: 96, rarity: "Super Rare", isSuperRare: true, variantName: "Island Edition", basePrice: 38000, color: "#125740" },
 
             // EPICS (95 - 91 OVR)
@@ -408,8 +415,7 @@
             { id: "parsons_epic", name: "Micah Parsons", team: "Dallas Cowboys", position: "LB", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 5500, color: "#003594" },
             { id: "bosa_epic", name: "Nick Bosa", team: "San Francisco 49ers", position: "DL", overall: 93, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 4800, color: "#AA0000" },
             { id: "lane_johnson", name: "Lane Johnson", team: "Philadelphia Eagles", position: "OL", overall: 93, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 4500, color: "#004C54" },
-            { id: "winfield_safety", name: "Antoine Winfield Jr", team: "Tampa Bay Buccaneers", position: "S", overall: 92, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 4200, color: "#D50A0A" },
-            { id: "kittle_epic", name: "George Kittle", team: "San Francisco 49ers", position: "TE", overall: 92, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 4100, color: "#AA0000" },
+            { id: "tj_watt", name: "T.J. Watt", team: "Pittsburgh Steelers", position: "LB", overall: 95, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 6200, color: "#FFB612" },
 
             // RARES (90 - 86 OVR)
             { id: "stroud_rare", name: "C.J. Stroud", team: "Houston Texans", position: "QB", overall: 89, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2500, color: "#03202F" },
@@ -418,14 +424,12 @@
             { id: "tucker_rare", name: "Justin Tucker", team: "Baltimore Ravens", position: "K", overall: 89, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2200, color: "#241773" },
             { id: "wirfs_ol", name: "Tristan Wirfs", team: "Tampa Bay Buccaneers", position: "OL", overall: 88, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2000, color: "#D50A0A" },
             { id: "surtain_cb", name: "Patrick Surtain II", team: "Denver Broncos", position: "CB", overall: 90, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2900, color: "#FB4F14" },
-            { id: "minkah_s", name: "Minkah Fitzpatrick", team: "Pittsburgh Steelers", position: "S", overall: 88, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2100, color: "#FFB612" },
 
             // COMMONS (85 - 80 OVR)
             { id: "purdy_common", name: "Brock Purdy", team: "San Francisco 49ers", position: "QB", overall: 85, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 900, color: "#AA0000" },
             { id: "puka_common", name: "Puka Nacua", team: "Los Angeles Rams", position: "WR", overall: 85, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 950, color: "#003594" },
             { id: "love_common", name: "Jordan Love", team: "Green Bay Packers", position: "QB", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 800, color: "#203731" },
             { id: "williams_common", name: "Caleb Williams", team: "Chicago Bears", position: "QB", overall: 82, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 700, color: "#0B162A" },
-            { id: "harrison_common", name: "Marvin Harrison Jr", team: "Arizona Cardinals", position: "WR", overall: 83, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 750, color: "#97233F" },
             { id: "common_ol_1", name: "Tyler Smith", team: "Dallas Cowboys", position: "OL", overall: 83, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 600, color: "#003594" },
             { id: "common_dl_1", name: "Jalen Carter", team: "Philadelphia Eagles", position: "DL", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 700, color: "#004C54" },
             { id: "common_lb_1", name: "Patrick Queen", team: "Pittsburgh Steelers", position: "LB", overall: 82, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 650, color: "#FFB612" },
@@ -469,7 +473,7 @@
         ];
 
         // ==========================================
-        // 2. GAME STATE
+        // 2. STATE & INIT
         // ==========================================
         let gameState = {
             selectedTeam: null,
@@ -490,14 +494,14 @@
         let binderFilter = 'ALL';
         let tempSelectedTeam = null;
 
-        window.addEventListener('DOMContentLoaded', () => {
-            if (!loadSavedGame()) {
-                renderTeamSelectModal();
-            } else {
+        window.onload = function() {
+            renderTeamSelectModal();
+            if (loadSavedGame() && gameState.selectedTeam) {
+                document.getElementById('teamSelectModal').classList.add('hidden');
                 initMainApp();
             }
             startAIBiddingLoop();
-        });
+        };
 
         // ==========================================
         // 3. TEAM SELECT MODAL
@@ -518,7 +522,6 @@
                 `;
                 grid.appendChild(btn);
             });
-            document.getElementById('teamSelectModal').classList.remove('hidden');
         }
 
         function selectTeamOption(team, element) {
@@ -551,7 +554,7 @@
         }
 
         // ==========================================
-        // 4. MAIN APP INITIALIZATION
+        // 4. MAIN APP LOGIC
         // ==========================================
         function initMainApp() {
             document.getElementById('mainApp').classList.remove('hidden');
@@ -601,21 +604,38 @@
         }
 
         // ==========================================
-        // 5. PACK PURCHASING & REVEAL SYSTEM
+        // 5. PACK PURCHASING
         // ==========================================
         function buyPack(type) {
             let cost = 0, cardCount = 3;
+            let filterPos = null;
             let chances = { common: 0.70, rare: 0.25, epic: 0.04, legendary: 0.01, sr: 0.00, legend: 0.00 };
 
-            if (type === 'bronze') { cost = 250; cardCount = 3; chances = { common: 0.80, rare: 0.18, epic: 0.02, legendary: 0.00, sr: 0.00, legend: 0.00 }; }
-            else if (type === 'silver') { cost = 750; cardCount = 3; chances = { common: 0.40, rare: 0.50, epic: 0.08, legendary: 0.02, sr: 0.00, legend: 0.00 }; }
-            else if (type === 'gold') { cost = 2000; cardCount = 4; chances = { common: 0.10, rare: 0.50, epic: 0.32, legendary: 0.06, sr: 0.02, legend: 0.00 }; }
-            else if (type === 'heroes') { cost = 3500; cardCount = 4; chances = { common: 0.00, rare: 0.30, epic: 0.50, legendary: 0.15, sr: 0.04, legend: 0.01 }; }
-            else if (type === 'hof') { cost = 5000; cardCount = 5; chances = { common: 0.00, rare: 0.15, epic: 0.45, legendary: 0.25, sr: 0.12, legend: 0.03 }; }
-            else if (type === 'legends') { cost = 10000; cardCount = 5; chances = { common: 0.00, rare: 0.00, epic: 0.20, legendary: 0.35, sr: 0.25, legend: 0.20 }; }
+            if (type === 'wildcard') {
+                cost = 100; cardCount = 1;
+                chances = { common: 0.92, rare: 0.05, epic: 0.02, legendary: 0.005, sr: 0.003, legend: 0.002 };
+            } else if (type === 'lockdown') {
+                cost = 1200; cardCount = 3; filterPos = ['DL', 'LB', 'CB', 'S'];
+                chances = { common: 0.30, rare: 0.50, epic: 0.15, legendary: 0.04, sr: 0.01, legend: 0.00 };
+            } else if (type === 'ice') {
+                cost = 1800; cardCount = 3; filterPos = ['WR', 'TE'];
+                chances = { common: 0.20, rare: 0.50, epic: 0.22, legendary: 0.06, sr: 0.02, legend: 0.00 };
+            } else if (type === 'trench') {
+                cost = 1500; cardCount = 3; filterPos = ['OL', 'RB'];
+                chances = { common: 0.30, rare: 0.45, epic: 0.20, legendary: 0.04, sr: 0.01, legend: 0.00 };
+            } else if (type === 'silver') {
+                cost = 750; cardCount = 3;
+                chances = { common: 0.40, rare: 0.50, epic: 0.08, legendary: 0.02, sr: 0.00, legend: 0.00 };
+            } else if (type === 'gold') {
+                cost = 2500; cardCount = 4;
+                chances = { common: 0.05, rare: 0.45, epic: 0.38, legendary: 0.08, sr: 0.03, legend: 0.01 };
+            } else if (type === 'legends') {
+                cost = 10000; cardCount = 5;
+                chances = { common: 0.00, rare: 0.00, epic: 0.20, legendary: 0.35, sr: 0.25, legend: 0.20 };
+            }
 
             if (gameState.gold < cost) {
-                alert("Not enough gold to purchase this pack!");
+                alert("Not enough gold for this pack!");
                 return;
             }
 
@@ -624,7 +644,7 @@
 
             const pulledCards = [];
             for (let i = 0; i < cardCount; i++) {
-                pulledCards.push(rollRandomCard(chances));
+                pulledCards.push(rollRandomCard(chances, filterPos));
             }
 
             pulledCards.forEach(c => {
@@ -637,7 +657,7 @@
             triggerPackRevealAnimation(pulledCards, type.toUpperCase());
         }
 
-        function rollRandomCard(chances) {
+        function rollRandomCard(chances, filterPos) {
             const rand = Math.random();
             let targetRarity = 'Common';
 
@@ -648,6 +668,10 @@
             else if (rand < chances.legend + chances.sr + chances.legendary + chances.epic + chances.rare) targetRarity = 'Rare';
 
             let pool = CARDS_DATABASE.filter(c => c.rarity === targetRarity);
+            if (filterPos) {
+                let posPool = pool.filter(c => filterPos.includes(c.position));
+                if (posPool.length > 0) pool = posPool;
+            }
             if (pool.length === 0) pool = CARDS_DATABASE;
 
             return pool[Math.floor(Math.random() * pool.length)];
@@ -693,9 +717,6 @@
             document.getElementById('packRevealOverlay').classList.add('hidden');
         }
 
-        // ==========================================
-        // 6. CARD UI RENDERERS
-        // ==========================================
         function getCardBorderClass(card) {
             if (card.rarity === 'All-Time Legend') return "border-amber-300 card-legend legend-glow text-white";
             if (card.isSuperRare) return "border-pink-500 card-super-rare sr-glow text-white";
@@ -727,7 +748,7 @@
         }
 
         // ==========================================
-        // 7. ROSTER & BINDER MANAGEMENT
+        // 6. ROSTER VIEWS
         // ==========================================
         function renderRosterView() {
             const offGrid = document.getElementById('offenseLineupGrid');
@@ -854,7 +875,7 @@
         }
 
         // ==========================================
-        // 8. DYNAMIC MARKETPLACE & WORKING AI BIDS
+        // 7. MARKETPLACE & AI BOT AUCTIONS
         // ==========================================
         function generateMarketplaceAuctions() {
             if (gameState.marketAuctions.length > 0) return;
@@ -1002,14 +1023,12 @@
             alert(`Quick sold ${card.name} for ${sellPrice} Gold!`);
         }
 
-        // AI Bidding Loop for Active Auctions
         function startAIBiddingLoop() {
             setInterval(() => {
                 if (!gameState.marketAuctions || gameState.marketAuctions.length === 0) return;
 
                 let updated = false;
                 gameState.marketAuctions.forEach((auction, idx) => {
-                    // Random chance for AI to bid
                     if (Math.random() < 0.35) {
                         const increment = Math.round(auction.currentBid * 0.1) || 50;
                         if (auction.currentBid + increment < auction.buyoutPrice) {
@@ -1017,7 +1036,6 @@
                             auction.highBidder = "AI_Manager_" + Math.floor(Math.random() * 99);
                             updated = true;
                         } else if (auction.seller === "YOU") {
-                            // AI Buyout on user card!
                             gameState.gold += auction.buyoutPrice;
                             gameState.marketAuctions.splice(idx, 1);
                             updated = true;
@@ -1035,7 +1053,7 @@
         }
 
         // ==========================================
-        // 9. GAME SIMULATOR
+        // 8. SIMULATOR
         // ==========================================
         function renderSimView() {
             document.getElementById('simMyTeamBadge').style.backgroundColor = gameState.selectedTeam.color;
@@ -1115,7 +1133,7 @@
         }
 
         // ==========================================
-        // 10. SAVING & LOCAL STORAGE
+        // 9. LOCAL STORAGE
         // ==========================================
         function saveGameState() {
             localStorage.setItem('nfl_card_game_save', JSON.stringify(gameState));
@@ -1136,7 +1154,7 @@
 
         function manualSave() {
             saveGameState();
-            alert("Game progress saved to local storage!");
+            alert("Game progress saved to browser storage!");
         }
 
         function resetGame() {
