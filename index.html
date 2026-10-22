@@ -30,48 +30,77 @@
     </script>
 
     <style>
-        /* AUTHENTIC MUT CARD ART (NO ROUNDED CORNERS) */
-        .mut-card-box {
-            border-radius: 0px !important;
+        /* MADDEN ULTIMATE TEAM CARD ART EFFECTS */
+        .mut-card-goat {
+            background: linear-gradient(135deg, #111827 0%, #451a03 50%, #000000 100%);
+            border: 2px solid #f59e0b;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.6), inset 0 0 15px rgba(251, 191, 36, 0.4);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
-            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
         }
-        .mut-card-box:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.9);
+        .mut-card-goat::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent 45%, rgba(255, 215, 0, 0.3) 50%, transparent 55%);
+            animation: mutShine 4s infinite linear;
         }
 
-        .mut-bg-goat {
-            background: linear-gradient(135deg, #0f172a 0%, #451a03 50%, #000000 100%);
-            border: 2px solid #f59e0b;
-        }
-        .mut-bg-sr {
+        .mut-card-sr {
             background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #831843 100%);
             border: 2px solid #ec4899;
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.7), inset 0 0 10px rgba(168, 85, 247, 0.5);
+            position: relative;
+            overflow: hidden;
         }
-        .mut-bg-legendary {
+        .mut-card-sr::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(135deg, transparent 40%, rgba(236, 72, 153, 0.4) 50%, rgba(56, 189, 248, 0.4) 60%, transparent 70%);
+            animation: mutShine 3s infinite ease-in-out;
+        }
+
+        .mut-card-legendary {
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #020617 100%);
             border: 2px solid #eab308;
+            box-shadow: 0 0 15px rgba(234, 179, 8, 0.5);
         }
-        .mut-bg-epic {
+
+        .mut-card-epic {
             background: linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #020617 100%);
             border: 2px solid #a855f7;
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.5);
         }
-        .mut-bg-rare {
+
+        .mut-card-rare {
             background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #020617 100%);
             border: 2px solid #3b82f6;
         }
-        .mut-bg-common {
+
+        .mut-card-common {
             background: linear-gradient(135deg, #0f172a 0%, #334155 50%, #020617 100%);
             border: 2px solid #64748b;
         }
 
-        .vertical-text {
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            transform: rotate(180deg);
+        @keyframes mutShine {
+            0% { transform: translateY(-100%) rotate(45deg); }
+            100% { transform: translateY(100%) rotate(45deg); }
+        }
+
+        /* CARD BURST FLIP REVEALS */
+        .reveal-legend-burst { animation: legendBurst 0.8s ease-out forwards; }
+        @keyframes legendBurst {
+            0% { transform: scale(0.8) rotateY(180deg); box-shadow: 0 0 0 rgba(234, 179, 8, 0); }
+            50% { transform: scale(1.15) rotateY(180deg); box-shadow: 0 0 60px rgba(234, 179, 8, 1), 0 0 100px rgba(239, 68, 68, 0.8); }
+            100% { transform: scale(1) rotateY(180deg); box-shadow: 0 0 25px rgba(234, 179, 8, 0.8); }
+        }
+
+        .reveal-sr-burst { animation: srBurst 0.8s ease-out forwards; }
+        @keyframes srBurst {
+            0% { transform: scale(0.8) rotateY(180deg); box-shadow: 0 0 0 rgba(236, 72, 153, 0); }
+            50% { transform: scale(1.1) rotateY(180deg); box-shadow: 0 0 50px rgba(236, 72, 153, 1), 0 0 80px rgba(168, 85, 247, 0.8); }
+            100% { transform: scale(1) rotateY(180deg); box-shadow: 0 0 20px rgba(236, 72, 153, 0.8); }
         }
 
         .perspective-1000 { perspective: 1000px; }
@@ -88,7 +117,7 @@
 
     <!-- TEAM SELECTION MODAL -->
     <div id="teamSelectModal" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-700 max-w-4xl w-full p-6 shadow-2xl flex flex-col max-h-[90vh]">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full p-6 shadow-2xl flex flex-col max-h-[90vh]">
             <div class="text-center mb-6">
                 <i class="fa-solid fa-football text-nflRed text-5xl mb-2"></i>
                 <h1 class="text-4xl font-sports tracking-wider uppercase text-white">Choose Your Franchise</h1>
@@ -98,7 +127,7 @@
             <div id="teamGrid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3 overflow-y-auto p-2 flex-grow min-h-[300px]"></div>
 
             <div class="mt-6 text-center">
-                <button id="confirmTeamBtn" disabled onclick="confirmTeamSelection()" class="bg-nflRed disabled:opacity-40 disabled:cursor-not-allowed hover:bg-red-700 text-white font-bold py-3 px-8 uppercase tracking-widest text-lg font-sports shadow-lg">
+                <button id="confirmTeamBtn" disabled onclick="confirmTeamSelection()" class="bg-nflRed disabled:opacity-40 disabled:cursor-not-allowed hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl transition uppercase tracking-widest text-lg font-sports shadow-lg">
                     Start Franchise
                 </button>
             </div>
@@ -119,14 +148,7 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-4 bg-slate-950 px-4 py-2 border border-slate-800">
-                    <div class="flex items-center gap-2">
-                        <div class="bg-amber-500 text-slate-950 font-sports font-bold px-2 py-0.5 text-lg leading-none" id="userLevelDisplay">LVL 1</div>
-                        <div class="w-24 bg-slate-800 h-2.5 overflow-hidden border border-slate-700">
-                            <div id="xpBarFill" class="bg-amber-400 h-full transition-all duration-300" style="width: 0%"></div>
-                        </div>
-                    </div>
-                    <div class="h-6 w-px bg-slate-800"></div>
+                <div class="flex items-center gap-6 bg-slate-950 px-4 py-2 rounded-xl border border-slate-800">
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-coins text-amber-400 text-lg"></i>
                         <span id="goldDisplay" class="font-sports text-2xl text-amber-400">1,500</span>
@@ -136,21 +158,24 @@
                         <i class="fa-solid fa-shield-halved text-nflRed text-lg"></i>
                         <span id="teamOvrDisplay" class="font-sports text-2xl text-white">60 OVR</span>
                     </div>
+                    <div class="h-6 w-px bg-slate-800"></div>
+                    <div class="text-xs text-slate-400">
+                        Record: <span id="recordDisplay" class="text-white font-bold">0-0</span>
+                    </div>
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <nav class="flex bg-slate-950 p-1 border border-slate-800 text-sm">
-                        <button onclick="switchTab('packs')" id="tab-packs" class="px-3 py-1.5 font-semibold transition active-tab text-amber-400 bg-slate-800">Packs</button>
-                        <button onclick="switchTab('roster')" id="tab-roster" class="px-3 py-1.5 font-semibold transition text-slate-400 hover:text-white">Roster</button>
-                        <button onclick="switchTab('market')" id="tab-market" class="px-3 py-1.5 font-semibold transition text-slate-400 hover:text-white">Marketplace</button>
-                        <button onclick="switchTab('skills')" id="tab-skills" class="px-3 py-1.5 font-semibold transition text-slate-400 hover:text-white">Skills & Rewards</button>
-                        <button onclick="switchTab('sim')" id="tab-sim" class="px-3 py-1.5 font-semibold transition text-slate-400 hover:text-white">Sim Game</button>
+                    <nav class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-sm">
+                        <button onclick="switchTab('packs')" id="tab-packs" class="px-3 py-1.5 rounded-lg font-semibold transition active-tab text-amber-400 bg-slate-800">Packs</button>
+                        <button onclick="switchTab('roster')" id="tab-roster" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white">Roster</button>
+                        <button onclick="switchTab('market')" id="tab-market" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white">Marketplace</button>
+                        <button onclick="switchTab('sim')" id="tab-sim" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white">Sim Game</button>
                     </nav>
 
-                    <button onclick="manualSave()" title="Save Game" class="bg-slate-800 hover:bg-slate-700 text-slate-300 p-2 border border-slate-700 transition">
+                    <button onclick="manualSave()" title="Save Game" class="bg-slate-800 hover:bg-slate-700 text-slate-300 p-2 rounded-xl border border-slate-700 transition">
                         <i class="fa-solid fa-floppy-disk"></i>
                     </button>
-                    <button onclick="resetGame()" title="Reset Game" class="bg-red-950/60 hover:bg-red-900 text-red-400 p-2 border border-red-900/50 transition">
+                    <button onclick="resetGame()" title="Reset Game" class="bg-red-950/60 hover:bg-red-900 text-red-400 p-2 rounded-xl border border-red-900/50 transition">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
@@ -168,75 +193,128 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="bg-slate-900 border border-emerald-500/60 p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-emerald-400 transition">
-                        <div class="w-32 h-44 bg-gradient-to-br from-emerald-800 via-teal-900 to-slate-950 border-2 border-emerald-400 flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
+                    <!-- Wildcard Gamble Pack -->
+                    <div class="bg-slate-900 border border-emerald-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-emerald-400 transition">
+                        <div class="w-32 h-44 bg-gradient-to-br from-emerald-800 via-teal-900 to-slate-950 border-2 border-emerald-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-dice text-4xl text-emerald-300 mb-2"></i>
                             <span class="font-sports text-xl text-emerald-100 leading-none">GAMBLE</span>
                             <span class="text-[9px] text-emerald-200 uppercase font-bold mt-1">1 Card Pull</span>
                         </div>
                         <h3 class="font-sports text-2xl text-emerald-300">Wildcard Gamble</h3>
                         <p class="text-[11px] text-slate-400 mb-3">Super cheap! Tiny chance for a 100 OVR GOAT!</p>
-                        <button onclick="buyPack('wildcard')" class="mt-auto w-full py-2 bg-emerald-600 hover:bg-emerald-500 font-sports tracking-wider text-white text-lg transition">
+                        <button onclick="buyPack('wildcard')" class="mt-auto w-full py-2 bg-emerald-600 hover:bg-emerald-500 font-sports tracking-wider text-white text-lg rounded-xl transition">
                             <i class="fa-solid fa-coins"></i> 100 GOLD
                         </button>
                     </div>
 
-                    <div class="bg-slate-900 border border-cyan-500/60 p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-cyan-400 transition">
-                        <div class="w-32 h-44 bg-gradient-to-br from-cyan-800 via-blue-950 to-slate-950 border-2 border-cyan-400 flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
+                    <!-- Lock Down Defense Pack -->
+                    <div class="bg-slate-900 border border-cyan-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-cyan-400 transition">
+                        <div class="w-32 h-44 bg-gradient-to-br from-cyan-800 via-blue-950 to-slate-950 border-2 border-cyan-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-lock text-4xl text-cyan-300 mb-2"></i>
                             <span class="font-sports text-xl text-cyan-100 leading-none">LOCK DOWN</span>
                             <span class="text-[9px] text-cyan-200 uppercase font-bold mt-1">3 Defense Cards</span>
                         </div>
                         <h3 class="font-sports text-2xl text-cyan-300">Lock Down Pack</h3>
                         <p class="text-[11px] text-slate-400 mb-3">100% Defensive stars (DL, LB, CB, S).</p>
-                        <button onclick="buyPack('lockdown')" class="mt-auto w-full py-2 bg-cyan-600 hover:bg-cyan-500 font-sports tracking-wider text-white text-lg transition">
+                        <button onclick="buyPack('lockdown')" class="mt-auto w-full py-2 bg-cyan-600 hover:bg-cyan-500 font-sports tracking-wider text-white text-lg rounded-xl transition">
                             <i class="fa-solid fa-coins"></i> 1,200 GOLD
                         </button>
                     </div>
 
-                    <div class="bg-slate-900 border border-sky-400 p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-sky-300 transition">
-                        <div class="w-32 h-44 bg-gradient-to-br from-sky-600 via-indigo-900 to-slate-950 border-2 border-sky-300 flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
+                    <!-- Ice Pack (WRs / TEs) -->
+                    <div class="bg-slate-900 border border-sky-400 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-sky-300 transition">
+                        <div class="w-32 h-44 bg-gradient-to-br from-sky-600 via-indigo-900 to-slate-950 border-2 border-sky-300 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-snowflake text-4xl text-sky-200 mb-2"></i>
                             <span class="font-sports text-xl text-sky-100 leading-none">ICE PACK</span>
                             <span class="text-[9px] text-sky-200 uppercase font-bold mt-1">3 Receiver Cards</span>
                         </div>
                         <h3 class="font-sports text-2xl text-sky-300">Ice Receivers</h3>
                         <p class="text-[11px] text-slate-400 mb-3">Targeted elite WR & TE pass catchers.</p>
-                        <button onclick="buyPack('ice')" class="mt-auto w-full py-2 bg-sky-500 hover:bg-sky-400 font-sports tracking-wider text-slate-950 font-bold text-lg transition">
+                        <button onclick="buyPack('ice')" class="mt-auto w-full py-2 bg-sky-500 hover:bg-sky-400 font-sports tracking-wider text-slate-950 font-bold text-lg rounded-xl transition">
                             <i class="fa-solid fa-coins"></i> 1,800 GOLD
                         </button>
                     </div>
 
-                    <div class="bg-slate-900 border border-amber-400 p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-amber-300 transition">
-                        <div class="w-32 h-44 mut-bg-goat border-2 border-amber-300 flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
+                    <!-- Rookie Phenoms Pack -->
+                    <div class="bg-slate-900 border border-purple-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-purple-400 transition">
+                        <div class="w-32 h-44 bg-gradient-to-br from-purple-800 via-indigo-950 to-slate-950 border-2 border-purple-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
+                            <i class="fa-solid fa-graduation-cap text-4xl text-purple-300 mb-2"></i>
+                            <span class="font-sports text-xl text-purple-100 leading-none">ROOKIES</span>
+                            <span class="text-[9px] text-purple-200 uppercase font-bold mt-1">3 Young Stars</span>
+                        </div>
+                        <h3 class="font-sports text-2xl text-purple-300">Rookie Phenoms</h3>
+                        <p class="text-[11px] text-slate-400 mb-3">Young draft talent & rising phenoms.</p>
+                        <button onclick="buyPack('rookies')" class="mt-auto w-full py-2 bg-purple-600 hover:bg-purple-500 font-sports tracking-wider text-white text-lg rounded-xl transition">
+                            <i class="fa-solid fa-coins"></i> 1,400 GOLD
+                        </button>
+                    </div>
+
+                    <!-- Trench Pack (OL / RB) -->
+                    <div class="bg-slate-900 border border-orange-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-orange-400 transition">
+                        <div class="w-32 h-44 bg-gradient-to-br from-orange-800 via-stone-900 to-slate-950 border-2 border-orange-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
+                            <i class="fa-solid fa-shield text-4xl text-orange-300 mb-2"></i>
+                            <span class="font-sports text-xl text-orange-100 leading-none">TRENCHES</span>
+                            <span class="text-[9px] text-orange-200 uppercase font-bold mt-1">3 OL / RB Cards</span>
+                        </div>
+                        <h3 class="font-sports text-2xl text-orange-300">Trench Warfare</h3>
+                        <p class="text-[11px] text-slate-400 mb-3">Offensive Linemen & Power Backs.</p>
+                        <button onclick="buyPack('trench')" class="mt-auto w-full py-2 bg-orange-600 hover:bg-orange-500 font-sports tracking-wider text-white text-lg rounded-xl transition">
+                            <i class="fa-solid fa-coins"></i> 1,500 GOLD
+                        </button>
+                    </div>
+
+                    <!-- Standard Pro Pack -->
+                    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-slate-400 transition">
+                        <div class="w-32 h-44 bg-gradient-to-br from-slate-600 to-slate-950 border-2 border-slate-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
+                            <i class="fa-solid fa-box-open text-4xl text-slate-300 mb-2"></i>
+                            <span class="font-sports text-xl text-slate-200 leading-none">PRO PACK</span>
+                            <span class="text-[9px] text-slate-300 uppercase font-bold mt-1">3 Cards</span>
+                        </div>
+                        <h3 class="font-sports text-2xl text-slate-200">Standard Pro</h3>
+                        <p class="text-[11px] text-slate-400 mb-3">Guaranteed Rare player.</p>
+                        <button onclick="buyPack('silver')" class="mt-auto w-full py-2 bg-slate-700 hover:bg-slate-600 font-sports tracking-wider text-white text-lg rounded-xl transition">
+                            <i class="fa-solid fa-coins"></i> 750 GOLD
+                        </button>
+                    </div>
+
+                    <!-- All-Pro Pack -->
+                    <div class="bg-slate-900 border border-amber-500/50 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-amber-400 transition">
+                        <div class="w-32 h-44 bg-gradient-to-br from-amber-500 via-amber-700 to-slate-950 border-2 border-amber-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
+                            <i class="fa-solid fa-box-open text-4xl text-amber-300 mb-2"></i>
+                            <span class="font-sports text-xl text-amber-200 leading-none">ALL-PRO</span>
+                            <span class="text-[9px] text-amber-300 uppercase font-bold mt-1">4 Cards</span>
+                        </div>
+                        <h3 class="font-sports text-2xl text-amber-300">All-Pro Pack</h3>
+                        <p class="text-[11px] text-slate-400 mb-3">Guaranteed Epic or Legendary.</p>
+                        <button onclick="buyPack('gold')" class="mt-auto w-full py-2 bg-amber-500 hover:bg-amber-400 font-sports tracking-wider text-slate-950 font-bold text-lg rounded-xl transition">
+                            <i class="fa-solid fa-coins"></i> 2,500 GOLD
+                        </button>
+                    </div>
+
+                    <!-- All-Time Legends GOAT Pack -->
+                    <div class="bg-slate-900 border border-amber-400 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-amber-300 transition">
+                        <div class="w-32 h-44 mut-card-goat border-2 border-amber-300 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-crown text-4xl text-amber-200 mb-2"></i>
                             <span class="font-sports text-xl text-amber-100 leading-none">ALL-TIME</span>
                             <span class="text-[9px] text-amber-200 uppercase font-bold mt-1">5 GOAT Cards</span>
                         </div>
                         <h3 class="font-sports text-2xl text-amber-300">All-Time Legends</h3>
                         <p class="text-[11px] text-slate-400 mb-3">Highest odds for Brady, Rice & 100 OVR GOATs!</p>
-                        <button onclick="buyPack('legends')" class="mt-auto w-full py-2 bg-amber-500 hover:bg-amber-400 font-sports tracking-wider text-slate-950 font-bold text-lg transition">
+                        <button onclick="buyPack('legends')" class="mt-auto w-full py-2 bg-amber-500 hover:bg-amber-400 font-sports tracking-wider text-slate-950 font-bold text-lg rounded-xl transition">
                             <i class="fa-solid fa-coins"></i> 10,000 GOLD
                         </button>
                     </div>
                 </div>
             </section>
 
-            <!-- PACK SWIPE / OPEN OVERLAY -->
+            <!-- PACK OPENING OVERLAY -->
             <div id="packRevealOverlay" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl hidden flex flex-col items-center justify-center p-4">
-                <h2 class="text-3xl font-sports text-slate-400 uppercase tracking-widest mb-2" id="packOpeningTitle">Pack Opening</h2>
-                
-                <div id="swipePackStage" class="my-6 relative w-64 h-96 bg-gradient-to-br from-amber-500 via-amber-700 to-slate-900 border-4 border-amber-300 shadow-2xl flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-300">
-                    <i class="fa-solid fa-box-open text-6xl text-amber-200 mb-3 animate-bounce"></i>
-                    <span class="font-sports text-3xl text-white font-bold tracking-wider uppercase">PACK READY</span>
-                    <button onclick="ripOpenPackNow()" class="mt-4 px-6 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-sports text-xl font-bold tracking-wider uppercase transition">
-                        RIP OPEN PACK
-                    </button>
-                </div>
+                <h2 class="text-3xl font-sports text-slate-400 uppercase tracking-widest mb-2" id="packOpeningTitle">Opening Pack...</h2>
+                <p class="text-slate-500 text-sm mb-6">Click cards to reveal your pulled players</p>
 
-                <div id="revealedCardsContainer" class="hidden flex flex-wrap justify-center gap-4 max-w-6xl w-full my-4"></div>
+                <div id="revealedCardsContainer" class="flex flex-wrap justify-center gap-4 max-w-6xl w-full my-4"></div>
 
-                <button id="closePackBtn" onclick="closePackModal()" class="hidden mt-6 px-8 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-sports text-2xl font-bold shadow-xl transition">
+                <button id="closePackBtn" onclick="closePackModal()" class="hidden mt-6 px-8 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-sports text-2xl font-bold rounded-xl shadow-xl transition">
                     Collect All Cards
                 </button>
             </div>
@@ -248,7 +326,7 @@
                         <h2 class="text-3xl font-sports tracking-wide uppercase text-white">Active Starting Lineup</h2>
                         <p class="text-xs text-slate-400">Slots across Offense, Defense, and Kicker determine simulation power.</p>
                     </div>
-                    <button onclick="autoSetBestLineup()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold transition flex items-center gap-2">
+                    <button onclick="autoSetBestLineup()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded-xl transition flex items-center gap-2">
                         <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Set Best Lineup
                     </button>
                 </div>
@@ -267,17 +345,17 @@
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                         <h3 class="text-2xl font-sports text-white">Card Binder (<span id="totalCardsCount">0</span>)</h3>
                         <div class="flex flex-wrap items-center gap-2 text-xs" id="binderFilterButtons">
-                            <button onclick="filterBinder('ALL')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold active-filter">ALL</button>
-                            <button onclick="filterBinder('QB')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold">QB</button>
-                            <button onclick="filterBinder('RB')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold">RB</button>
-                            <button onclick="filterBinder('WR')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold">WR</button>
-                            <button onclick="filterBinder('TE')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold">TE</button>
-                            <button onclick="filterBinder('OL')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold">OL</button>
-                            <button onclick="filterBinder('DL')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold">DL</button>
-                            <button onclick="filterBinder('LB')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold">LB</button>
-                            <button onclick="filterBinder('CB')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold">CB</button>
-                            <button onclick="filterBinder('S')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold">S</button>
-                            <button onclick="filterBinder('K')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold">K</button>
+                            <button onclick="filterBinder('ALL')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold active-filter">ALL</button>
+                            <button onclick="filterBinder('QB')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">QB</button>
+                            <button onclick="filterBinder('RB')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">RB</button>
+                            <button onclick="filterBinder('WR')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">WR</button>
+                            <button onclick="filterBinder('TE')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">TE</button>
+                            <button onclick="filterBinder('OL')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">OL</button>
+                            <button onclick="filterBinder('DL')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">DL</button>
+                            <button onclick="filterBinder('LB')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">LB</button>
+                            <button onclick="filterBinder('CB')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">CB</button>
+                            <button onclick="filterBinder('S')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">S</button>
+                            <button onclick="filterBinder('K')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold">K</button>
                         </div>
                     </div>
 
@@ -292,7 +370,7 @@
                         <h2 class="text-3xl font-sports tracking-wide uppercase text-white">Marketplace & Auctions</h2>
                         <p class="text-xs text-slate-400">Buy players, bid on live auctions, or list bench cards for AI buyers to outbid each other!</p>
                     </div>
-                    <button onclick="renderMarketplace()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300">
+                    <button onclick="renderMarketplace()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-xl text-slate-300">
                         <i class="fa-solid fa-arrows-rotate mr-1"></i> Refresh Market
                     </button>
                 </div>
@@ -300,19 +378,19 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div class="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="marketListingsGrid"></div>
 
-                    <div class="bg-slate-900 border border-slate-800 p-5 h-fit space-y-4">
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 h-fit space-y-4">
                         <h3 class="font-sports text-2xl text-white">List or Quick-Sell Card</h3>
                         <p class="text-xs text-slate-400">Post bench cards to auction. AI buyers will place bids on your listings!</p>
                         
                         <div id="sellCardSelector" class="space-y-3">
                             <label class="text-xs text-slate-400 block font-semibold">Select Bench Player:</label>
-                            <select id="userCardSelectInput" class="w-full bg-slate-950 border border-slate-700 p-2.5 text-xs text-slate-200"></select>
+                            <select id="userCardSelectInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-200"></select>
                             
                             <div class="pt-2 flex gap-2">
-                                <button onclick="quickSellSelected()" class="w-1/2 py-2 bg-amber-600 hover:bg-amber-500 text-white font-sports tracking-wider text-lg transition">
+                                <button onclick="quickSellSelected()" class="w-1/2 py-2 bg-amber-600 hover:bg-amber-500 text-white font-sports tracking-wider rounded-xl text-lg transition">
                                     Quick Sell
                                 </button>
-                                <button onclick="listCardOnMarket()" class="w-1/2 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-sports tracking-wider text-lg transition">
+                                <button onclick="listCardOnMarket()" class="w-1/2 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-sports tracking-wider rounded-xl text-lg transition">
                                     Post Auction
                                 </button>
                             </div>
@@ -321,40 +399,19 @@
                 </div>
             </section>
 
-            <!-- SKILLS, LEVELING & ACHIEVEMENTS VIEW -->
-            <section id="view-skills" class="hidden space-y-6">
-                <div class="text-center max-w-xl mx-auto mb-6">
-                    <h2 class="text-4xl font-sports tracking-wide uppercase text-white">Skills & Achievements</h2>
-                    <p class="text-xs text-slate-400">Complete milestones and level up to earn XP, Gold, and Free MUT Packs!</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-slate-900 border border-slate-800 p-5 text-center flex flex-col items-center">
-                        <div class="w-20 h-20 rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center font-sports text-4xl text-amber-400 font-bold mb-3" id="skillsLvlCircle">1</div>
-                        <h3 class="font-sports text-2xl text-white">Franchise Level</h3>
-                        <p class="text-xs text-slate-400 mb-4">Levels grow exponentially harder!</p>
-                        <div class="w-full bg-slate-950 p-3 border border-slate-800 space-y-1">
-                            <div class="flex justify-between text-xs text-slate-300">
-                                <span>Current XP:</span>
-                                <span class="text-amber-400 font-bold" id="skillsXpText">0 / 100 XP</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="md:col-span-2 space-y-3" id="achievementsContainer"></div>
-                </div>
-            </section>
-
             <!-- ESPN GAMECAST SIMULATOR VIEW -->
             <section id="view-sim" class="hidden space-y-6">
                 <div class="text-center max-w-2xl mx-auto mb-4">
                     <h2 class="text-4xl font-sports tracking-wide uppercase text-white">ESPN GameCast Simulator</h2>
-                    <p class="text-xs text-slate-400">Live gridiron drive tracking!</p>
+                    <p class="text-xs text-slate-400">Live 2D interactive gridiron visual tracking drive position, downs & yards-to-gain!</p>
                 </div>
 
-                <div class="max-w-5xl mx-auto bg-slate-900 border border-slate-800 p-6 shadow-2xl space-y-4">
+                <div class="max-w-5xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
                     
-                    <div class="bg-slate-950 border-2 border-slate-800 p-4 flex flex-wrap items-center justify-between gap-4 shadow-xl relative overflow-hidden">
+                    <!-- ESPN BROADCAST SCOREBUG -->
+                    <div class="bg-slate-950 border-2 border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-xl relative overflow-hidden">
+                        
+                        <!-- MY TEAM -->
                         <div class="flex items-center gap-3">
                             <div id="simMyTeamBadge" class="w-12 h-12 rounded-full bg-slate-800 border-2 border-amber-400 flex items-center justify-center font-sports text-2xl text-white"></div>
                             <div>
@@ -364,6 +421,7 @@
                             <div id="simMyScore" class="font-sports text-5xl font-black text-white ml-2">0</div>
                         </div>
 
+                        <!-- ESPN GAME STATUS CENTER -->
                         <div class="flex flex-col items-center">
                             <div class="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-widest flex items-center gap-1 mb-1">
                                 <i class="fa-solid fa-circle text-[6px] animate-pulse"></i> ESPN LIVE
@@ -372,6 +430,7 @@
                             <div id="simDownAndDist" class="font-sports text-lg text-slate-300 leading-none">1st & 10 at 25</div>
                         </div>
 
+                        <!-- OPPONENT TEAM -->
                         <div class="flex items-center gap-3">
                             <div id="simOppScore" class="font-sports text-5xl font-black text-white mr-2">0</div>
                             <div class="text-right">
@@ -384,17 +443,19 @@
                         </div>
                     </div>
 
-                    <div class="relative w-full overflow-hidden border-2 border-slate-700 bg-emerald-950 shadow-2xl" style="height: 220px;">
+                    <!-- ESPN GAMECAST 2D CANVAS FOOTBALL FIELD -->
+                    <div class="relative w-full rounded-xl overflow-hidden border-2 border-slate-700 bg-emerald-950 shadow-2xl" style="height: 220px;">
                         <canvas id="espnFieldCanvas" class="w-full h-full block"></canvas>
                     </div>
 
+                    <!-- CONTROL BUTTONS & LIVE DRIVE LOG -->
                     <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
-                        <button id="startSimBtn" onclick="runGameSimulation()" class="w-full sm:w-auto px-8 py-3 bg-nflRed hover:bg-red-600 font-sports tracking-wider text-white text-2xl font-bold transition">
+                        <button id="startSimBtn" onclick="runGameSimulation()" class="w-full sm:w-auto px-8 py-3 bg-nflRed hover:bg-red-600 font-sports tracking-wider text-white text-2xl font-bold rounded-xl shadow-lg transition">
                             SIMULATE GAME
                         </button>
 
-                        <div class="w-full flex-grow bg-slate-950 p-3 border border-slate-800 h-28 overflow-y-auto font-mono text-xs space-y-1" id="simPlayLog">
-                            <div class="text-slate-500 text-center py-6">Press "SIMULATE GAME" to kickoff...</div>
+                        <div class="w-full flex-grow bg-slate-950 rounded-xl p-3 border border-slate-800 h-28 overflow-y-auto font-mono text-xs space-y-1" id="simPlayLog">
+                            <div class="text-slate-500 text-center py-6">Press "SIMULATE GAME" to kickoff on the ESPN field...</div>
                         </div>
                     </div>
                 </div>
@@ -408,41 +469,47 @@
     </div>
 
     <script>
-        // EXPANDED ROSTER DATABASE WITH IMAGE PORTRAITS & MULTIPLE PLAYER VARIANTS
         const CARDS_DATABASE = [
-            // PATRICK MAHOMES VARIANTS
-            { id: "mahomes_goat", name: "Patrick Mahomes", team: "Kansas City Chiefs", position: "QB", overall: 100, rarity: "All-Time Legend", isSuperRare: true, variantName: "GOAT Edition", basePrice: 100000, color: "#E31837", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Patrick_Mahomes_2023_(cropped).jpg" },
-            { id: "mahomes_sr", name: "Patrick Mahomes", team: "Kansas City Chiefs", position: "QB", overall: 99, rarity: "Super Rare", isSuperRare: true, variantName: "Galaxy LTD", basePrice: 55000, color: "#E31837", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Patrick_Mahomes_2023_(cropped).jpg" },
-            { id: "mahomes_epic", name: "Patrick Mahomes", team: "Kansas City Chiefs", position: "QB", overall: 95, rarity: "Epic", isSuperRare: false, variantName: "Superstar", basePrice: 12000, color: "#E31837", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Patrick_Mahomes_2023_(cropped).jpg" },
-            { id: "mahomes_rare", name: "Patrick Mahomes", team: "Kansas City Chiefs", position: "QB", overall: 88, rarity: "Rare", isSuperRare: false, variantName: "Core Elite", basePrice: 3500, color: "#E31837", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Patrick_Mahomes_2023_(cropped).jpg" },
+            { id: "rice_goat", name: "Jerry Rice", team: "San Francisco 49ers", position: "WR", overall: 100, rarity: "All-Time Legend", isSuperRare: true, variantName: "GOAT Edition", basePrice: 100000, color: "#AA0000" },
+            { id: "brady_goat", name: "Tom Brady", team: "New England Patriots", position: "QB", overall: 100, rarity: "All-Time Legend", isSuperRare: true, variantName: "GOAT Edition", basePrice: 100000, color: "#002244" },
+            { id: "lt_goat", name: "Lawrence Taylor", team: "New York Giants", position: "LB", overall: 100, rarity: "All-Time Legend", isSuperRare: true, variantName: "GOAT Edition", basePrice: 100000, color: "#0B2265" },
+            { id: "moss_legend", name: "Randy Moss", team: "Minnesota Vikings", position: "WR", overall: 99, rarity: "All-Time Legend", isSuperRare: true, variantName: "Freak Edition", basePrice: 85000, color: "#4F2683" },
+            { id: "sanders_barry", name: "Barry Sanders", team: "Detroit Lions", position: "RB", overall: 99, rarity: "All-Time Legend", isSuperRare: true, variantName: "Hall of Fame", basePrice: 85000, color: "#0076B6" },
+            { id: "manning_peyton", name: "Peyton Manning", team: "Indianapolis Colts", position: "QB", overall: 99, rarity: "All-Time Legend", isSuperRare: false, variantName: "Hall of Fame", basePrice: 75000, color: "#002C5F" },
+            { id: "deion_sanders", name: "Deion Sanders", team: "Dallas Cowboys", position: "CB", overall: 99, rarity: "All-Time Legend", isSuperRare: true, variantName: "Prime Time", basePrice: 85000, color: "#003594" },
+            { id: "lewis_ray", name: "Ray Lewis", team: "Baltimore Ravens", position: "LB", overall: 99, rarity: "All-Time Legend", isSuperRare: false, variantName: "Hall of Fame", basePrice: 75000, color: "#241773" },
+            { id: "gronkowski_rob", name: "Rob Gronkowski", team: "New England Patriots", position: "TE", overall: 98, rarity: "All-Time Legend", isSuperRare: false, variantName: "Gronk Spike", basePrice: 65000, color: "#002244" },
 
-            // JERRY RICE & HISTORIC GOATS
-            { id: "rice_goat", name: "Jerry Rice", team: "San Francisco 49ers", position: "WR", overall: 100, rarity: "All-Time Legend", isSuperRare: true, variantName: "GOAT Edition", basePrice: 100000, color: "#AA0000", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Jerry_Rice_2012.jpg" },
-            { id: "brady_goat", name: "Tom Brady", team: "New England Patriots", position: "QB", overall: 100, rarity: "All-Time Legend", isSuperRare: true, variantName: "GOAT Edition", basePrice: 100000, color: "#002244", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Tom_Brady_2021.jpg" },
-            { id: "lt_goat", name: "Lawrence Taylor", team: "New York Giants", position: "LB", overall: 100, rarity: "All-Time Legend", isSuperRare: true, variantName: "GOAT Edition", basePrice: 100000, color: "#0B2265", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Lawrence_Taylor_2011.jpg" },
+            { id: "mahomes_base", name: "Patrick Mahomes", team: "Kansas City Chiefs", position: "QB", overall: 99, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 12000, color: "#E31837" },
+            { id: "mahomes_sr_galaxy", name: "Patrick Mahomes", team: "Kansas City Chiefs", position: "QB", overall: 99, rarity: "Super Rare", isSuperRare: true, variantName: "Galaxy Animated", basePrice: 55000, color: "#E31837" },
+            { id: "jefferson_base", name: "Justin Jefferson", team: "Minnesota Vikings", position: "WR", overall: 98, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 10000, color: "#4F2683" },
+            { id: "mccaffrey_base", name: "Christian McCaffrey", team: "San Francisco 49ers", position: "RB", overall: 98, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 10500, color: "#AA0000" },
+            { id: "trent_williams", name: "Trent Williams", team: "San Francisco 49ers", position: "OL", overall: 98, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 9500, color: "#AA0000" },
+            { id: "fred_warner", name: "Fred Warner", team: "San Francisco 49ers", position: "LB", overall: 97, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 9000, color: "#AA0000" },
+            { id: "chris_jones", name: "Chris Jones", team: "Kansas City Chiefs", position: "DL", overall: 97, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 8800, color: "#E31837" },
+            { id: "sauce_sr", name: "Sauce Gardner", team: "New York Jets", position: "CB", overall: 96, rarity: "Super Rare", isSuperRare: true, variantName: "Island Edition", basePrice: 38000, color: "#125740" },
 
-            // OTHER STARS & VARIANTS
-            { id: "donald_rare", name: "Aaron Donald", team: "Los Angeles Rams", position: "DL", overall: 88, rarity: "Rare", isSuperRare: false, variantName: "Core Elite", basePrice: 3800, color: "#003594", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Aaron_Donald_2021.jpg" },
-            { id: "donald_legend", name: "Aaron Donald", team: "Los Angeles Rams", position: "DL", overall: 98, rarity: "Legendary", isSuperRare: false, variantName: "Tribute", basePrice: 15000, color: "#003594", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Aaron_Donald_2021.jpg" },
-            { id: "jefferson_legend", name: "Justin Jefferson", team: "Minnesota Vikings", position: "WR", overall: 98, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 10000, color: "#4F2683", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Justin_Jefferson.jpg" },
-            { id: "mccaffrey_legend", name: "Christian McCaffrey", team: "San Francisco 49ers", position: "RB", overall: 98, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 10500, color: "#AA0000", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Christian_McCaffrey_2021.jpg" },
-            
-            // EPICS & RARES
-            { id: "lamar_epic", name: "Lamar Jackson", team: "Baltimore Ravens", position: "QB", overall: 95, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 6000, color: "#241773", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Lamar_Jackson_2021.jpg" },
-            { id: "hill_epic", name: "Tyreek Hill", team: "Miami Dolphins", position: "WR", overall: 95, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 5800, color: "#008E97", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Tyreek_Hill_2021.jpg" },
-            { id: "parsons_epic", name: "Micah Parsons", team: "Dallas Cowboys", position: "LB", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 5500, color: "#003594", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Micah_Parsons_2021.jpg" },
-            { id: "stroud_rare", name: "C.J. Stroud", team: "Houston Texans", position: "QB", overall: 89, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2500, color: "#03202F", img: "https://commons.wikimedia.org/wiki/Special:FilePath/C.J._Stroud_2023.jpg" },
-            { id: "barkley_rare", name: "Saquon Barkley", team: "Philadelphia Eagles", position: "RB", overall: 90, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2800, color: "#004C54", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Saquon_Barkley_2021.jpg" },
-            { id: "henry_rare", name: "Derrick Henry", team: "Baltimore Ravens", position: "RB", overall: 89, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2400, color: "#241773", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Derrick_Henry_2021.jpg" },
+            { id: "drake_maye", name: "Drake Maye", team: "New England Patriots", position: "QB", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Phenom", basePrice: 5800, color: "#002244" },
+            { id: "lamar_epic", name: "Lamar Jackson", team: "Baltimore Ravens", position: "QB", overall: 95, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 6000, color: "#241773" },
+            { id: "hill_epic", name: "Tyreek Hill", team: "Miami Dolphins", position: "WR", overall: 95, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 5800, color: "#008E97" },
+            { id: "chase_epic", name: "Ja'Marr Chase", team: "Cincinnati Bengals", position: "WR", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 5000, color: "#FB4F14" },
+            { id: "kelce_epic", name: "Travis Kelce", team: "Kansas City Chiefs", position: "TE", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 5200, color: "#E31837" },
+            { id: "parsons_epic", name: "Micah Parsons", team: "Dallas Cowboys", position: "LB", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 5500, color: "#003594" },
+            { id: "bosa_epic", name: "Nick Bosa", team: "San Francisco 49ers", position: "DL", overall: 93, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 4800, color: "#AA0000" },
 
-            // COMMONS
-            { id: "purdy_common", name: "Brock Purdy", team: "San Francisco 49ers", position: "QB", overall: 85, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 900, color: "#AA0000", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Brock_Purdy_2023.jpg" },
-            { id: "puka_common", name: "Puka Nacua", team: "Los Angeles Rams", position: "WR", overall: 85, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 950, color: "#003594", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Puka_Nacua_2023.jpg" },
-            { id: "love_common", name: "Jordan Love", team: "Green Bay Packers", position: "QB", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 800, color: "#203731", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Jordan_Love_2021.jpg" },
-            { id: "williams_common", name: "Caleb Williams", team: "Chicago Bears", position: "QB", overall: 82, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 700, color: "#0B162A", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Caleb_Williams_2023.jpg" },
-            { id: "common_ol_1", name: "Tyler Smith", team: "Dallas Cowboys", position: "OL", overall: 83, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 600, color: "#003594", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Tyler_Smith_2022.jpg" },
-            { id: "common_dl_1", name: "Jalen Carter", team: "Philadelphia Eagles", position: "DL", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 700, color: "#004C54", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Jalen_Carter_2023.jpg" },
-            { id: "butker_common", name: "Harrison Butker", team: "Kansas City Chiefs", position: "K", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 600, color: "#E31837", img: "https://commons.wikimedia.org/wiki/Special:FilePath/Harrison_Butker_2021.jpg" }
+            { id: "stroud_rare", name: "C.J. Stroud", team: "Houston Texans", position: "QB", overall: 89, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2500, color: "#03202F" },
+            { id: "barkley_rare", name: "Saquon Barkley", team: "Philadelphia Eagles", position: "RB", overall: 90, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2800, color: "#004C54" },
+            { id: "henry_rare", name: "Derrick Henry", team: "Baltimore Ravens", position: "RB", overall: 89, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2400, color: "#241773" },
+            { id: "tucker_rare", name: "Justin Tucker", team: "Baltimore Ravens", position: "K", overall: 89, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2200, color: "#241773" },
+
+            { id: "purdy_common", name: "Brock Purdy", team: "San Francisco 49ers", position: "QB", overall: 85, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 900, color: "#AA0000" },
+            { id: "puka_common", name: "Puka Nacua", team: "Los Angeles Rams", position: "WR", overall: 85, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 950, color: "#003594" },
+            { id: "love_common", name: "Jordan Love", team: "Green Bay Packers", position: "QB", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 800, color: "#203731" },
+            { id: "williams_common", name: "Caleb Williams", team: "Chicago Bears", position: "QB", overall: 82, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 700, color: "#0B162A" },
+            { id: "harrison_common", name: "Marvin Harrison Jr", team: "Arizona Cardinals", position: "WR", overall: 83, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 750, color: "#97233F" },
+            { id: "common_ol_1", name: "Tyler Smith", team: "Dallas Cowboys", position: "OL", overall: 83, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 600, color: "#003594" },
+            { id: "common_dl_1", name: "Jalen Carter", team: "Philadelphia Eagles", position: "DL", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 700, color: "#004C54" },
+            { id: "butker_common", name: "Harrison Butker", team: "Kansas City Chiefs", position: "K", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 600, color: "#E31837" }
         ];
 
         const NFL_TEAMS = [
@@ -480,38 +547,29 @@
             { name: "Washington Commanders", abbr: "WAS", color: "#5A1414" }
         ];
 
-        const ACHIEVEMENTS_DATA = [
-            { id: "win_1", title: "First Franchise Win", desc: "Win 1 game simulation", rewardGold: 500, rewardXp: 50, reqWins: 1, claimed: false },
-            { id: "win_5", title: "Rising Dynasty", desc: "Win 5 game simulations", rewardGold: 1500, rewardXp: 150, reqWins: 5, claimed: false },
-            { id: "cards_10", title: "Collector", desc: "Own 10 cards in your binder", rewardGold: 1000, rewardXp: 100, reqCards: 10, claimed: false },
-            { id: "ovr_80", title: "Stacked Roster", desc: "Reach 80+ Team OVR", rewardGold: 3000, rewardXp: 300, reqOvr: 80, claimed: false }
-        ];
-
         let gameState = {
             selectedTeam: null,
             gold: 1500,
-            level: 1,
-            xp: 0,
             wins: 0,
             losses: 0,
             inventory: [],
             starters: {
                 QB: null, RB: null, WR1: null, WR2: null, TE: null,
                 OL1: null, OL2: null, OL3: null,
-                DL1: null, DL2: null, LB1: null, LB2: null, CB1: null, CB2: null, S: null, K: null
+                DL1: null, DL2: null, LB1: null, LB2: null, CB1: null, CB2: null, S: null,
+                K: null
             },
-            marketAuctions: [],
-            achievements: ACHIEVEMENTS_DATA
+            marketAuctions: []
         };
 
         let activeTab = 'packs';
         let binderFilter = 'ALL';
         let tempSelectedTeam = null;
 
+        // ESPN GameCast Canvas Variables
         let simBallYard = 25;
         let simFirstDownYard = 35;
         let simOppTeamObj = null;
-        let currentPulledCards = [];
 
         window.onload = function() {
             renderTeamSelectModal();
@@ -529,7 +587,7 @@
 
             NFL_TEAMS.forEach(team => {
                 const btn = document.createElement('button');
-                btn.className = `team-select-card border border-slate-800 bg-slate-950 hover:border-slate-500 p-3 flex flex-col items-center justify-center gap-2 transition`;
+                btn.className = `team-select-card border border-slate-800 bg-slate-950 hover:border-slate-500 rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition`;
                 btn.onclick = () => selectTeamOption(team, btn);
                 btn.innerHTML = `
                     <div class="w-10 h-10 rounded-full flex items-center justify-center font-sports text-white text-lg border font-bold" style="background-color:${team.color}">
@@ -562,7 +620,7 @@
             starterPos.forEach((p, idx) => {
                 let pool = CARDS_DATABASE.filter(c => c.position === p && c.rarity === 'Common');
                 if (pool.length === 0) pool = CARDS_DATABASE.filter(c => c.position === p);
-                const card = pool[idx % pool.length] || CARDS_DATABASE[0];
+                const card = pool[idx % pool.length] || CARDS_DATABASE[20];
                 const copy = JSON.parse(JSON.stringify(card));
                 copy.instanceId = 'card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
                 gameState.inventory.push(copy);
@@ -581,55 +639,24 @@
             switchTab(activeTab);
         }
 
-        function getRequiredXP(level) {
-            return Math.round(100 * Math.pow(1.6, level - 1));
-        }
-
-        function addXP(amount) {
-            gameState.xp += amount;
-            let req = getRequiredXP(gameState.level);
-            
-            while (gameState.xp >= req) {
-                gameState.xp -= req;
-                gameState.level++;
-                req = getRequiredXP(gameState.level);
-                
-                const goldReward = gameState.level * 500;
-                gameState.gold += goldReward;
-                alert(`🎉 LEVEL UP! You reached Franchise Level ${gameState.level}!\nEarned +${goldReward} Gold!`);
-            }
-
-            saveGameState();
-            updateUIHeader();
-        }
-
-        // FIXED OVERALL CALCULATION BUG
-        function calculateTeamOVR() {
-            const slots = Object.values(gameState.starters);
-            let sum = 0, count = 0;
-            slots.forEach(card => {
-                if (card && card.overall) { 
-                    sum += Number(card.overall); 
-                    count++; 
-                }
-            });
-            return count === 0 ? 60 : Math.round(sum / count);
-        }
-
         function updateUIHeader() {
             document.getElementById('goldDisplay').innerText = gameState.gold.toLocaleString();
             document.getElementById('recordDisplay').innerText = `${gameState.wins}-${gameState.losses}`;
             document.getElementById('teamOvrDisplay').innerText = `${calculateTeamOVR()} OVR`;
+        }
 
-            document.getElementById('userLevelDisplay').innerText = `LVL ${gameState.level}`;
-            const reqXp = getRequiredXP(gameState.level);
-            const pct = Math.min(100, (gameState.xp / reqXp) * 100);
-            document.getElementById('xpBarFill').style.width = `${pct}%`;
+        function calculateTeamOVR() {
+            const slots = Object.values(gameState.starters);
+            let sum = 0, count = 0;
+            slots.forEach(card => {
+                if (card) { sum += card.overall; count++; }
+            });
+            return count === 0 ? 60 : Math.round(sum / count);
         }
 
         function switchTab(tab) {
             activeTab = tab;
-            ['packs', 'roster', 'market', 'skills', 'sim'].forEach(t => {
+            ['packs', 'roster', 'market', 'sim'].forEach(t => {
                 const view = document.getElementById(`view-${t}`);
                 const btn = document.getElementById(`tab-${t}`);
                 if (t === tab) {
@@ -645,7 +672,6 @@
 
             if (tab === 'roster') renderRosterView();
             if (tab === 'market') renderMarketplace();
-            if (tab === 'skills') renderSkillsAndAchievements();
             if (tab === 'sim') renderSimView();
         }
 
@@ -663,6 +689,18 @@
             } else if (type === 'ice') {
                 cost = 1800; cardCount = 3; filterPos = ['WR', 'TE'];
                 chances = { common: 0.20, rare: 0.50, epic: 0.22, legendary: 0.06, sr: 0.02, legend: 0.00 };
+            } else if (type === 'rookies') {
+                cost = 1400; cardCount = 3;
+                chances = { common: 0.40, rare: 0.40, epic: 0.15, legendary: 0.04, sr: 0.01, legend: 0.00 };
+            } else if (type === 'trench') {
+                cost = 1500; cardCount = 3; filterPos = ['OL', 'RB'];
+                chances = { common: 0.30, rare: 0.45, epic: 0.20, legendary: 0.04, sr: 0.01, legend: 0.00 };
+            } else if (type === 'silver') {
+                cost = 750; cardCount = 3;
+                chances = { common: 0.40, rare: 0.50, epic: 0.08, legendary: 0.02, sr: 0.00, legend: 0.00 };
+            } else if (type === 'gold') {
+                cost = 2500; cardCount = 4;
+                chances = { common: 0.05, rare: 0.45, epic: 0.38, legendary: 0.08, sr: 0.03, legend: 0.01 };
             } else if (type === 'legends') {
                 cost = 10000; cardCount = 5;
                 chances = { common: 0.00, rare: 0.00, epic: 0.20, legendary: 0.35, sr: 0.25, legend: 0.20 };
@@ -674,22 +712,21 @@
             }
 
             gameState.gold -= cost;
-            addXP(25);
             updateUIHeader();
 
-            currentPulledCards = [];
+            const pulledCards = [];
             for (let i = 0; i < cardCount; i++) {
-                currentPulledCards.push(rollRandomCard(chances, filterPos));
+                pulledCards.push(rollRandomCard(chances, filterPos));
             }
 
-            currentPulledCards.forEach(c => {
+            pulledCards.forEach(c => {
                 const copy = JSON.parse(JSON.stringify(c));
                 copy.instanceId = 'card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
                 gameState.inventory.push(copy);
             });
 
             saveGameState();
-            preparePackSwipeOverlay(type.toUpperCase());
+            triggerPackRevealAnimation(pulledCards, type.toUpperCase());
         }
 
         function rollRandomCard(chances, filterPos) {
@@ -712,43 +749,28 @@
             return pool[Math.floor(Math.random() * pool.length)];
         }
 
-        function preparePackSwipeOverlay(packTitle) {
+        function triggerPackRevealAnimation(cards, packTitle) {
             const overlay = document.getElementById('packRevealOverlay');
-            const stage = document.getElementById('swipePackStage');
             const container = document.getElementById('revealedCardsContainer');
+            const title = document.getElementById('packOpeningTitle');
             const closeBtn = document.getElementById('closePackBtn');
 
-            document.getElementById('packOpeningTitle').innerText = `${packTitle} PACK`;
-            stage.classList.remove('hidden');
-            container.classList.add('hidden');
+            title.innerText = `${packTitle} PACK REVEAL`;
             container.innerHTML = '';
             closeBtn.classList.add('hidden');
             overlay.classList.remove('hidden');
-        }
-
-        // FIXED PACK RIP BUTTON
-        function ripOpenPackNow() {
-            const stage = document.getElementById('swipePackStage');
-            stage.classList.add('hidden');
-            renderRevealedCards(currentPulledCards);
-        }
-
-        function renderRevealedCards(cards) {
-            const container = document.getElementById('revealedCardsContainer');
-            const closeBtn = document.getElementById('closePackBtn');
-            container.classList.remove('hidden');
 
             cards.forEach((card, idx) => {
                 const cardEl = document.createElement('div');
-                cardEl.className = `perspective-1000 w-48 h-72 cursor-pointer my-2`;
+                cardEl.className = `perspective-1000 w-44 h-64 cursor-pointer my-2`;
                 cardEl.innerHTML = `
                     <div class="relative w-full h-full duration-500 transform-style-3d transition-transform card-flip-inner" id="revealCard_${idx}">
-                        <div class="absolute inset-0 bg-slate-900 border-2 border-amber-400 flex flex-col items-center justify-center p-4 shadow-xl backface-hidden">
+                        <div class="absolute inset-0 bg-slate-900 border-2 border-amber-400 rounded-xl flex flex-col items-center justify-center p-4 shadow-xl backface-hidden">
                             <i class="fa-solid fa-shield-halved text-5xl text-nflRed mb-2"></i>
                             <span class="font-sports text-2xl text-amber-400">NFL MUT</span>
                             <span class="text-[10px] text-slate-500">Tap to Reveal</span>
                         </div>
-                        <div class="absolute inset-0 backface-hidden rotate-y-180 flex flex-col p-1 border-2 ${getCardBorderClass(card)} shadow-2xl">
+                        <div class="absolute inset-0 rounded-xl backface-hidden rotate-y-180 flex flex-col p-2 border-2 ${getCardBorderClass(card)} shadow-2xl">
                             ${renderCardHTML(card)}
                         </div>
                     </div>
@@ -756,8 +778,14 @@
 
                 cardEl.onclick = () => {
                     const inner = document.getElementById(`revealCard_${idx}`);
-                    inner.classList.add('rotate-y-180');
-                    setTimeout(() => closeBtn.classList.remove('hidden'), 400);
+                    if (card.rarity === 'All-Time Legend') {
+                        inner.classList.add('reveal-legend-burst');
+                    } else if (card.isSuperRare) {
+                        inner.classList.add('reveal-sr-burst');
+                    } else {
+                        inner.classList.add('rotate-y-180');
+                    }
+                    setTimeout(() => closeBtn.classList.remove('hidden'), 500);
                 };
 
                 container.appendChild(cardEl);
@@ -769,49 +797,42 @@
         }
 
         function getCardBorderClass(card) {
-            if (card.rarity === 'All-Time Legend') return "mut-bg-goat text-white";
-            if (card.isSuperRare) return "mut-bg-sr text-white";
-            if (card.rarity === 'Legendary') return "mut-bg-legendary text-amber-300";
-            if (card.rarity === 'Epic') return "mut-bg-epic text-purple-300";
-            if (card.rarity === 'Rare') return "mut-bg-rare text-blue-200";
-            return "mut-bg-common text-slate-300";
+            if (card.rarity === 'All-Time Legend') return "mut-card-goat text-white";
+            if (card.isSuperRare) return "mut-card-sr text-white";
+            if (card.rarity === 'Legendary') return "mut-card-legendary text-amber-300";
+            if (card.rarity === 'Epic') return "mut-card-epic text-purple-300";
+            if (card.rarity === 'Rare') return "mut-card-rare text-blue-200";
+            return "mut-card-common text-slate-300";
         }
 
-        // ACCURATE MUT CARD RENDERER (NO ROUNDED CORNERS, PORTRAIT PLAYER ART)
         function renderCardHTML(card) {
-            const playerImg = card.img || 'https://commons.wikimedia.org/wiki/Special:FilePath/Patrick_Mahomes_2023_(cropped).jpg';
             return `
-                <div class="mut-card-box w-full h-full bg-slate-900 flex flex-col justify-between p-1.5 relative overflow-hidden">
-                    
-                    <!-- TOP OVR & POSITION HEADER -->
-                    <div class="flex justify-between items-start z-10">
-                        <div class="flex flex-col items-center bg-slate-950/90 border border-slate-700 px-1.5 py-0.5">
-                            <span class="font-sports text-sm font-bold uppercase text-slate-200">${card.position}</span>
-                        </div>
-                        <div class="flex flex-col items-center bg-slate-950/90 border border-amber-400/60 px-2 py-0.5">
-                            <span class="font-sports text-3xl font-black text-amber-400 leading-none">${card.overall}</span>
-                            <span class="text-[7px] font-bold text-slate-400 uppercase tracking-tighter">OVR</span>
-                        </div>
+                <div class="flex justify-between items-start w-full relative z-10 px-1 pt-1">
+                    <div class="flex flex-col items-center">
+                        <span class="font-sports text-4xl font-extrabold leading-none text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">${card.overall}</span>
+                        <span class="text-[8px] font-black uppercase text-amber-400 bg-slate-950/80 px-1 rounded -mt-1 tracking-tighter">OVR</span>
                     </div>
-
-                    <!-- PLAYER IMAGE CUTOUT & SIDE NAMES -->
-                    <div class="flex-grow flex items-center justify-between my-1 relative overflow-hidden">
-                        <div class="vertical-text font-sports text-2xl font-black uppercase text-white tracking-widest opacity-90 z-10 leading-none">
-                            ${card.name.split(' ')[1] || card.name}
-                        </div>
-
-                        <div class="w-28 h-36 flex items-center justify-center overflow-hidden z-0">
-                            <img src="${playerImg}" class="object-cover h-full w-full filter contrast-115 brightness-105" alt="${card.name}">
-                        </div>
+                    <div class="bg-slate-950/90 border border-slate-700 rounded px-2 py-0.5 text-center">
+                        <span class="font-sports text-sm font-bold uppercase tracking-wider text-slate-200">${card.position}</span>
                     </div>
+                </div>
+                
+                <div class="flex-grow flex flex-col items-center justify-center my-1 relative z-10">
+                    <div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl font-sports font-bold text-white shadow-2xl border-2 border-white/20 relative" style="background-color:${card.color}">
+                        ${card.name.split(' ').map(n=>n[0]).join('')}
+                    </div>
+                    ${card.isSuperRare || card.rarity === 'All-Time Legend' ? `
+                        <span class="mt-1 text-[8px] font-black px-2 py-0.5 rounded ${card.rarity === 'All-Time Legend' ? 'bg-amber-500 text-slate-950' : 'bg-pink-600 text-white'} tracking-widest uppercase shadow-md border border-white/30">
+                            ${card.variantName}
+                        </span>
+                    ` : ''}
+                </div>
 
-                    <!-- BOTTOM MUT BRANDING BANNER -->
-                    <div class="bg-slate-950/90 border-t border-slate-800 p-1 flex justify-between items-center z-10">
-                        <div class="truncate">
-                            <h4 class="font-sports text-lg leading-none uppercase font-bold text-white truncate">${card.name}</h4>
-                            <span class="text-[8px] text-slate-400 font-semibold uppercase block truncate">${card.team}</span>
-                        </div>
-                        <span class="font-sports text-lg text-amber-400 font-bold uppercase">UT</span>
+                <div class="w-full bg-slate-950/90 border-t border-slate-800 rounded-b-lg p-1.5 text-center relative z-10">
+                    <h4 class="font-sports text-xl leading-none truncate uppercase font-bold text-white tracking-wide">${card.name}</h4>
+                    <div class="flex justify-between items-center text-[8px] text-slate-400 mt-1 font-semibold uppercase">
+                        <span class="truncate">${card.team}</span>
+                        <span class="text-amber-400 font-bold">${card.rarity}</span>
                     </div>
                 </div>
             `;
@@ -835,7 +856,7 @@
         function createSlotCard(slotKey) {
             const card = gameState.starters[slotKey];
             const slot = document.createElement('div');
-            slot.className = `bg-slate-900 border ${card ? getCardBorderClass(card) : 'border-dashed border-slate-800'} p-1 flex flex-col justify-between min-h-[180px]`;
+            slot.className = `bg-slate-900 border ${card ? getCardBorderClass(card) : 'border-dashed border-slate-800'} rounded-xl p-1.5 flex flex-col justify-between min-h-[170px]`;
 
             if (card) {
                 slot.innerHTML = `
@@ -882,13 +903,13 @@
             cards.forEach(card => {
                 const isStarting = Object.values(gameState.starters).some(s => s && s.instanceId === card.instanceId);
                 const cardEl = document.createElement('div');
-                cardEl.className = `p-1 border ${getCardBorderClass(card)} flex flex-col justify-between relative group shadow-md min-h-[200px]`;
+                cardEl.className = `rounded-xl p-2 border ${getCardBorderClass(card)} flex flex-col justify-between relative group shadow-md min-h-[190px]`;
                 
                 cardEl.innerHTML = `
-                    ${isStarting ? `<span class="absolute -top-2 -right-2 bg-amber-400 text-slate-950 text-[8px] font-bold px-1.5 py-0.5 shadow z-20">STARTER</span>` : ''}
+                    ${isStarting ? `<span class="absolute -top-2 -right-2 bg-amber-400 text-slate-950 text-[8px] font-bold px-1.5 py-0.5 rounded-full shadow z-20">STARTER</span>` : ''}
                     ${renderCardHTML(card)}
                     <div class="mt-2 pt-1 border-t border-slate-800/80 flex gap-1 relative z-20">
-                        <button onclick="setCardToFirstSlot('${card.instanceId}')" class="w-full py-1 bg-indigo-600 hover:bg-indigo-500 text-[9px] font-bold text-white transition">
+                        <button onclick="setCardToFirstSlot('${card.instanceId}')" class="w-full py-1 bg-indigo-600 hover:bg-indigo-500 text-[9px] font-bold rounded text-white transition">
                             ${isStarting ? 'STARTER' : 'EQUIP'}
                         </button>
                     </div>
@@ -928,7 +949,7 @@
                 const allowedPos = slotMap[slotKey][0];
                 const available = gameState.inventory
                     .filter(c => c.position === allowedPos && !usedInstances.has(c.instanceId))
-                    .sort((a,b) => Number(b.overall) - Number(a.overall));
+                    .sort((a,b) => b.overall - a.overall);
 
                 if (available.length > 0) {
                     gameState.starters[slotKey] = available[0];
@@ -966,7 +987,7 @@
             gameState.marketAuctions.forEach((auction, idx) => {
                 const isUserSeller = auction.seller === "YOU";
                 const cardEl = document.createElement('div');
-                cardEl.className = `bg-slate-900 border ${getCardBorderClass(auction.card)} p-4 flex flex-col justify-between shadow-xl`;
+                cardEl.className = `bg-slate-900 border ${getCardBorderClass(auction.card)} rounded-2xl p-4 flex flex-col justify-between shadow-xl`;
                 
                 cardEl.innerHTML = `
                     <div>
@@ -980,14 +1001,14 @@
 
                     <div class="mt-4 pt-3 border-t border-slate-800 space-y-2 relative z-20">
                         ${!isUserSeller ? `
-                            <button onclick="placeMarketBid(${idx})" class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-white font-sports tracking-wider text-lg transition">
+                            <button onclick="placeMarketBid(${idx})" class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-white font-sports tracking-wider rounded-xl text-lg transition">
                                 Bid +${Math.round(auction.currentBid * 0.1)} Gold
                             </button>
-                            <button onclick="buyoutMarketCard(${idx})" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-semibold transition">
+                            <button onclick="buyoutMarketCard(${idx})" class="w-full py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-semibold rounded-xl transition">
                                 Buyout: ${auction.buyoutPrice.toLocaleString()} Gold
                             </button>
                         ` : `
-                            <div class="text-center py-2 bg-indigo-950/60 border border-indigo-800/50 text-indigo-300 text-xs font-semibold">
+                            <div class="text-center py-2 bg-indigo-950/60 border border-indigo-800/50 rounded-xl text-indigo-300 text-xs font-semibold">
                                 <i class="fa-solid fa-tag"></i> Your Listing (Bids Active)
                             </div>
                         `}
@@ -1116,57 +1137,9 @@
             }, 6000);
         }
 
-        function renderSkillsAndAchievements() {
-            document.getElementById('skillsLvlCircle').innerText = gameState.level;
-            const req = getRequiredXP(gameState.level);
-            document.getElementById('skillsXpText').innerText = `${gameState.xp} / ${req} XP`;
-
-            const container = document.getElementById('achievementsContainer');
-            container.innerHTML = '';
-
-            gameState.achievements.forEach((ach, idx) => {
-                let currentProgress = 0;
-                let goal = 1;
-                if (ach.reqWins) { currentProgress = gameState.wins; goal = ach.reqWins; }
-                if (ach.reqCards) { currentProgress = gameState.inventory.length; goal = ach.reqCards; }
-                if (ach.reqOvr) { currentProgress = calculateTeamOVR(); goal = ach.reqOvr; }
-
-                const isComplete = currentProgress >= goal;
-
-                const card = document.createElement('div');
-                card.className = `bg-slate-900 border ${ach.claimed ? 'border-slate-800 opacity-60' : isComplete ? 'border-amber-400 bg-amber-950/20' : 'border-slate-800'} p-4 flex justify-between items-center`;
-                
-                card.innerHTML = `
-                    <div>
-                        <h4 class="font-sports text-2xl text-white leading-none">${ach.title}</h4>
-                        <p class="text-xs text-slate-400 mb-2">${ach.desc}</p>
-                        <div class="flex items-center gap-3 text-xs">
-                            <span class="text-amber-400 font-bold"><i class="fa-solid fa-coins"></i> +${ach.rewardGold}</span>
-                            <span class="text-indigo-400 font-bold"><i class="fa-solid fa-bolt"></i> +${ach.rewardXp} XP</span>
-                            <span class="text-slate-500 font-semibold">Progress: ${currentProgress}/${goal}</span>
-                        </div>
-                    </div>
-
-                    <button onclick="claimAchievementReward(${idx})" ${!isComplete || ach.claimed ? 'disabled' : ''} class="px-5 py-2 font-sports text-xl tracking-wider text-white font-bold ${ach.claimed ? 'bg-slate-800 text-slate-500 cursor-not-allowed' : isComplete ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}">
-                        ${ach.claimed ? 'CLAIMED' : isComplete ? 'CLAIM' : 'LOCKED'}
-                    </button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function claimAchievementReward(idx) {
-            const ach = gameState.achievements[idx];
-            if (ach.claimed) return;
-
-            ach.claimed = true;
-            gameState.gold += ach.rewardGold;
-            addXP(ach.rewardXp);
-
-            saveGameState();
-            renderSkillsAndAchievements();
-        }
-
+        // ==========================================
+        // ESPN GAMECAST GRAPHIC SIMULATOR
+        // ==========================================
         function renderSimView() {
             document.getElementById('simMyTeamBadge').style.backgroundColor = gameState.selectedTeam.color;
             document.getElementById('simMyTeamBadge').innerText = gameState.selectedTeam.abbr;
@@ -1195,9 +1168,11 @@
             const w = canvas.width;
             const h = canvas.height;
 
+            // Turf Background
             ctx.fillStyle = '#064e3b';
             ctx.fillRect(0, 0, w, h);
 
+            // Alternating Field Grass Stripes
             const fieldXStart = 60;
             const fieldXEnd = w - 60;
             const fieldWidth = fieldXEnd - fieldXStart;
@@ -1209,17 +1184,20 @@
                 }
             }
 
+            // Endzones
             ctx.fillStyle = gameState ? gameState.selectedTeam.color : '#003594';
             ctx.fillRect(0, 0, fieldXStart, h);
             ctx.fillStyle = simOppTeamObj ? simOppTeamObj.color : '#AA0000';
             ctx.fillRect(fieldXEnd, 0, 60, h);
 
+            // Endzone Labels
             ctx.fillStyle = '#ffffff';
             ctx.font = 'bold 16px Teko';
             ctx.textAlign = 'center';
             ctx.fillText(gameState ? gameState.selectedTeam.abbr : 'HOME', 30, h / 2 + 5);
             ctx.fillText(simOppTeamObj ? simOppTeamObj.abbr : 'AWAY', w - 30, h / 2 + 5);
 
+            // Yard Line Numbers & White Lines
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
             ctx.lineWidth = 2;
 
@@ -1239,6 +1217,7 @@
                 }
             }
 
+            // ESPN LINE OF SCRIMMAGE (BLUE LINE)
             const ballX = fieldXStart + (simBallYard / 100 * fieldWidth);
             ctx.strokeStyle = '#38bdf8';
             ctx.lineWidth = 4;
@@ -1247,6 +1226,7 @@
             ctx.lineTo(ballX, h);
             ctx.stroke();
 
+            // ESPN 1ST DOWN MARKER LINE (YELLOW LINE)
             const firstX = fieldXStart + (simFirstDownYard / 100 * fieldWidth);
             ctx.strokeStyle = '#facc15';
             ctx.lineWidth = 4;
@@ -1255,6 +1235,7 @@
             ctx.lineTo(firstX, h);
             ctx.stroke();
 
+            // ANIMATED FOOTBALL MARKER ICON
             ctx.fillStyle = '#b45309';
             ctx.beginPath();
             ctx.ellipse(ballX, h / 2, 12, 8, Math.PI / 4, 0, 2 * Math.PI);
@@ -1288,12 +1269,8 @@
             addLog("--- KICKOFF ---");
             drawESPNField();
 
-            let playCount = 0;
-            const maxPlays = 20;
-
+            let q = 1;
             const simInterval = setInterval(() => {
-                playCount++;
-                const q = Math.ceil(playCount / 5);
                 document.getElementById('simQuarter').innerText = `QUARTER ${q}`;
                 
                 const myChance = 0.5 + (myOvr - oppOvr) * 0.02;
@@ -1303,10 +1280,10 @@
                     
                     if (simBallYard >= 99) {
                         myScore += 7;
-                        addLog(`Q${q}: TOUCHDOWN ${gameState.selectedTeam.name}! (+7)`);
+                        addLog(`Q${q}: TOUCHDOWN ${gameState.selectedTeam.name}! (+7 PTS)`);
                         simBallYard = 25;
                     } else {
-                        addLog(`Q${q}: ${gameState.selectedTeam.name} pass complete +${yardsGained} YDS!`);
+                        addLog(`Q${q}: ${gameState.selectedTeam.name} gain +${yardsGained} YDS to ${simBallYard} yd line!`);
                     }
                     simFirstDownYard = Math.min(99, simBallYard + 10);
                 } else {
@@ -1314,7 +1291,7 @@
                     simBallYard = Math.max(1, simBallYard - yardsGained);
                     if (simBallYard <= 5) {
                         oppScore += 7;
-                        addLog(`Q${q}: Opponent scored TOUCHDOWN! (+7)`);
+                        addLog(`Q${q}: Opponent scored TOUCHDOWN! (+7 PTS)`);
                         simBallYard = 25;
                     } else {
                         addLog(`Q${q}: Opponent defense stop! Ball at ${simBallYard} yd line.`);
@@ -1328,7 +1305,8 @@
 
                 drawESPNField();
 
-                if (playCount >= maxPlays) {
+                q++;
+                if (q > 4) {
                     clearInterval(simInterval);
                     document.getElementById('simQuarter').innerText = "FINAL";
                     
@@ -1336,21 +1314,19 @@
                         gameState.wins++;
                         const reward = 800 + (myOvr * 10);
                         gameState.gold += reward;
-                        addXP(100);
-                        addLog(`\n🎉 VICTORY! Earned +${reward} Gold & +100 XP!`);
+                        addLog(`\n🎉 VICTORY! Earned +${reward} Gold reward!`);
                     } else {
                         gameState.losses++;
                         const reward = 250;
                         gameState.gold += reward;
-                        addXP(30);
-                        addLog(`\n❌ LOSS. Earned +${reward} Gold & +30 XP.`);
+                        addLog(`\n❌ LOSS. Consolation reward: +${reward} Gold.`);
                     }
 
                     saveGameState();
                     updateUIHeader();
                     btn.disabled = false;
                 }
-            }, 400);
+            }, 1200);
         }
 
         function saveGameState() {
@@ -1362,9 +1338,6 @@
             if (saved) {
                 try {
                     gameState = JSON.parse(saved);
-                    if (!gameState.level) gameState.level = 1;
-                    if (!gameState.xp) gameState.xp = 0;
-                    if (!gameState.achievements) gameState.achievements = ACHIEVEMENTS_DATA;
                     return true;
                 } catch(e) {
                     return false;
