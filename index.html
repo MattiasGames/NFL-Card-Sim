@@ -30,11 +30,23 @@
     </script>
 
     <style>
-        /* MADDEN ULTIMATE TEAM CARD ART EFFECTS */
+        /* 3D MADDEN CARD VISUAL STYLES */
+        .card-3d-wrapper {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        .card-3d-body {
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+            transform-style: preserve-3d;
+        }
+        .card-3d-wrapper:hover .card-3d-body {
+            transform: rotateY(-8deg) rotateX(8deg) translateZ(10px);
+        }
+
         .mut-card-goat {
             background: linear-gradient(135deg, #111827 0%, #451a03 50%, #000000 100%);
             border: 2px solid #f59e0b;
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.6), inset 0 0 15px rgba(251, 191, 36, 0.4);
+            box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.6), inset 0 0 15px rgba(251, 191, 36, 0.4);
             position: relative;
             overflow: hidden;
         }
@@ -49,7 +61,7 @@
         .mut-card-sr {
             background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #831843 100%);
             border: 2px solid #ec4899;
-            box-shadow: 0 0 20px rgba(236, 72, 153, 0.7), inset 0 0 10px rgba(168, 85, 247, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(236, 72, 153, 0.7), inset 0 0 10px rgba(168, 85, 247, 0.5);
             position: relative;
             overflow: hidden;
         }
@@ -64,13 +76,13 @@
         .mut-card-legendary {
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #020617 100%);
             border: 2px solid #eab308;
-            box-shadow: 0 0 15px rgba(234, 179, 8, 0.5);
+            box-shadow: 0 10px 20px -5px rgba(234, 179, 8, 0.5);
         }
 
         .mut-card-epic {
             background: linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #020617 100%);
             border: 2px solid #a855f7;
-            box-shadow: 0 0 12px rgba(168, 85, 247, 0.5);
+            box-shadow: 0 10px 18px -5px rgba(168, 85, 247, 0.5);
         }
 
         .mut-card-rare {
@@ -88,7 +100,6 @@
             100% { transform: translateY(100%) rotate(45deg); }
         }
 
-        /* CARD BURST FLIP REVEALS */
         .reveal-legend-burst { animation: legendBurst 0.8s ease-out forwards; }
         @keyframes legendBurst {
             0% { transform: scale(0.8) rotateY(180deg); box-shadow: 0 0 0 rgba(234, 179, 8, 0); }
@@ -107,6 +118,16 @@
         .transform-style-3d { transform-style: preserve-3d; }
         .backface-hidden { backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
+
+        /* PACK SWIPE RIPPING ANIMATION */
+        .pack-foil-wrapper {
+            user-select: none;
+            touch-action: none;
+            cursor: grab;
+        }
+        .pack-foil-wrapper:active {
+            cursor: grabbing;
+        }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
@@ -148,7 +169,15 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-6 bg-slate-950 px-4 py-2 rounded-xl border border-slate-800">
+                <div class="flex items-center gap-4 bg-slate-950 px-4 py-2 rounded-xl border border-slate-800">
+                    <!-- LEVEL & EXP PROGRESS -->
+                    <div class="flex items-center gap-2">
+                        <div class="bg-amber-500 text-slate-950 font-sports font-bold px-2 py-0.5 rounded text-lg leading-none" id="userLevelDisplay">LVL 1</div>
+                        <div class="w-24 bg-slate-800 rounded-full h-2.5 overflow-hidden border border-slate-700">
+                            <div id="xpBarFill" class="bg-amber-400 h-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="h-6 w-px bg-slate-800"></div>
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-coins text-amber-400 text-lg"></i>
                         <span id="goldDisplay" class="font-sports text-2xl text-amber-400">1,500</span>
@@ -158,10 +187,6 @@
                         <i class="fa-solid fa-shield-halved text-nflRed text-lg"></i>
                         <span id="teamOvrDisplay" class="font-sports text-2xl text-white">60 OVR</span>
                     </div>
-                    <div class="h-6 w-px bg-slate-800"></div>
-                    <div class="text-xs text-slate-400">
-                        Record: <span id="recordDisplay" class="text-white font-bold">0-0</span>
-                    </div>
                 </div>
 
                 <div class="flex items-center gap-2">
@@ -169,6 +194,7 @@
                         <button onclick="switchTab('packs')" id="tab-packs" class="px-3 py-1.5 rounded-lg font-semibold transition active-tab text-amber-400 bg-slate-800">Packs</button>
                         <button onclick="switchTab('roster')" id="tab-roster" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white">Roster</button>
                         <button onclick="switchTab('market')" id="tab-market" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white">Marketplace</button>
+                        <button onclick="switchTab('skills')" id="tab-skills" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white">Skills & Rewards</button>
                         <button onclick="switchTab('sim')" id="tab-sim" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white">Sim Game</button>
                     </nav>
 
@@ -193,7 +219,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Wildcard Gamble Pack -->
                     <div class="bg-slate-900 border border-emerald-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-emerald-400 transition">
                         <div class="w-32 h-44 bg-gradient-to-br from-emerald-800 via-teal-900 to-slate-950 border-2 border-emerald-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-dice text-4xl text-emerald-300 mb-2"></i>
@@ -207,7 +232,6 @@
                         </button>
                     </div>
 
-                    <!-- Lock Down Defense Pack -->
                     <div class="bg-slate-900 border border-cyan-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-cyan-400 transition">
                         <div class="w-32 h-44 bg-gradient-to-br from-cyan-800 via-blue-950 to-slate-950 border-2 border-cyan-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-lock text-4xl text-cyan-300 mb-2"></i>
@@ -221,7 +245,6 @@
                         </button>
                     </div>
 
-                    <!-- Ice Pack (WRs / TEs) -->
                     <div class="bg-slate-900 border border-sky-400 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-sky-300 transition">
                         <div class="w-32 h-44 bg-gradient-to-br from-sky-600 via-indigo-900 to-slate-950 border-2 border-sky-300 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-snowflake text-4xl text-sky-200 mb-2"></i>
@@ -235,7 +258,6 @@
                         </button>
                     </div>
 
-                    <!-- Rookie Phenoms Pack -->
                     <div class="bg-slate-900 border border-purple-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-purple-400 transition">
                         <div class="w-32 h-44 bg-gradient-to-br from-purple-800 via-indigo-950 to-slate-950 border-2 border-purple-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-graduation-cap text-4xl text-purple-300 mb-2"></i>
@@ -249,7 +271,6 @@
                         </button>
                     </div>
 
-                    <!-- Trench Pack (OL / RB) -->
                     <div class="bg-slate-900 border border-orange-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-orange-400 transition">
                         <div class="w-32 h-44 bg-gradient-to-br from-orange-800 via-stone-900 to-slate-950 border-2 border-orange-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-shield text-4xl text-orange-300 mb-2"></i>
@@ -263,7 +284,6 @@
                         </button>
                     </div>
 
-                    <!-- Standard Pro Pack -->
                     <div class="bg-slate-900 border border-slate-700 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-slate-400 transition">
                         <div class="w-32 h-44 bg-gradient-to-br from-slate-600 to-slate-950 border-2 border-slate-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-box-open text-4xl text-slate-300 mb-2"></i>
@@ -277,7 +297,6 @@
                         </button>
                     </div>
 
-                    <!-- All-Pro Pack -->
                     <div class="bg-slate-900 border border-amber-500/50 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-amber-400 transition">
                         <div class="w-32 h-44 bg-gradient-to-br from-amber-500 via-amber-700 to-slate-950 border-2 border-amber-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-box-open text-4xl text-amber-300 mb-2"></i>
@@ -291,7 +310,6 @@
                         </button>
                     </div>
 
-                    <!-- All-Time Legends GOAT Pack -->
                     <div class="bg-slate-900 border border-amber-400 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-amber-300 transition">
                         <div class="w-32 h-44 mut-card-goat border-2 border-amber-300 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-crown text-4xl text-amber-200 mb-2"></i>
@@ -307,12 +325,19 @@
                 </div>
             </section>
 
-            <!-- PACK OPENING OVERLAY -->
+            <!-- PACK SWIPE / OPEN OVERLAY -->
             <div id="packRevealOverlay" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl hidden flex flex-col items-center justify-center p-4">
-                <h2 class="text-3xl font-sports text-slate-400 uppercase tracking-widest mb-2" id="packOpeningTitle">Opening Pack...</h2>
-                <p class="text-slate-500 text-sm mb-6">Click cards to reveal your pulled players</p>
+                <h2 class="text-3xl font-sports text-slate-400 uppercase tracking-widest mb-2" id="packOpeningTitle">Pack Opening</h2>
+                
+                <!-- SWIPE RIPPING PACK INTERACTION -->
+                <div id="swipePackStage" class="pack-foil-wrapper my-6 relative w-64 h-96 bg-gradient-to-br from-amber-500 via-amber-700 to-slate-900 border-4 border-amber-300 rounded-2xl shadow-2xl flex flex-col items-center justify-center text-center overflow-hidden transition-transform duration-300">
+                    <div id="packFoilTearLine" class="absolute inset-x-0 top-1/2 h-2 bg-white/60 shadow-lg pointer-events-none"></div>
+                    <i class="fa-solid fa-box-open text-6xl text-amber-200 mb-3"></i>
+                    <span class="font-sports text-3xl text-white font-bold tracking-wider uppercase">SWIPE TO RIP</span>
+                    <p class="text-xs text-amber-200 px-4 mt-2">Drag cursor across pack to open!</p>
+                </div>
 
-                <div id="revealedCardsContainer" class="flex flex-wrap justify-center gap-4 max-w-6xl w-full my-4"></div>
+                <div id="revealedCardsContainer" class="hidden flex flex-wrap justify-center gap-4 max-w-6xl w-full my-4"></div>
 
                 <button id="closePackBtn" onclick="closePackModal()" class="hidden mt-6 px-8 py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-sports text-2xl font-bold rounded-xl shadow-xl transition">
                     Collect All Cards
@@ -399,19 +424,40 @@
                 </div>
             </section>
 
+            <!-- SKILLS, LEVELING & ACHIEVEMENTS VIEW -->
+            <section id="view-skills" class="hidden space-y-6">
+                <div class="text-center max-w-xl mx-auto mb-6">
+                    <h2 class="text-4xl font-sports tracking-wide uppercase text-white">Skills & Achievements</h2>
+                    <p class="text-xs text-slate-400">Complete milestones and level up to earn XP, Gold, and Free MUT Packs!</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 text-center flex flex-col items-center">
+                        <div class="w-20 h-20 rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center font-sports text-4xl text-amber-400 font-bold mb-3" id="skillsLvlCircle">1</div>
+                        <h3 class="font-sports text-2xl text-white">Franchise Level</h3>
+                        <p class="text-xs text-slate-400 mb-4">Levels grow exponentially harder!</p>
+                        <div class="w-full bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1">
+                            <div class="flex justify-between text-xs text-slate-300">
+                                <span>Current XP:</span>
+                                <span class="text-amber-400 font-bold" id="skillsXpText">0 / 100 XP</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2 space-y-3" id="achievementsContainer"></div>
+                </div>
+            </section>
+
             <!-- ESPN GAMECAST SIMULATOR VIEW -->
             <section id="view-sim" class="hidden space-y-6">
                 <div class="text-center max-w-2xl mx-auto mb-4">
-                    <h2 class="text-4xl font-sports tracking-wide uppercase text-white">ESPN GameCast Simulator</h2>
-                    <p class="text-xs text-slate-400">Live 2D interactive gridiron visual tracking drive position, downs & yards-to-gain!</p>
+                    <h2 class="text-4xl font-sports tracking-wide uppercase text-white">ESPN GameCast Fast-Sim</h2>
+                    <p class="text-xs text-slate-400">Multi-play drive simulation in under 15 seconds!</p>
                 </div>
 
                 <div class="max-w-5xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
                     
-                    <!-- ESPN BROADCAST SCOREBUG -->
                     <div class="bg-slate-950 border-2 border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-xl relative overflow-hidden">
-                        
-                        <!-- MY TEAM -->
                         <div class="flex items-center gap-3">
                             <div id="simMyTeamBadge" class="w-12 h-12 rounded-full bg-slate-800 border-2 border-amber-400 flex items-center justify-center font-sports text-2xl text-white"></div>
                             <div>
@@ -421,7 +467,6 @@
                             <div id="simMyScore" class="font-sports text-5xl font-black text-white ml-2">0</div>
                         </div>
 
-                        <!-- ESPN GAME STATUS CENTER -->
                         <div class="flex flex-col items-center">
                             <div class="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-widest flex items-center gap-1 mb-1">
                                 <i class="fa-solid fa-circle text-[6px] animate-pulse"></i> ESPN LIVE
@@ -430,7 +475,6 @@
                             <div id="simDownAndDist" class="font-sports text-lg text-slate-300 leading-none">1st & 10 at 25</div>
                         </div>
 
-                        <!-- OPPONENT TEAM -->
                         <div class="flex items-center gap-3">
                             <div id="simOppScore" class="font-sports text-5xl font-black text-white mr-2">0</div>
                             <div class="text-right">
@@ -443,19 +487,17 @@
                         </div>
                     </div>
 
-                    <!-- ESPN GAMECAST 2D CANVAS FOOTBALL FIELD -->
                     <div class="relative w-full rounded-xl overflow-hidden border-2 border-slate-700 bg-emerald-950 shadow-2xl" style="height: 220px;">
                         <canvas id="espnFieldCanvas" class="w-full h-full block"></canvas>
                     </div>
 
-                    <!-- CONTROL BUTTONS & LIVE DRIVE LOG -->
                     <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
                         <button id="startSimBtn" onclick="runGameSimulation()" class="w-full sm:w-auto px-8 py-3 bg-nflRed hover:bg-red-600 font-sports tracking-wider text-white text-2xl font-bold rounded-xl shadow-lg transition">
-                            SIMULATE GAME
+                            FAST SIMULATE GAME
                         </button>
 
                         <div class="w-full flex-grow bg-slate-950 rounded-xl p-3 border border-slate-800 h-28 overflow-y-auto font-mono text-xs space-y-1" id="simPlayLog">
-                            <div class="text-slate-500 text-center py-6">Press "SIMULATE GAME" to kickoff on the ESPN field...</div>
+                            <div class="text-slate-500 text-center py-6">Press "FAST SIMULATE GAME" to kickoff...</div>
                         </div>
                     </div>
                 </div>
@@ -469,7 +511,9 @@
     </div>
 
     <script>
+        // EXPANDED ROSTER DATABASE (70+ REAL PLAYERS)
         const CARDS_DATABASE = [
+            // GOATS
             { id: "rice_goat", name: "Jerry Rice", team: "San Francisco 49ers", position: "WR", overall: 100, rarity: "All-Time Legend", isSuperRare: true, variantName: "GOAT Edition", basePrice: 100000, color: "#AA0000" },
             { id: "brady_goat", name: "Tom Brady", team: "New England Patriots", position: "QB", overall: 100, rarity: "All-Time Legend", isSuperRare: true, variantName: "GOAT Edition", basePrice: 100000, color: "#002244" },
             { id: "lt_goat", name: "Lawrence Taylor", team: "New York Giants", position: "LB", overall: 100, rarity: "All-Time Legend", isSuperRare: true, variantName: "GOAT Edition", basePrice: 100000, color: "#0B2265" },
@@ -480,6 +524,7 @@
             { id: "lewis_ray", name: "Ray Lewis", team: "Baltimore Ravens", position: "LB", overall: 99, rarity: "All-Time Legend", isSuperRare: false, variantName: "Hall of Fame", basePrice: 75000, color: "#241773" },
             { id: "gronkowski_rob", name: "Rob Gronkowski", team: "New England Patriots", position: "TE", overall: 98, rarity: "All-Time Legend", isSuperRare: false, variantName: "Gronk Spike", basePrice: 65000, color: "#002244" },
 
+            // LEGENDARIES & SUPER RARES
             { id: "mahomes_base", name: "Patrick Mahomes", team: "Kansas City Chiefs", position: "QB", overall: 99, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 12000, color: "#E31837" },
             { id: "mahomes_sr_galaxy", name: "Patrick Mahomes", team: "Kansas City Chiefs", position: "QB", overall: 99, rarity: "Super Rare", isSuperRare: true, variantName: "Galaxy Animated", basePrice: 55000, color: "#E31837" },
             { id: "jefferson_base", name: "Justin Jefferson", team: "Minnesota Vikings", position: "WR", overall: 98, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 10000, color: "#4F2683" },
@@ -488,7 +533,9 @@
             { id: "fred_warner", name: "Fred Warner", team: "San Francisco 49ers", position: "LB", overall: 97, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 9000, color: "#AA0000" },
             { id: "chris_jones", name: "Chris Jones", team: "Kansas City Chiefs", position: "DL", overall: 97, rarity: "Legendary", isSuperRare: false, variantName: "Base", basePrice: 8800, color: "#E31837" },
             { id: "sauce_sr", name: "Sauce Gardner", team: "New York Jets", position: "CB", overall: 96, rarity: "Super Rare", isSuperRare: true, variantName: "Island Edition", basePrice: 38000, color: "#125740" },
+            { id: "smith_njigba", name: "Jaxon Smith-Njigba", team: "Seattle Seahawks", position: "WR", overall: 96, rarity: "Legendary", isSuperRare: false, variantName: "Breakout", basePrice: 8000, color: "#002244" },
 
+            // EPICS
             { id: "drake_maye", name: "Drake Maye", team: "New England Patriots", position: "QB", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Phenom", basePrice: 5800, color: "#002244" },
             { id: "lamar_epic", name: "Lamar Jackson", team: "Baltimore Ravens", position: "QB", overall: 95, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 6000, color: "#241773" },
             { id: "hill_epic", name: "Tyreek Hill", team: "Miami Dolphins", position: "WR", overall: 95, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 5800, color: "#008E97" },
@@ -496,16 +543,22 @@
             { id: "kelce_epic", name: "Travis Kelce", team: "Kansas City Chiefs", position: "TE", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 5200, color: "#E31837" },
             { id: "parsons_epic", name: "Micah Parsons", team: "Dallas Cowboys", position: "LB", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 5500, color: "#003594" },
             { id: "bosa_epic", name: "Nick Bosa", team: "San Francisco 49ers", position: "DL", overall: 93, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 4800, color: "#AA0000" },
+            { id: "allen_epic", name: "Josh Allen", team: "Buffalo Bills", position: "QB", overall: 95, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 6100, color: "#00338D" },
+            { id: "burrow_epic", name: "Joe Burrow", team: "Cincinnati Bengals", position: "QB", overall: 94, rarity: "Epic", isSuperRare: false, variantName: "Base", basePrice: 5400, color: "#FB4F14" },
 
+            // RARES
             { id: "stroud_rare", name: "C.J. Stroud", team: "Houston Texans", position: "QB", overall: 89, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2500, color: "#03202F" },
             { id: "barkley_rare", name: "Saquon Barkley", team: "Philadelphia Eagles", position: "RB", overall: 90, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2800, color: "#004C54" },
             { id: "henry_rare", name: "Derrick Henry", team: "Baltimore Ravens", position: "RB", overall: 89, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2400, color: "#241773" },
             { id: "tucker_rare", name: "Justin Tucker", team: "Baltimore Ravens", position: "K", overall: 89, rarity: "Rare", isSuperRare: false, variantName: "Base", basePrice: 2200, color: "#241773" },
+            { id: "love_jeremiyah", name: "Jeremiyah Love", team: "Arizona Cardinals", position: "RB", overall: 88, rarity: "Rare", isSuperRare: false, variantName: "Rookie", basePrice: 2100, color: "#97233F" },
 
+            // COMMONS
             { id: "purdy_common", name: "Brock Purdy", team: "San Francisco 49ers", position: "QB", overall: 85, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 900, color: "#AA0000" },
             { id: "puka_common", name: "Puka Nacua", team: "Los Angeles Rams", position: "WR", overall: 85, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 950, color: "#003594" },
             { id: "love_common", name: "Jordan Love", team: "Green Bay Packers", position: "QB", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 800, color: "#203731" },
             { id: "williams_common", name: "Caleb Williams", team: "Chicago Bears", position: "QB", overall: 82, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 700, color: "#0B162A" },
+            { id: "mendoza_rookie", name: "Fernando Mendoza", team: "Las Vegas Raiders", position: "QB", overall: 81, rarity: "Common", isSuperRare: false, variantName: "Rookie", basePrice: 650, color: "#000000" },
             { id: "harrison_common", name: "Marvin Harrison Jr", team: "Arizona Cardinals", position: "WR", overall: 83, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 750, color: "#97233F" },
             { id: "common_ol_1", name: "Tyler Smith", team: "Dallas Cowboys", position: "OL", overall: 83, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 600, color: "#003594" },
             { id: "common_dl_1", name: "Jalen Carter", team: "Philadelphia Eagles", position: "DL", overall: 84, rarity: "Common", isSuperRare: false, variantName: "Base", basePrice: 700, color: "#004C54" },
@@ -547,29 +600,38 @@
             { name: "Washington Commanders", abbr: "WAS", color: "#5A1414" }
         ];
 
+        const ACHIEVEMENTS_DATA = [
+            { id: "win_1", title: "First Franchise Win", desc: "Win 1 game simulation", rewardGold: 500, rewardXp: 50, reqWins: 1, claimed: false },
+            { id: "win_5", title: "Rising Dynasty", desc: "Win 5 game simulations", rewardGold: 1500, rewardXp: 150, reqWins: 5, claimed: false },
+            { id: "cards_10", title: "Collector", desc: "Own 10 cards in your binder", rewardGold: 1000, rewardXp: 100, reqCards: 10, claimed: false },
+            { id: "ovr_80", title: "Stacked Roster", desc: "Reach 80+ Team OVR", rewardGold: 3000, rewardXp: 300, reqOvr: 80, claimed: false }
+        ];
+
         let gameState = {
             selectedTeam: null,
             gold: 1500,
+            level: 1,
+            xp: 0,
             wins: 0,
             losses: 0,
             inventory: [],
             starters: {
                 QB: null, RB: null, WR1: null, WR2: null, TE: null,
                 OL1: null, OL2: null, OL3: null,
-                DL1: null, DL2: null, LB1: null, LB2: null, CB1: null, CB2: null, S: null,
-                K: null
+                DL1: null, DL2: null, LB1: null, LB2: null, CB1: null, CB2: null, S: null, K: null
             },
-            marketAuctions: []
+            marketAuctions: [],
+            achievements: ACHIEVEMENTS_DATA
         };
 
         let activeTab = 'packs';
         let binderFilter = 'ALL';
         let tempSelectedTeam = null;
 
-        // ESPN GameCast Canvas Variables
         let simBallYard = 25;
         let simFirstDownYard = 35;
         let simOppTeamObj = null;
+        let currentPulledCards = [];
 
         window.onload = function() {
             renderTeamSelectModal();
@@ -578,6 +640,7 @@
                 initMainApp();
             }
             startAIBiddingLoop();
+            initPackSwipeInteraction();
             window.addEventListener('resize', drawESPNField);
         };
 
@@ -639,10 +702,38 @@
             switchTab(activeTab);
         }
 
+        // EXPONENTIAL LEVELING LOGIC
+        function getRequiredXP(level) {
+            return Math.round(100 * Math.pow(1.6, level - 1));
+        }
+
+        function addXP(amount) {
+            gameState.xp += amount;
+            let req = getRequiredXP(gameState.level);
+            
+            while (gameState.xp >= req) {
+                gameState.xp -= req;
+                gameState.level++;
+                req = getRequiredXP(gameState.level);
+                
+                const goldReward = gameState.level * 500;
+                gameState.gold += goldReward;
+                alert(`🎉 LEVEL UP! You reached Franchise Level ${gameState.level}!\nEarned +${goldReward} Gold!`);
+            }
+
+            saveGameState();
+            updateUIHeader();
+        }
+
         function updateUIHeader() {
             document.getElementById('goldDisplay').innerText = gameState.gold.toLocaleString();
             document.getElementById('recordDisplay').innerText = `${gameState.wins}-${gameState.losses}`;
             document.getElementById('teamOvrDisplay').innerText = `${calculateTeamOVR()} OVR`;
+
+            document.getElementById('userLevelDisplay').innerText = `LVL ${gameState.level}`;
+            const reqXp = getRequiredXP(gameState.level);
+            const pct = Math.min(100, (gameState.xp / reqXp) * 100);
+            document.getElementById('xpBarFill').style.width = `${pct}%`;
         }
 
         function calculateTeamOVR() {
@@ -656,7 +747,7 @@
 
         function switchTab(tab) {
             activeTab = tab;
-            ['packs', 'roster', 'market', 'sim'].forEach(t => {
+            ['packs', 'roster', 'market', 'skills', 'sim'].forEach(t => {
                 const view = document.getElementById(`view-${t}`);
                 const btn = document.getElementById(`tab-${t}`);
                 if (t === tab) {
@@ -672,6 +763,7 @@
 
             if (tab === 'roster') renderRosterView();
             if (tab === 'market') renderMarketplace();
+            if (tab === 'skills') renderSkillsAndAchievements();
             if (tab === 'sim') renderSimView();
         }
 
@@ -712,21 +804,22 @@
             }
 
             gameState.gold -= cost;
+            addXP(25);
             updateUIHeader();
 
-            const pulledCards = [];
+            currentPulledCards = [];
             for (let i = 0; i < cardCount; i++) {
-                pulledCards.push(rollRandomCard(chances, filterPos));
+                currentPulledCards.push(rollRandomCard(chances, filterPos));
             }
 
-            pulledCards.forEach(c => {
+            currentPulledCards.forEach(c => {
                 const copy = JSON.parse(JSON.stringify(c));
                 copy.instanceId = 'card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
                 gameState.inventory.push(copy);
             });
 
             saveGameState();
-            triggerPackRevealAnimation(pulledCards, type.toUpperCase());
+            preparePackSwipeOverlay(type.toUpperCase());
         }
 
         function rollRandomCard(chances, filterPos) {
@@ -749,16 +842,61 @@
             return pool[Math.floor(Math.random() * pool.length)];
         }
 
-        function triggerPackRevealAnimation(cards, packTitle) {
+        // SWIPE TO RIP PACK MECHANIC
+        function preparePackSwipeOverlay(packTitle) {
             const overlay = document.getElementById('packRevealOverlay');
+            const stage = document.getElementById('swipePackStage');
             const container = document.getElementById('revealedCardsContainer');
-            const title = document.getElementById('packOpeningTitle');
             const closeBtn = document.getElementById('closePackBtn');
 
-            title.innerText = `${packTitle} PACK REVEAL`;
+            document.getElementById('packOpeningTitle').innerText = `${packTitle} PACK`;
+            stage.classList.remove('hidden', 'scale-150', 'opacity-0');
+            container.classList.add('hidden');
             container.innerHTML = '';
             closeBtn.classList.add('hidden');
             overlay.classList.remove('hidden');
+        }
+
+        function initPackSwipeInteraction() {
+            const stage = document.getElementById('swipePackStage');
+            let isDragging = false;
+            let startX = 0;
+
+            const startRip = (e) => {
+                isDragging = true;
+                startX = e.clientX || (e.touches && e.touches[0].clientX);
+            };
+
+            const doRip = (e) => {
+                if (!isDragging) return;
+                const currentX = e.clientX || (e.touches && e.touches[0].clientX);
+                const diff = Math.abs(currentX - startX);
+
+                if (diff > 80) {
+                    isDragging = false;
+                    stage.classList.add('scale-150', 'opacity-0');
+                    setTimeout(() => {
+                        stage.classList.add('hidden');
+                        renderRevealedCards(currentPulledCards);
+                    }, 300);
+                }
+            };
+
+            const endRip = () => { isDragging = false; };
+
+            stage.addEventListener('mousedown', startRip);
+            stage.addEventListener('mousemove', doRip);
+            window.addEventListener('mouseup', endRip);
+
+            stage.addEventListener('touchstart', startRip);
+            stage.addEventListener('touchmove', doRip);
+            window.addEventListener('touchend', endRip);
+        }
+
+        function renderRevealedCards(cards) {
+            const container = document.getElementById('revealedCardsContainer');
+            const closeBtn = document.getElementById('closePackBtn');
+            container.classList.remove('hidden');
 
             cards.forEach((card, idx) => {
                 const cardEl = document.createElement('div');
@@ -785,7 +923,7 @@
                     } else {
                         inner.classList.add('rotate-y-180');
                     }
-                    setTimeout(() => closeBtn.classList.remove('hidden'), 500);
+                    setTimeout(() => closeBtn.classList.remove('hidden'), 400);
                 };
 
                 container.appendChild(cardEl);
@@ -805,34 +943,39 @@
             return "mut-card-common text-slate-300";
         }
 
+        // 3D MUT CARD GRAPHICS
         function renderCardHTML(card) {
             return `
-                <div class="flex justify-between items-start w-full relative z-10 px-1 pt-1">
-                    <div class="flex flex-col items-center">
-                        <span class="font-sports text-4xl font-extrabold leading-none text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">${card.overall}</span>
-                        <span class="text-[8px] font-black uppercase text-amber-400 bg-slate-950/80 px-1 rounded -mt-1 tracking-tighter">OVR</span>
-                    </div>
-                    <div class="bg-slate-950/90 border border-slate-700 rounded px-2 py-0.5 text-center">
-                        <span class="font-sports text-sm font-bold uppercase tracking-wider text-slate-200">${card.position}</span>
-                    </div>
-                </div>
-                
-                <div class="flex-grow flex flex-col items-center justify-center my-1 relative z-10">
-                    <div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl font-sports font-bold text-white shadow-2xl border-2 border-white/20 relative" style="background-color:${card.color}">
-                        ${card.name.split(' ').map(n=>n[0]).join('')}
-                    </div>
-                    ${card.isSuperRare || card.rarity === 'All-Time Legend' ? `
-                        <span class="mt-1 text-[8px] font-black px-2 py-0.5 rounded ${card.rarity === 'All-Time Legend' ? 'bg-amber-500 text-slate-950' : 'bg-pink-600 text-white'} tracking-widest uppercase shadow-md border border-white/30">
-                            ${card.variantName}
-                        </span>
-                    ` : ''}
-                </div>
+                <div class="card-3d-wrapper w-full h-full">
+                    <div class="card-3d-body w-full h-full flex flex-col justify-between">
+                        <div class="flex justify-between items-start w-full relative z-10 px-1 pt-1">
+                            <div class="flex flex-col items-center">
+                                <span class="font-sports text-4xl font-extrabold leading-none text-white drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)]">${card.overall}</span>
+                                <span class="text-[8px] font-black uppercase text-amber-400 bg-slate-950/90 px-1 rounded -mt-1 tracking-tighter border border-amber-500/40">OVR</span>
+                            </div>
+                            <div class="bg-slate-950/90 border border-slate-700 rounded px-2 py-0.5 text-center shadow-lg">
+                                <span class="font-sports text-sm font-bold uppercase tracking-wider text-slate-200">${card.position}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-grow flex flex-col items-center justify-center my-1 relative z-10">
+                            <div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl font-sports font-bold text-white shadow-2xl border-2 border-white/30 relative" style="background-color:${card.color}">
+                                ${card.name.split(' ').map(n=>n[0]).join('')}
+                            </div>
+                            ${card.isSuperRare || card.rarity === 'All-Time Legend' ? `
+                                <span class="mt-1 text-[8px] font-black px-2 py-0.5 rounded ${card.rarity === 'All-Time Legend' ? 'bg-amber-500 text-slate-950' : 'bg-pink-600 text-white'} tracking-widest uppercase shadow-md border border-white/30">
+                                    ${card.variantName}
+                                </span>
+                            ` : ''}
+                        </div>
 
-                <div class="w-full bg-slate-950/90 border-t border-slate-800 rounded-b-lg p-1.5 text-center relative z-10">
-                    <h4 class="font-sports text-xl leading-none truncate uppercase font-bold text-white tracking-wide">${card.name}</h4>
-                    <div class="flex justify-between items-center text-[8px] text-slate-400 mt-1 font-semibold uppercase">
-                        <span class="truncate">${card.team}</span>
-                        <span class="text-amber-400 font-bold">${card.rarity}</span>
+                        <div class="w-full bg-slate-950/90 border-t border-slate-800 rounded-b-lg p-1.5 text-center relative z-10">
+                            <h4 class="font-sports text-xl leading-none truncate uppercase font-bold text-white tracking-wide">${card.name}</h4>
+                            <div class="flex justify-between items-center text-[8px] text-slate-400 mt-1 font-semibold uppercase">
+                                <span class="truncate">${card.team}</span>
+                                <span class="text-amber-400 font-bold">${card.rarity}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1137,9 +1280,59 @@
             }, 6000);
         }
 
-        // ==========================================
-        // ESPN GAMECAST GRAPHIC SIMULATOR
-        // ==========================================
+        // SKILLS & ACHIEVEMENTS SYSTEM
+        function renderSkillsAndAchievements() {
+            document.getElementById('skillsLvlCircle').innerText = gameState.level;
+            const req = getRequiredXP(gameState.level);
+            document.getElementById('skillsXpText').innerText = `${gameState.xp} / ${req} XP`;
+
+            const container = document.getElementById('achievementsContainer');
+            container.innerHTML = '';
+
+            gameState.achievements.forEach((ach, idx) => {
+                let currentProgress = 0;
+                let goal = 1;
+                if (ach.reqWins) { currentProgress = gameState.wins; goal = ach.reqWins; }
+                if (ach.reqCards) { currentProgress = gameState.inventory.length; goal = ach.reqCards; }
+                if (ach.reqOvr) { currentProgress = calculateTeamOVR(); goal = ach.reqOvr; }
+
+                const isComplete = currentProgress >= goal;
+
+                const card = document.createElement('div');
+                card.className = `bg-slate-900 border ${ach.claimed ? 'border-slate-800 opacity-60' : isComplete ? 'border-amber-400 bg-amber-950/20' : 'border-slate-800'} rounded-2xl p-4 flex justify-between items-center`;
+                
+                card.innerHTML = `
+                    <div>
+                        <h4 class="font-sports text-2xl text-white leading-none">${ach.title}</h4>
+                        <p class="text-xs text-slate-400 mb-2">${ach.desc}</p>
+                        <div class="flex items-center gap-3 text-xs">
+                            <span class="text-amber-400 font-bold"><i class="fa-solid fa-coins"></i> +${ach.rewardGold}</span>
+                            <span class="text-indigo-400 font-bold"><i class="fa-solid fa-bolt"></i> +${ach.rewardXp} XP</span>
+                            <span class="text-slate-500 font-semibold">Progress: ${currentProgress}/${goal}</span>
+                        </div>
+                    </div>
+
+                    <button onclick="claimAchievementReward(${idx})" ${!isComplete || ach.claimed ? 'disabled' : ''} class="px-5 py-2 rounded-xl font-sports text-xl tracking-wider text-white font-bold ${ach.claimed ? 'bg-slate-800 text-slate-500 cursor-not-allowed' : isComplete ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-lg' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}">
+                        ${ach.claimed ? 'CLAIMED' : isComplete ? 'CLAIM' : 'LOCKED'}
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function claimAchievementReward(idx) {
+            const ach = gameState.achievements[idx];
+            if (ach.claimed) return;
+
+            ach.claimed = true;
+            gameState.gold += ach.rewardGold;
+            addXP(ach.rewardXp);
+
+            saveGameState();
+            renderSkillsAndAchievements();
+        }
+
+        // ESPN GAMECAST FAST SIMULATOR (15 SECONDS FULL GAME)
         function renderSimView() {
             document.getElementById('simMyTeamBadge').style.backgroundColor = gameState.selectedTeam.color;
             document.getElementById('simMyTeamBadge').innerText = gameState.selectedTeam.abbr;
@@ -1168,11 +1361,9 @@
             const w = canvas.width;
             const h = canvas.height;
 
-            // Turf Background
             ctx.fillStyle = '#064e3b';
             ctx.fillRect(0, 0, w, h);
 
-            // Alternating Field Grass Stripes
             const fieldXStart = 60;
             const fieldXEnd = w - 60;
             const fieldWidth = fieldXEnd - fieldXStart;
@@ -1184,20 +1375,17 @@
                 }
             }
 
-            // Endzones
             ctx.fillStyle = gameState ? gameState.selectedTeam.color : '#003594';
             ctx.fillRect(0, 0, fieldXStart, h);
             ctx.fillStyle = simOppTeamObj ? simOppTeamObj.color : '#AA0000';
             ctx.fillRect(fieldXEnd, 0, 60, h);
 
-            // Endzone Labels
             ctx.fillStyle = '#ffffff';
             ctx.font = 'bold 16px Teko';
             ctx.textAlign = 'center';
             ctx.fillText(gameState ? gameState.selectedTeam.abbr : 'HOME', 30, h / 2 + 5);
             ctx.fillText(simOppTeamObj ? simOppTeamObj.abbr : 'AWAY', w - 30, h / 2 + 5);
 
-            // Yard Line Numbers & White Lines
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
             ctx.lineWidth = 2;
 
@@ -1217,7 +1405,6 @@
                 }
             }
 
-            // ESPN LINE OF SCRIMMAGE (BLUE LINE)
             const ballX = fieldXStart + (simBallYard / 100 * fieldWidth);
             ctx.strokeStyle = '#38bdf8';
             ctx.lineWidth = 4;
@@ -1226,7 +1413,6 @@
             ctx.lineTo(ballX, h);
             ctx.stroke();
 
-            // ESPN 1ST DOWN MARKER LINE (YELLOW LINE)
             const firstX = fieldXStart + (simFirstDownYard / 100 * fieldWidth);
             ctx.strokeStyle = '#facc15';
             ctx.lineWidth = 4;
@@ -1235,7 +1421,6 @@
             ctx.lineTo(firstX, h);
             ctx.stroke();
 
-            // ANIMATED FOOTBALL MARKER ICON
             ctx.fillStyle = '#b45309';
             ctx.beginPath();
             ctx.ellipse(ballX, h / 2, 12, 8, Math.PI / 4, 0, 2 * Math.PI);
@@ -1269,8 +1454,12 @@
             addLog("--- KICKOFF ---");
             drawESPNField();
 
-            let q = 1;
+            let playCount = 0;
+            const maxPlays = 20;
+
             const simInterval = setInterval(() => {
+                playCount++;
+                const q = Math.ceil(playCount / 5);
                 document.getElementById('simQuarter').innerText = `QUARTER ${q}`;
                 
                 const myChance = 0.5 + (myOvr - oppOvr) * 0.02;
@@ -1280,10 +1469,10 @@
                     
                     if (simBallYard >= 99) {
                         myScore += 7;
-                        addLog(`Q${q}: TOUCHDOWN ${gameState.selectedTeam.name}! (+7 PTS)`);
+                        addLog(`Q${q}: TOUCHDOWN ${gameState.selectedTeam.name}! (+7)`);
                         simBallYard = 25;
                     } else {
-                        addLog(`Q${q}: ${gameState.selectedTeam.name} gain +${yardsGained} YDS to ${simBallYard} yd line!`);
+                        addLog(`Q${q}: ${gameState.selectedTeam.name} pass complete +${yardsGained} YDS!`);
                     }
                     simFirstDownYard = Math.min(99, simBallYard + 10);
                 } else {
@@ -1291,7 +1480,7 @@
                     simBallYard = Math.max(1, simBallYard - yardsGained);
                     if (simBallYard <= 5) {
                         oppScore += 7;
-                        addLog(`Q${q}: Opponent scored TOUCHDOWN! (+7 PTS)`);
+                        addLog(`Q${q}: Opponent scored TOUCHDOWN! (+7)`);
                         simBallYard = 25;
                     } else {
                         addLog(`Q${q}: Opponent defense stop! Ball at ${simBallYard} yd line.`);
@@ -1305,8 +1494,7 @@
 
                 drawESPNField();
 
-                q++;
-                if (q > 4) {
+                if (playCount >= maxPlays) {
                     clearInterval(simInterval);
                     document.getElementById('simQuarter').innerText = "FINAL";
                     
@@ -1314,19 +1502,21 @@
                         gameState.wins++;
                         const reward = 800 + (myOvr * 10);
                         gameState.gold += reward;
-                        addLog(`\n🎉 VICTORY! Earned +${reward} Gold reward!`);
+                        addXP(100);
+                        addLog(`\n🎉 VICTORY! Earned +${reward} Gold & +100 XP!`);
                     } else {
                         gameState.losses++;
                         const reward = 250;
                         gameState.gold += reward;
-                        addLog(`\n❌ LOSS. Consolation reward: +${reward} Gold.`);
+                        addXP(30);
+                        addLog(`\n❌ LOSS. Earned +${reward} Gold & +30 XP.`);
                     }
 
                     saveGameState();
                     updateUIHeader();
                     btn.disabled = false;
                 }
-            }, 1200);
+            }, 500);
         }
 
         function saveGameState() {
@@ -1338,6 +1528,9 @@
             if (saved) {
                 try {
                     gameState = JSON.parse(saved);
+                    if (!gameState.level) gameState.level = 1;
+                    if (!gameState.xp) gameState.xp = 0;
+                    if (!gameState.achievements) gameState.achievements = ACHIEVEMENTS_DATA;
                     return true;
                 } catch(e) {
                     return false;
