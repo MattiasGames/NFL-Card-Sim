@@ -183,7 +183,7 @@
                             <span class="text-[9px] text-cyan-200 uppercase font-bold mt-1">3 Defense Cards</span>
                         </div>
                         <h3 class="font-sports text-2xl text-cyan-300">Lock Down Pack</h3>
-                        <p class="text-[11px] text-slate-400 mb-3">100% Defensive stars (DL, LB, CB, S).</p>
+                        <p class="text-[11px] text-slate-400 mb-3">Defensive players (DL, LB, CB, S).</p>
                         <button onclick="buyPack('lockdown')" class="mt-auto w-full py-2 bg-cyan-600 hover:bg-cyan-500 font-sports tracking-wider text-white text-lg rounded-xl transition">
                             <i class="fa-solid fa-coins"></i> 1,200 GOLD
                         </button>
@@ -196,7 +196,7 @@
                             <span class="text-[9px] text-sky-200 uppercase font-bold mt-1">3 Receiver Cards</span>
                         </div>
                         <h3 class="font-sports text-2xl text-sky-300">Ice Receivers</h3>
-                        <p class="text-[11px] text-slate-400 mb-3">Targeted elite WR & TE pass catchers.</p>
+                        <p class="text-[11px] text-slate-400 mb-3">Targeted WR & TE pass catchers.</p>
                         <button onclick="buyPack('ice')" class="mt-auto w-full py-2 bg-sky-500 hover:bg-sky-400 font-sports tracking-wider text-slate-950 font-bold text-lg rounded-xl transition">
                             <i class="fa-solid fa-coins"></i> 1,800 GOLD
                         </button>
@@ -235,7 +235,7 @@
                             <span class="text-[9px] text-slate-300 uppercase font-bold mt-1">3 Cards</span>
                         </div>
                         <h3 class="font-sports text-2xl text-slate-200">Standard Pro</h3>
-                        <p class="text-[11px] text-slate-400 mb-3">Guaranteed Rare player.</p>
+                        <p class="text-[11px] text-slate-400 mb-3">Mostly Common/Rare budget cards.</p>
                         <button onclick="buyPack('silver')" class="mt-auto w-full py-2 bg-slate-700 hover:bg-slate-600 font-sports tracking-wider text-white text-lg rounded-xl transition">
                             <i class="fa-solid fa-coins"></i> 750 GOLD
                         </button>
@@ -248,7 +248,7 @@
                             <span class="text-[9px] text-amber-300 uppercase font-bold mt-1">4 Cards</span>
                         </div>
                         <h3 class="font-sports text-2xl text-amber-300">All-Pro Pack</h3>
-                        <p class="text-[11px] text-slate-400 mb-3">Guaranteed Epic or Legendary.</p>
+                        <p class="text-[11px] text-slate-400 mb-3">Higher chance for 85+ OVR.</p>
                         <button onclick="buyPack('gold')" class="mt-auto w-full py-2 bg-amber-500 hover:bg-amber-400 font-sports tracking-wider text-slate-950 font-bold text-lg rounded-xl transition">
                             <i class="fa-solid fa-coins"></i> 2,500 GOLD
                         </button>
@@ -258,10 +258,10 @@
                         <div class="w-32 h-44 mut-card-frame art-variant-goat rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-crown text-4xl text-amber-200 mb-2"></i>
                             <span class="font-sports text-xl text-amber-100 leading-none">ALL-TIME</span>
-                            <span class="text-[9px] text-amber-200 uppercase font-bold mt-1">5 GOAT Cards</span>
+                            <span class="text-[9px] text-amber-200 uppercase font-bold mt-1">5 Elite Cards</span>
                         </div>
                         <h3 class="font-sports text-2xl text-amber-300">All-Time Legends</h3>
-                        <p class="text-[11px] text-slate-400 mb-3">Highest odds for Brady, Rice & 100 OVR GOATs!</p>
+                        <p class="text-[11px] text-slate-400 mb-3">Guaranteed 90+ OVR cards & GOAT chance.</p>
                         <button onclick="buyPack('legends')" class="mt-auto w-full py-2 bg-amber-500 hover:bg-amber-400 font-sports tracking-wider text-slate-950 font-bold text-lg rounded-xl transition">
                             <i class="fa-solid fa-coins"></i> 10,000 GOLD
                         </button>
@@ -552,98 +552,110 @@
             return `${pre}${suf}_${num}`;
         }
 
-        const PLAYER_POOL = [
-            { id: 'p1', name: 'Tom Brady', pos: 'QB', ovr: 100, tier: 'goat', price: 15000, arch: 'FIELD GENERAL', artStyle: 'goat' },
-            { id: 'p2', name: 'Jerry Rice', pos: 'WR', ovr: 100, tier: 'goat', price: 15000, arch: 'DEEP THREAT', artStyle: 'goat' },
-            { id: 'p3', name: 'Lawrence Taylor', pos: 'LB', ovr: 99, tier: 'sr', price: 10000, arch: 'PASS RUSHER', artStyle: 'lava' },
-            { id: 'p4', name: 'Patrick Mahomes', pos: 'QB', ovr: 98, tier: 'sr', price: 9000, arch: 'IMPROVISER', artStyle: 'cyber' },
-            { id: 'p5', name: 'Justin Jefferson', pos: 'WR', ovr: 96, tier: 'legendary', price: 6000, arch: 'SPEEDSTER', artStyle: 'electric' },
-            { id: 'p6', name: 'Derrick Henry', pos: 'RB', ovr: 95, tier: 'legendary', price: 5500, arch: 'POWER BACK', artStyle: 'lava' },
-            { id: 'p7', name: 'Travis Kelce', pos: 'TE', ovr: 94, tier: 'legendary', price: 5000, arch: 'IMPROVISER', artStyle: 'gold' },
-            { id: 'p8', name: 'Trent Williams', pos: 'OL', ovr: 93, tier: 'legendary', price: 4500, arch: 'POWER BACK', artStyle: 'darkmatter' },
-            { id: 'p9', name: 'Aaron Donald', pos: 'DL', ovr: 95, tier: 'legendary', price: 5500, arch: 'PASS RUSHER', artStyle: 'lava' },
-            { id: 'p10', name: 'Sauce Gardner', pos: 'CB', ovr: 92, tier: 'legendary', price: 4200, arch: 'LOCKDOWN', artStyle: 'frost' },
-            { id: 'p11', name: 'Minkah Fitzpatrick', pos: 'S', ovr: 91, tier: 'epic', price: 3000, arch: 'ZONE HAWK', artStyle: 'cyber' },
-            { id: 'p12', name: 'Justin Tucker', pos: 'K', ovr: 92, tier: 'epic', price: 3200, arch: 'FIELD GENERAL', artStyle: 'retro' },
-            { id: 'p13', name: 'Caleb Williams', pos: 'QB', ovr: 85, tier: 'rare', price: 1200, arch: 'IMPROVISER', artStyle: 'electric' },
-            { id: 'p14', name: 'Marvin Harrison Jr.', pos: 'WR', ovr: 84, tier: 'rare', price: 1100, arch: 'SPEEDSTER', artStyle: 'cyber' },
-            { id: 'p15', name: 'Joe Burrow', pos: 'QB', ovr: 89, tier: 'epic', price: 2500, arch: 'FIELD GENERAL', artStyle: 'frost' },
-            { id: 'p16', name: 'Christian McCaffrey', pos: 'RB', ovr: 96, tier: 'legendary', price: 6500, arch: 'IMPROVISER', artStyle: 'gold' },
-            { id: 'p17', name: 'Tyreek Hill', pos: 'WR', ovr: 95, tier: 'legendary', price: 5800, arch: 'SPEEDSTER', artStyle: 'electric' },
-            { id: 'p18', name: 'Micah Parsons', pos: 'LB', ovr: 94, tier: 'legendary', price: 5200, arch: 'PASS RUSHER', artStyle: 'darkmatter' },
-            { id: 'p19', name: 'Nick Bosa', pos: 'DL', ovr: 92, tier: 'epic', price: 3500, arch: 'PASS RUSHER', artStyle: 'lava' },
-            { id: 'p20', name: 'Lamar Jackson', pos: 'QB', ovr: 93, tier: 'legendary', price: 4800, arch: 'SPEEDSTER', artStyle: 'electric' },
-            { id: 'p21', name: 'Saquon Barkley', pos: 'RB', ovr: 88, tier: 'rare', price: 1800, arch: 'POWER BACK', artStyle: 'darkmatter' },
-            { id: 'p22', name: 'George Kittle', pos: 'TE', ovr: 90, tier: 'epic', price: 2800, arch: 'POWER BACK', artStyle: 'retro' },
-            { id: 'p23', name: 'Penei Sewell', pos: 'OL', ovr: 89, tier: 'epic', price: 2400, arch: 'POWER BACK', artStyle: 'cyber' },
-            { id: 'p24', name: 'Jalen Ramsey', pos: 'CB', ovr: 88, tier: 'rare', price: 1600, arch: 'LOCKDOWN', artStyle: 'frost' },
-            { id: 'p25', name: 'Derwin James', pos: 'S', ovr: 87, tier: 'rare', price: 1400, arch: 'ZONE HAWK', artStyle: 'electric' },
-            { id: 'p26', name: 'Harrison Butker', pos: 'K', ovr: 86, tier: 'rare', price: 1300, arch: 'FIELD GENERAL', artStyle: 'retro' },
-            { id: 'p27', name: 'C.J. Stroud', pos: 'QB', ovr: 86, tier: 'rare', price: 1350, arch: 'FIELD GENERAL', artStyle: 'cyber' },
-            { id: 'p28', name: 'Jayden Daniels', pos: 'QB', ovr: 83, tier: 'common', price: 800, arch: 'IMPROVISER', artStyle: 'electric' },
-            { id: 'p29', name: 'Malik Nabers', pos: 'WR', ovr: 83, tier: 'common', price: 750, arch: 'SPEEDSTER', artStyle: 'retro' },
-            { id: 'p30', name: 'Brock Bowers', pos: 'TE', ovr: 84, tier: 'rare', price: 950, arch: 'IMPROVISER', artStyle: 'frost' },
-            { id: 'p31', name: 'Josh Allen', pos: 'QB', ovr: 97, tier: 'sr', price: 8000, arch: 'FIELD GENERAL', artStyle: 'cyber' },
-            { id: 'p32', name: 'Myles Garrett', pos: 'DL', ovr: 98, tier: 'sr', price: 9000, arch: 'PASS RUSHER', artStyle: 'lava' },
-            { id: 'p33', name: "Ja'Marr Chase", pos: 'WR', ovr: 99, tier: 'sr', price: 10000, arch: 'DEEP THREAT', artStyle: 'electric' },
-            { id: 'p34', name: 'Fred Warner', pos: 'LB', ovr: 97, tier: 'sr', price: 8000, arch: 'LOCKDOWN', artStyle: 'frost' },
-            { id: 'p35', name: 'Maxx Crosby', pos: 'DL', ovr: 97, tier: 'sr', price: 8000, arch: 'PASS RUSHER', artStyle: 'darkmatter' },
-            { id: 'p36', name: 'Pat Surtain II', pos: 'CB', ovr: 97, tier: 'sr', price: 8000, arch: 'LOCKDOWN', artStyle: 'cyber' },
-            { id: 'p37', name: 'Lane Johnson', pos: 'OL', ovr: 97, tier: 'sr', price: 8000, arch: 'POWER BACK', artStyle: 'gold' },
-            { id: 'p38', name: 'Christian Gonzalez', pos: 'CB', ovr: 92, tier: 'epic', price: 3500, arch: 'LOCKDOWN', artStyle: 'electric' },
-            { id: 'p39', name: 'Amon-Ra St. Brown', pos: 'WR', ovr: 95, tier: 'legendary', price: 5800, arch: 'SPEEDSTER', artStyle: 'retro' },
-            { id: 'p40', name: 'Bijan Robinson', pos: 'RB', ovr: 92, tier: 'epic', price: 3500, arch: 'IMPROVISER', artStyle: 'gold' },
-            { id: 'p41', name: 'Cameron Heyward', pos: 'DL', ovr: 92, tier: 'epic', price: 3500, arch: 'POWER BACK', artStyle: 'lava' },
-            { id: 'p42', name: 'Will Anderson Jr.', pos: 'DL', ovr: 89, tier: 'epic', price: 2400, arch: 'PASS RUSHER', artStyle: 'darkmatter' },
-            { id: 'p43', name: 'Jeffery Simmons', pos: 'DL', ovr: 88, tier: 'rare', price: 1800, arch: 'POWER BACK', artStyle: 'lava' },
-            { id: 'p44', name: 'Trent McDuffie', pos: 'CB', ovr: 94, tier: 'legendary', price: 5000, arch: 'LOCKDOWN', artStyle: 'frost' },
-            { id: 'p45', name: 'Derek Stingley Jr.', pos: 'CB', ovr: 91, tier: 'epic', price: 3000, arch: 'LOCKDOWN', artStyle: 'cyber' },
-            { id: 'p46', name: 'Drake Maye', pos: 'QB', ovr: 82, tier: 'common', price: 700, arch: 'IMPROVISER', artStyle: 'electric' },
-            { id: 'p47', name: 'Jaxon Smith-Njigba', pos: 'WR', ovr: 88, tier: 'rare', price: 1800, arch: 'SPEEDSTER', artStyle: 'retro' },
-            { id: 'p48', name: 'Devon Witherspoon', pos: 'CB', ovr: 89, tier: 'epic', price: 2400, arch: 'LOCKDOWN', artStyle: 'electric' },
-            { id: 'p49', name: 'Trey McBride', pos: 'TE', ovr: 91, tier: 'epic', price: 3000, arch: 'IMPROVISER', artStyle: 'frost' },
-            { id: 'p50', name: 'Nico Collins', pos: 'WR', ovr: 89, tier: 'epic', price: 2400, arch: 'DEEP THREAT', artStyle: 'cyber' },
-            { id: 'p51', name: 'Kenneth Walker III', pos: 'RB', ovr: 88, tier: 'rare', price: 1800, arch: 'POWER BACK', artStyle: 'darkmatter' },
-            { id: 'p52', name: 'Jahmyr Gibbs', pos: 'RB', ovr: 92, tier: 'epic', price: 3500, arch: 'SPEEDSTER', artStyle: 'electric' },
-            { id: 'p53', name: 'Bobby Wagner', pos: 'LB', ovr: 87, tier: 'rare', price: 1500, arch: 'FIELD GENERAL', artStyle: 'retro' },
-            { id: 'p54', name: 'Jake Matthews', pos: 'OL', ovr: 83, tier: 'common', price: 750, arch: 'POWER BACK', artStyle: 'gold' },
-            { id: 'p55', name: 'Cooper DeJean', pos: 'CB', ovr: 84, tier: 'rare', price: 1100, arch: 'ZONE HAWK', artStyle: 'cyber' },
-            { id: 'p56', name: 'Jalen Hurts', pos: 'QB', ovr: 88, tier: 'rare', price: 1800, arch: 'IMPROVISER', artStyle: 'electric' },
-            { id: 'p57', name: 'T.J. Watt', pos: 'LB', ovr: 97, tier: 'sr', price: 8000, arch: 'PASS RUSHER', artStyle: 'lava' },
-            { id: 'p58', name: 'Chris Jones', pos: 'DL', ovr: 97, tier: 'sr', price: 8000, arch: 'POWER BACK', artStyle: 'darkmatter' },
-            { id: 'p59', name: 'A.J. Brown', pos: 'WR', ovr: 95, tier: 'legendary', price: 5800, arch: 'DEEP THREAT', artStyle: 'electric' },
-            { id: 'p60', name: 'Dexter Lawrence', pos: 'DL', ovr: 95, tier: 'legendary', price: 5800, arch: 'POWER BACK', artStyle: 'lava' },
-            { id: 'p61', name: 'CeeDee Lamb', pos: 'WR', ovr: 96, tier: 'legendary', price: 6000, arch: 'SPEEDSTER', artStyle: 'gold' },
-            { id: 'p62', name: 'Roquan Smith', pos: 'LB', ovr: 95, tier: 'legendary', price: 5800, arch: 'FIELD GENERAL', artStyle: 'frost' },
-            { id: 'p63', name: 'Zack Martin', pos: 'OL', ovr: 97, tier: 'sr', price: 8000, arch: 'POWER BACK', artStyle: 'gold' },
-            { id: 'p64', name: 'Jessie Bates III', pos: 'S', ovr: 97, tier: 'sr', price: 8000, arch: 'ZONE HAWK', artStyle: 'frost' },
-            { id: 'p65', name: 'Mark Andrews', pos: 'TE', ovr: 94, tier: 'legendary', price: 5000, arch: 'IMPROVISER', artStyle: 'cyber' },
-            { id: 'p66', name: 'Quinnen Williams', pos: 'DL', ovr: 94, tier: 'legendary', price: 5000, arch: 'POWER BACK', artStyle: 'lava' },
-            { id: 'p67', name: 'Antoine Winfield Jr.', pos: 'S', ovr: 94, tier: 'legendary', price: 5000, arch: 'ZONE HAWK', artStyle: 'frost' },
-            { id: 'p68', name: 'Laremy Tunsil', pos: 'OL', ovr: 94, tier: 'legendary', price: 5000, arch: 'POWER BACK', artStyle: 'darkmatter' },
-            { id: 'p69', name: 'Tristan Wirfs', pos: 'OL', ovr: 94, tier: 'legendary', price: 5000, arch: 'POWER BACK', artStyle: 'gold' },
-            { id: 'p70', name: 'Davante Adams', pos: 'WR', ovr: 94, tier: 'legendary', price: 5000, arch: 'DEEP THREAT', artStyle: 'electric' },
-            { id: 'p71', name: 'Frank Ragnow', pos: 'OL', ovr: 93, tier: 'legendary', price: 4500, arch: 'POWER BACK', artStyle: 'retro' },
-            { id: 'p72', name: 'Creed Humphrey', pos: 'OL', ovr: 93, tier: 'legendary', price: 4500, arch: 'POWER BACK', artStyle: 'gold' },
-            { id: 'p73', name: 'Jaire Alexander', pos: 'CB', ovr: 93, tier: 'legendary', price: 4500, arch: 'LOCKDOWN', artStyle: 'cyber' },
-            { id: 'p74', name: 'Demario Davis', pos: 'LB', ovr: 92, tier: 'epic', price: 3500, arch: 'FIELD GENERAL', artStyle: 'darkmatter' },
-            { id: 'p75', name: 'Justin Madubuike', pos: 'DL', ovr: 92, tier: 'epic', price: 3500, arch: 'PASS RUSHER', artStyle: 'lava' },
-            { id: 'p76', name: "L'Jarius Sneed", pos: 'CB', ovr: 92, tier: 'epic', price: 3500, arch: 'LOCKDOWN', artStyle: 'frost' },
-            { id: 'p77', name: 'Stefon Diggs', pos: 'WR', ovr: 92, tier: 'epic', price: 3500, arch: 'SPEEDSTER', artStyle: 'electric' },
-            { id: 'p78', name: 'Dak Prescott', pos: 'QB', ovr: 90, tier: 'epic', price: 2800, arch: 'FIELD GENERAL', artStyle: 'cyber' },
-            { id: 'p79', name: 'T.J. Hockenson', pos: 'TE', ovr: 91, tier: 'epic', price: 3000, arch: 'IMPROVISER', artStyle: 'frost' },
-            { id: 'p80', name: 'Nick Chubb', pos: 'RB', ovr: 96, tier: 'legendary', price: 6000, arch: 'POWER BACK', artStyle: 'lava' },
-            { id: 'p81', name: 'Jordan Mailata', pos: 'OL', ovr: 96, tier: 'legendary', price: 6000, arch: 'POWER BACK', artStyle: 'gold' },
-            { id: 'p82', name: 'Xavier McKinney', pos: 'S', ovr: 93, tier: 'legendary', price: 4500, arch: 'ZONE HAWK', artStyle: 'cyber' },
-            { id: 'p83', name: 'Trey Hendrickson', pos: 'DL', ovr: 89, tier: 'epic', price: 2400, arch: 'PASS RUSHER', artStyle: 'lava' },
-            { id: 'p84', name: 'Budda Baker', pos: 'S', ovr: 92, tier: 'epic', price: 3500, arch: 'ZONE HAWK', artStyle: 'electric' },
-            { id: 'p85', name: 'Chris Lindstrom', pos: 'OL', ovr: 94, tier: 'legendary', price: 5000, arch: 'POWER BACK', artStyle: 'gold' },
-            { id: 'p86', name: 'Josh Jacobs', pos: 'RB', ovr: 90, tier: 'epic', price: 2800, arch: 'POWER BACK', artStyle: 'darkmatter' },
-            { id: 'p87', name: 'David Njoku', pos: 'TE', ovr: 90, tier: 'epic', price: 2800, arch: 'IMPROVISER', artStyle: 'retro' },
-            { id: 'p88', name: 'Justin Herbert', pos: 'QB', ovr: 87, tier: 'rare', price: 1500, arch: 'FIELD GENERAL', artStyle: 'cyber' },
-            { id: 'p89', name: 'Brock Purdy', pos: 'QB', ovr: 85, tier: 'rare', price: 1200, arch: 'FIELD GENERAL', artStyle: 'frost' },
-            { id: 'p90', name: 'Kyle Juszczyk', pos: 'RB', ovr: 88, tier: 'rare', price: 1800, arch: 'POWER BACK', artStyle: 'gold' }
+        // EXPONENTIAL PRICING LOGIC (fixes market value based on OVR)
+        function calcPrice(ovr) {
+            return Math.round(Math.pow(ovr, 2.25) / 3);
+        }
+
+        const BASE_PLAYER_POOL = [
+            // GOATS & ELITES (95-100 OVR)
+            { id: 'p1', name: 'Tom Brady', pos: 'QB', ovr: 100, tier: 'goat', arch: 'FIELD GENERAL', artStyle: 'goat' },
+            { id: 'p2', name: 'Jerry Rice', pos: 'WR', ovr: 100, tier: 'goat', arch: 'DEEP THREAT', artStyle: 'goat' },
+            { id: 'p3', name: 'Lawrence Taylor', pos: 'LB', ovr: 99, tier: 'sr', arch: 'PASS RUSHER', artStyle: 'lava' },
+            { id: 'p4', name: 'Patrick Mahomes', pos: 'QB', ovr: 98, tier: 'sr', arch: 'IMPROVISER', artStyle: 'cyber' },
+            { id: 'p33', name: "Ja'Marr Chase", pos: 'WR', ovr: 99, tier: 'sr', arch: 'DEEP THREAT', artStyle: 'electric' },
+            { id: 'p32', name: 'Myles Garrett', pos: 'DL', ovr: 98, tier: 'sr', arch: 'PASS RUSHER', artStyle: 'lava' },
+            { id: 'p31', name: 'Josh Allen', pos: 'QB', ovr: 97, tier: 'sr', arch: 'FIELD GENERAL', artStyle: 'cyber' },
+            { id: 'p34', name: 'Fred Warner', pos: 'LB', ovr: 97, tier: 'sr', arch: 'LOCKDOWN', artStyle: 'frost' },
+            { id: 'p57', name: 'T.J. Watt', pos: 'LB', ovr: 97, tier: 'sr', arch: 'PASS RUSHER', artStyle: 'lava' },
+            { id: 'p5', name: 'Justin Jefferson', pos: 'WR', ovr: 96, tier: 'legendary', arch: 'SPEEDSTER', artStyle: 'electric' },
+            { id: 'p16', name: 'Christian McCaffrey', pos: 'RB', ovr: 96, tier: 'legendary', arch: 'IMPROVISER', artStyle: 'gold' },
+            { id: 'p6', name: 'Derrick Henry', pos: 'RB', ovr: 95, tier: 'legendary', arch: 'POWER BACK', artStyle: 'lava' },
+            { id: 'p9', name: 'Aaron Donald', pos: 'DL', ovr: 95, tier: 'legendary', arch: 'PASS RUSHER', artStyle: 'lava' },
+            { id: 'p17', name: 'Tyreek Hill', pos: 'WR', ovr: 95, tier: 'legendary', arch: 'SPEEDSTER', artStyle: 'electric' },
+            { id: 'p39', name: 'Amon-Ra St. Brown', pos: 'WR', ovr: 95, tier: 'legendary', arch: 'SPEEDSTER', artStyle: 'retro' },
+            { id: 'p59', name: 'A.J. Brown', pos: 'WR', ovr: 95, tier: 'legendary', arch: 'DEEP THREAT', artStyle: 'electric' },
+
+            // MID-TIER (80-94 OVR)
+            { id: 'p7', name: 'Travis Kelce', pos: 'TE', ovr: 94, tier: 'legendary', arch: 'IMPROVISER', artStyle: 'gold' },
+            { id: 'p18', name: 'Micah Parsons', pos: 'LB', ovr: 94, tier: 'legendary', arch: 'PASS RUSHER', artStyle: 'darkmatter' },
+            { id: 'p20', name: 'Lamar Jackson', pos: 'QB', ovr: 93, tier: 'legendary', arch: 'SPEEDSTER', artStyle: 'electric' },
+            { id: 'p10', name: 'Sauce Gardner', pos: 'CB', ovr: 92, tier: 'legendary', arch: 'LOCKDOWN', artStyle: 'frost' },
+            { id: 'p11', name: 'Minkah Fitzpatrick', pos: 'S', ovr: 91, tier: 'epic', arch: 'ZONE HAWK', artStyle: 'cyber' },
+            { id: 'p22', name: 'George Kittle', pos: 'TE', ovr: 90, tier: 'epic', arch: 'POWER BACK', artStyle: 'retro' },
+            { id: 'p15', name: 'Joe Burrow', pos: 'QB', ovr: 89, tier: 'epic', arch: 'FIELD GENERAL', artStyle: 'frost' },
+            { id: 'p21', name: 'Saquon Barkley', pos: 'RB', ovr: 88, tier: 'rare', arch: 'POWER BACK', artStyle: 'darkmatter' },
+            { id: 'p24', name: 'Jalen Ramsey', pos: 'CB', ovr: 88, tier: 'rare', arch: 'LOCKDOWN', artStyle: 'frost' },
+            { id: 'p27', name: 'C.J. Stroud', pos: 'QB', ovr: 86, tier: 'rare', arch: 'FIELD GENERAL', artStyle: 'cyber' },
+
+            // NEW 60 BUDGET & COMMON PLAYERS (70-79 OVR)
+            { id: 'b1', name: 'Gardner Minshew', pos: 'QB', ovr: 72, tier: 'common', arch: 'IMPROVISER', artStyle: 'retro' },
+            { id: 'b2', name: 'Zach Wilson', pos: 'QB', ovr: 71, tier: 'common', arch: 'IMPROVISER', artStyle: 'cyber' },
+            { id: 'b3', name: 'Desmond Ridder', pos: 'QB', ovr: 70, tier: 'common', arch: 'FIELD GENERAL', artStyle: 'retro' },
+            { id: 'b4', name: 'Cam Akers', pos: 'RB', ovr: 75, tier: 'common', arch: 'POWER BACK', artStyle: 'darkmatter' },
+            { id: 'b5', name: 'Alexander Mattison', pos: 'RB', ovr: 74, tier: 'common', arch: 'POWER BACK', artStyle: 'lava' },
+            { id: 'b6', name: 'Miles Sanders', pos: 'RB', ovr: 75, tier: 'common', arch: 'SPEEDSTER', artStyle: 'electric' },
+            { id: 'b7', name: 'Justice Hill', pos: 'RB', ovr: 76, tier: 'rare', arch: 'SPEEDSTER', artStyle: 'cyber' },
+            { id: 'b8', name: 'Samaje Perine', pos: 'RB', ovr: 74, tier: 'common', arch: 'POWER BACK', artStyle: 'darkmatter' },
+            { id: 'b9', name: 'Kareem Hunt', pos: 'RB', ovr: 77, tier: 'rare', arch: 'POWER BACK', artStyle: 'lava' },
+            { id: 'b10', name: 'A.J. Dillon', pos: 'RB', ovr: 76, tier: 'rare', arch: 'POWER BACK', artStyle: 'lava' },
+            { id: 'b11', name: 'K.J. Osborn', pos: 'WR', ovr: 75, tier: 'common', arch: 'SPEEDSTER', artStyle: 'electric' },
+            { id: 'b12', name: 'Nelson Agholor', pos: 'WR', ovr: 74, tier: 'common', arch: 'DEEP THREAT', artStyle: 'retro' },
+            { id: 'b13', name: 'Van Jefferson', pos: 'WR', ovr: 73, tier: 'common', arch: 'DEEP THREAT', artStyle: 'cyber' },
+            { id: 'b14', name: 'Mecole Hardman Jr.', pos: 'WR', ovr: 74, tier: 'common', arch: 'SPEEDSTER', artStyle: 'electric' },
+            { id: 'b15', name: 'Mack Hollins', pos: 'WR', ovr: 73, tier: 'common', arch: 'DEEP THREAT', artStyle: 'retro' },
+            { id: 'b16', name: 'Darius Slayton', pos: 'WR', ovr: 77, tier: 'rare', arch: 'DEEP THREAT', artStyle: 'electric' },
+            { id: 'b17', name: 'Allen Lazard', pos: 'WR', ovr: 76, tier: 'rare', arch: 'POWER BACK', artStyle: 'gold' },
+            { id: 'b18', name: 'Demarcus Robinson', pos: 'WR', ovr: 75, tier: 'common', arch: 'DEEP THREAT', artStyle: 'cyber' },
+            { id: 'b19', name: 'Calvin Austin III', pos: 'WR', ovr: 73, tier: 'common', arch: 'SPEEDSTER', artStyle: 'electric' },
+            { id: 'b20', name: 'Nick Westbrook-Ikhine', pos: 'WR', ovr: 74, tier: 'common', arch: 'DEEP THREAT', artStyle: 'retro' },
+            { id: 'b21', name: 'Mo Alie-Cox', pos: 'TE', ovr: 72, tier: 'common', arch: 'POWER BACK', artStyle: 'darkmatter' },
+            { id: 'b22', name: 'Foster Moreau', pos: 'TE', ovr: 74, tier: 'common', arch: 'IMPROVISER', artStyle: 'frost' },
+            { id: 'b23', name: 'Will Dissly', pos: 'TE', ovr: 75, tier: 'common', arch: 'POWER BACK', artStyle: 'gold' },
+            { id: 'b24', name: 'Austin Hooper', pos: 'TE', ovr: 76, tier: 'rare', arch: 'IMPROVISER', artStyle: 'retro' },
+            { id: 'b25', name: 'Durham Smythe', pos: 'TE', ovr: 73, tier: 'common', arch: 'POWER BACK', artStyle: 'cyber' },
+            { id: 'b26', name: 'Harrison Bryant', pos: 'TE', ovr: 72, tier: 'common', arch: 'IMPROVISER', artStyle: 'frost' },
+            { id: 'b27', name: 'Daniel Faalele', pos: 'OL', ovr: 72, tier: 'common', arch: 'POWER BACK', artStyle: 'gold' },
+            { id: 'b28', name: 'Chuma Edoga', pos: 'OL', ovr: 71, tier: 'common', arch: 'POWER BACK', artStyle: 'darkmatter' },
+            { id: 'b29', name: 'Lucas Niang', pos: 'OL', ovr: 72, tier: 'common', arch: 'POWER BACK', artStyle: 'gold' },
+            { id: 'b30', name: 'Hakeem Adeniji', pos: 'OL', ovr: 70, tier: 'common', arch: 'POWER BACK', artStyle: 'retro' },
+            { id: 'b31', name: 'Roy Robertson-Harris', pos: 'DL', ovr: 73, tier: 'common', arch: 'PASS RUSHER', artStyle: 'lava' },
+            { id: 'b32', name: 'Jonathan Bullard', pos: 'DL', ovr: 71, tier: 'common', arch: 'POWER BACK', artStyle: 'darkmatter' },
+            { id: 'b33', name: 'Folorunso Fatukasi', pos: 'DL', ovr: 77, tier: 'rare', arch: 'POWER BACK', artStyle: 'lava' },
+            { id: 'b34', name: 'Bryan Bresee', pos: 'DL', ovr: 76, tier: 'rare', arch: 'PASS RUSHER', artStyle: 'cyber' },
+            { id: 'b35', name: 'John Ridgeway III', pos: 'DL', ovr: 71, tier: 'common', arch: 'POWER BACK', artStyle: 'darkmatter' },
+            { id: 'b36', name: 'Montravius Adams', pos: 'DL', ovr: 72, tier: 'common', arch: 'POWER BACK', artStyle: 'lava' },
+            { id: 'b37', name: 'Neville Gallimore', pos: 'DL', ovr: 73, tier: 'common', arch: 'PASS RUSHER', artStyle: 'electric' },
+            { id: 'b38', name: 'Anfernee Jennings', pos: 'LB', ovr: 74, tier: 'common', arch: 'PASS RUSHER', artStyle: 'darkmatter' },
+            { id: 'b39', name: 'Tyus Bowser', pos: 'LB', ovr: 75, tier: 'common', arch: 'PASS RUSHER', artStyle: 'lava' },
+            { id: 'b40', name: 'Carl Granderson', pos: 'LB', ovr: 78, tier: 'rare', arch: 'PASS RUSHER', artStyle: 'electric' },
+            { id: 'b41', name: 'Oren Burks', pos: 'LB', ovr: 72, tier: 'common', arch: 'LOCKDOWN', artStyle: 'frost' },
+            { id: 'b42', name: 'Jamin Davis', pos: 'LB', ovr: 75, tier: 'common', arch: 'FIELD GENERAL', artStyle: 'cyber' },
+            { id: 'b43', name: 'Elandon Roberts', pos: 'LB', ovr: 76, tier: 'rare', arch: 'POWER BACK', artStyle: 'darkmatter' },
+            { id: 'b44', name: 'Nicholas Morrow', pos: 'LB', ovr: 74, tier: 'common', arch: 'LOCKDOWN', artStyle: 'frost' },
+            { id: 'b45', name: 'Anthony Walker Jr.', pos: 'LB', ovr: 75, tier: 'common', arch: 'FIELD GENERAL', artStyle: 'retro' },
+            { id: 'b46', name: 'Kwon Alexander', pos: 'LB', ovr: 73, tier: 'common', arch: 'PASS RUSHER', artStyle: 'lava' },
+            { id: 'b47', name: 'Tre Herndon', pos: 'CB', ovr: 72, tier: 'common', arch: 'LOCKDOWN', artStyle: 'frost' },
+            { id: 'b48', name: 'Rock Ya-Sin', pos: 'CB', ovr: 74, tier: 'common', arch: 'LOCKDOWN', artStyle: 'cyber' },
+            { id: 'b49', name: 'Eli Apple', pos: 'CB', ovr: 72, tier: 'common', arch: 'LOCKDOWN', artStyle: 'electric' },
+            { id: 'b50', name: 'Levi Wallace', pos: 'CB', ovr: 74, tier: 'common', arch: 'LOCKDOWN', artStyle: 'frost' },
+            { id: 'b51', name: 'Arthur Maulet', pos: 'CB', ovr: 73, tier: 'common', arch: 'ZONE HAWK', artStyle: 'cyber' },
+            { id: 'b52', name: 'Kristian Fulton', pos: 'CB', ovr: 75, tier: 'common', arch: 'LOCKDOWN', artStyle: 'electric' },
+            { id: 'b53', name: 'Tre Brown', pos: 'CB', ovr: 76, tier: 'rare', arch: 'LOCKDOWN', artStyle: 'frost' },
+            { id: 'b54', name: 'Damontae Kazee', pos: 'S', ovr: 75, tier: 'common', arch: 'ZONE HAWK', artStyle: 'electric' },
+            { id: 'b55', name: 'Chuck Clark', pos: 'S', ovr: 79, tier: 'rare', arch: 'ZONE HAWK', artStyle: 'cyber' },
+            { id: 'b56', name: 'Marcus Epps', pos: 'S', ovr: 78, tier: 'rare', arch: 'ZONE HAWK', artStyle: 'frost' },
+            { id: 'b57', name: 'Will Parks', pos: 'S', ovr: 71, tier: 'common', arch: 'ZONE HAWK', artStyle: 'retro' },
+            { id: 'b58', name: 'Terrell Edmunds', pos: 'S', ovr: 76, tier: 'rare', arch: 'ZONE HAWK', artStyle: 'electric' },
+            { id: 'b59', name: 'Joey Slye', pos: 'K', ovr: 74, tier: 'common', arch: 'FIELD GENERAL', artStyle: 'retro' },
+            { id: 'b60', name: 'Eddy Piñeiro', pos: 'K', ovr: 76, tier: 'rare', arch: 'FIELD GENERAL', artStyle: 'retro' }
         ];
+
+        // Automatically bind dynamic prices
+        const PLAYER_POOL = BASE_PLAYER_POOL.map(p => ({
+            ...p,
+            price: calcPrice(p.ovr)
+        }));
 
         const ROSTER_SLOTS = [
             { key: 'QB', name: 'Quarterback', cat: 'off' },
@@ -1091,6 +1103,7 @@
             }
         }
 
+        // REBALANCED BALANCED PACK PROBABILITIES LOGIC
         function buyPack(type) {
             let cost = 0;
             let packCount = 3;
@@ -1117,21 +1130,45 @@
             let pool = PLAYER_POOL;
             if (filterFn) pool = PLAYER_POOL.filter(filterFn);
 
+            const commons = pool.filter(p => p.ovr < 80);
+            const rares = pool.filter(p => p.ovr >= 80 && p.ovr < 88);
+            const epics = pool.filter(p => p.ovr >= 88 && p.ovr < 94);
+            const legends = pool.filter(p => p.ovr >= 94);
+
             for (let i = 0; i < packCount; i++) {
                 let card;
-                if (type === 'wildcard') {
-                    const roll = Math.random();
-                    if (roll < 0.005) card = pool.find(p => p.tier === 'goat') || pool[0];
-                    else if (roll < 0.02) card = pool.find(p => p.tier === 'sr') || pool[0];
-                    else if (roll < 0.10) card = pool.find(p => p.tier === 'legendary') || pool[0];
-                    else if (roll < 0.35) card = pool.find(p => p.tier === 'epic') || pool[0];
-                    else card = pool.filter(p => p.tier === 'common' || p.tier === 'rare')[Math.floor(Math.random() * pool.length)] || pool[0];
+                const roll = Math.random();
+
+                if (type === 'silver') {
+                    // 75% Common, 20% Rare, 4.5% Epic, 0.5% Legendary
+                    if (roll < 0.75 && commons.length) card = commons[Math.floor(Math.random() * commons.length)];
+                    else if (roll < 0.95 && rares.length) card = rares[Math.floor(Math.random() * rares.length)];
+                    else if (roll < 0.995 && epics.length) card = epics[Math.floor(Math.random() * epics.length)];
+                    else card = legends[Math.floor(Math.random() * legends.length)] || pool[0];
+                } else if (type === 'gold') {
+                    // 30% Common, 50% Rare, 17% Epic, 3% Legendary
+                    if (roll < 0.30 && commons.length) card = commons[Math.floor(Math.random() * commons.length)];
+                    else if (roll < 0.80 && rares.length) card = rares[Math.floor(Math.random() * rares.length)];
+                    else if (roll < 0.97 && epics.length) card = epics[Math.floor(Math.random() * epics.length)];
+                    else card = legends[Math.floor(Math.random() * legends.length)] || pool[0];
                 } else if (type === 'legends') {
-                    const topCards = pool.filter(p => p.tier === 'goat' || p.tier === 'sr' || p.tier === 'legendary');
-                    card = topCards[Math.floor(Math.random() * topCards.length)];
+                    // Guaranteed High End
+                    if (roll < 0.60 && epics.length) card = epics[Math.floor(Math.random() * epics.length)];
+                    else card = legends[Math.floor(Math.random() * legends.length)] || pool[0];
+                } else if (type === 'wildcard') {
+                    // High risk 0.1% GOAT roll
+                    if (roll < 0.001) card = pool.find(p => p.ovr >= 99) || legends[0];
+                    else if (roll < 0.05) card = legends[Math.floor(Math.random() * legends.length)];
+                    else if (roll < 0.30) card = rares[Math.floor(Math.random() * rares.length)];
+                    else card = commons[Math.floor(Math.random() * commons.length)] || pool[0];
                 } else {
-                    card = pool[Math.floor(Math.random() * pool.length)];
+                    // Targeted Packs (Lockdown, Ice, Trenches, Rookies)
+                    if (roll < 0.65 && commons.length) card = commons[Math.floor(Math.random() * commons.length)];
+                    else if (roll < 0.90 && rares.length) card = rares[Math.floor(Math.random() * rares.length)];
+                    else card = epics[Math.floor(Math.random() * epics.length)] || pool[0];
                 }
+
+                if (!card) card = pool[Math.floor(Math.random() * pool.length)];
 
                 const randomVariant = card.artStyle || ART_VARIANTS[Math.floor(Math.random() * ART_VARIANTS.length)];
                 const cardInstance = { 
@@ -1738,6 +1775,5 @@
     </script>
 </body>
 </html>
-
 
 
