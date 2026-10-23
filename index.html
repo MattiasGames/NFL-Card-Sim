@@ -39,17 +39,6 @@
             transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
-        .mut-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-between: space-between;
-        }
-
-        /* HOLOGRAPHIC FOIL & SCANLINE OVERLAY */
         .holo-overlay {
             position: absolute;
             inset: 0;
@@ -76,56 +65,48 @@
         }
 
         /* MULTIPLE MUT ART VARIANTS */
-        /* 1. CYBERPUNK / TECH NEON */
         .art-variant-cyber {
             background: radial-gradient(circle at 50% 30%, #0284c7 0%, #090d16 80%);
             border: 2px solid #38bdf8;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5), inset 0 0 15px rgba(56, 189, 248, 0.3);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
         }
 
-        /* 2. ELECTRIC LIGHTNING */
         .art-variant-electric {
             background: radial-gradient(circle at 50% 20%, #7c3aed 0%, #030712 85%);
             border: 2px solid #a855f7;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), inset 0 0 12px rgba(236, 72, 153, 0.4);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
         }
 
-        /* 3. LAVA BURST */
         .art-variant-lava {
             background: radial-gradient(circle at 50% 30%, #b91c1c 0%, #450a0a 60%, #0a0a0a 100%);
             border: 2px solid #ef4444;
-            box-shadow: 0 0 18px rgba(239, 68, 68, 0.6), inset 0 0 15px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 0 18px rgba(239, 68, 68, 0.6);
         }
 
-        /* 4. FROSTBITE ICE */
         .art-variant-frost {
             background: radial-gradient(circle at 50% 30%, #0ea5e9 0%, #1e3a8a 60%, #020617 100%);
             border: 2px solid #bae6fd;
-            box-shadow: 0 0 18px rgba(186, 230, 253, 0.7), inset 0 0 12px rgba(14, 165, 233, 0.5);
+            box-shadow: 0 0 18px rgba(186, 230, 253, 0.7);
         }
 
-        /* 5. GOLDEN GOAT */
         .art-variant-goat {
             background: linear-gradient(135deg, #1e1b4b 0%, #b45309 50%, #000000 100%);
             border: 2px solid #fbbf24;
-            box-shadow: 0 0 25px rgba(251, 191, 36, 0.7), inset 0 0 20px rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.7);
         }
 
-        /* 6. DARK MATTER */
         .art-variant-darkmatter {
             background: radial-gradient(circle at 50% 40%, #4c1d95 0%, #111827 70%, #000000 100%);
             border: 2px solid #c084fc;
             box-shadow: 0 0 15px rgba(192, 132, 252, 0.5);
         }
 
-        /* 7. GOLDEN TOUCH */
         .art-variant-gold {
             background: radial-gradient(circle at 50% 30%, #d97706 0%, #451a03 70%, #0f172a 100%);
             border: 2px solid #f59e0b;
             box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
         }
 
-        /* 8. RETRO GRID */
         .art-variant-retro {
             background: linear-gradient(180deg, #831843 0%, #0f172a 100%);
             border: 2px solid #f43f5e;
@@ -197,6 +178,7 @@
                     <nav class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-sm">
                         <button onclick="switchTab('packs')" id="tab-packs" class="px-3 py-1.5 rounded-lg font-semibold transition active-tab text-amber-400 bg-slate-800">Packs</button>
                         <button onclick="switchTab('roster')" id="tab-roster" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white">Roster</button>
+                        <button onclick="switchTab('teams')" id="tab-teams" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white">Teams</button>
                         <button onclick="switchTab('market')" id="tab-market" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white">Marketplace</button>
                         <button onclick="switchTab('sim')" id="tab-sim" class="px-3 py-1.5 rounded-lg font-semibold transition text-slate-400 hover:text-white">Sim Game</button>
                     </nav>
@@ -392,6 +374,83 @@
                 </div>
             </section>
 
+            <!-- LEAGUE TEAMS TAB VIEW -->
+            <section id="view-teams" class="hidden space-y-6">
+                <div class="border-b border-slate-800 pb-4">
+                    <h2 class="text-3xl font-sports tracking-wide uppercase text-white">NFL Franchise Directory</h2>
+                    <p class="text-xs text-slate-400">View all AI franchises ranked best-to-worst by Team Overall (OVR). Select a team to inspect their roster or negotiate trades and cash bids!</p>
+                </div>
+
+                <div id="teamsLeagueRankingsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4"></div>
+            </section>
+
+            <!-- AI TEAM ROSTER MODAL -->
+            <div id="aiRosterModal" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl hidden flex flex-col items-center justify-center p-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-5xl w-full p-6 shadow-2xl flex flex-col max-h-[90vh]">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-4 mb-4">
+                        <div class="flex items-center gap-3">
+                            <div id="modalAiTeamBadge" class="w-12 h-12 rounded-full flex items-center justify-center font-sports text-2xl text-white font-bold border-2 border-amber-400"></div>
+                            <div>
+                                <h3 id="modalAiTeamTitle" class="font-sports text-3xl text-white uppercase leading-none">TEAM NAME</h3>
+                                <p id="modalAiTeamOwner" class="text-xs text-slate-400">Owner: --</p>
+                            </div>
+                        </div>
+                        <button onclick="closeAiRosterModal()" class="text-slate-400 hover:text-white text-xl p-2"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+
+                    <p class="text-xs text-slate-400 mb-3">Cards listed in order of highest OVR. Click any card to initiate a bid or trade proposal!</p>
+
+                    <div id="aiTeamCardGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 overflow-y-auto p-2 flex-grow min-h-[300px]"></div>
+                </div>
+            </div>
+
+            <!-- TRADE / BID NEGOTIATION MODAL -->
+            <div id="tradeModal" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl hidden flex flex-col items-center justify-center p-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                        <h3 class="font-sports text-2xl text-white uppercase"><i class="fa-solid fa-handshake text-amber-400 mr-2"></i> Trade / Bid Offer</h3>
+                        <button onclick="closeTradeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center">
+                            <span class="text-xs text-slate-400 block mb-2 font-bold">Target Player:</span>
+                            <div id="tradeTargetCardContainer"></div>
+                        </div>
+
+                        <div class="space-y-4 flex flex-col justify-center">
+                            <div>
+                                <label class="text-xs text-slate-400 block font-bold mb-1">Cash Bid Offer (Gold):</label>
+                                <input type="number" id="tradeBidGoldInput" placeholder="Enter gold offer" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-amber-400 font-bold" />
+                            </div>
+
+                            <div class="text-center text-xs text-slate-500 font-bold uppercase">- OR -</div>
+
+                            <div>
+                                <label class="text-xs text-slate-400 block font-bold mb-1">Offer Player Trade (Bench):</label>
+                                <select id="tradeOfferCardSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-200"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tradePendingStatus" class="hidden p-3 bg-slate-950 border border-amber-500/40 rounded-xl text-center space-y-1">
+                        <div class="text-amber-400 font-sports text-xl uppercase tracking-wider flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-spinner animate-spin"></i> PENDING PROPOSAL ANALYSIS...
+                        </div>
+                        <p class="text-[11px] text-slate-400">AI Front Office is evaluating your offer against their depth chart...</p>
+                    </div>
+
+                    <div id="tradeActionButtons" class="pt-2 flex gap-3">
+                        <button onclick="submitTradeProposal('bid')" class="w-1/2 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-sports tracking-wider text-xl font-bold rounded-xl transition">
+                            Submit Cash Bid
+                        </button>
+                        <button onclick="submitTradeProposal('trade')" class="w-1/2 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-sports tracking-wider text-xl rounded-xl transition">
+                            Submit Card Trade
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- MARKETPLACE VIEW -->
             <section id="view-market" class="hidden space-y-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-4">
@@ -535,14 +594,9 @@
             { code: 'WAS', name: 'Commanders', color: '#5A1414' }
         ];
 
-        // CARD ART STYLES
-        const ART_VARIANTS = [
-            'cyber', 'electric', 'lava', 'frost', 'darkmatter', 'gold', 'retro'
-        ];
-
+        const ART_VARIANTS = ['cyber', 'electric', 'lava', 'frost', 'darkmatter', 'gold', 'retro'];
         const ARCHETYPES = ['FIELD GENERAL', 'IMPROVISER', 'SPEEDSTER', 'DEEP THREAT', 'LOCKDOWN', 'PASS RUSHER', 'POWER BACK', 'ZONE HAWK'];
 
-        // REALISTIC USERNAME GENERATOR FOR AI PLAYERS
         const USERNAME_PREFIXES = ['Gridiron', 'Blitz', 'Touchdown', 'Endzone', 'Quarterback', 'Pigskin', 'Redzone', 'Interception', 'Sack', 'HailMary'];
         const USERNAME_SUFFIXES = ['Boss', 'Pro', 'King', 'Master', 'Legend', 'Beast', 'Champ', 'Sniper', 'GOAT', 'Gamer'];
         function generateRandomUsername() {
@@ -552,7 +606,6 @@
             return `${pre}${suf}_${num}`;
         }
 
-        // PLAYER DATABASE
         const PLAYER_POOL = [
             { id: 'p1', name: 'Tom Brady', pos: 'QB', ovr: 100, tier: 'goat', price: 15000, arch: 'FIELD GENERAL', artStyle: 'goat' },
             { id: 'p2', name: 'Jerry Rice', pos: 'WR', ovr: 100, tier: 'goat', price: 15000, arch: 'DEEP THREAT', artStyle: 'goat' },
@@ -576,7 +629,7 @@
             { id: 'p20', name: 'Lamar Jackson', pos: 'QB', ovr: 93, tier: 'legendary', price: 4800, arch: 'SPEEDSTER', artStyle: 'electric' },
             { id: 'p21', name: 'Saquon Barkley', pos: 'RB', ovr: 88, tier: 'rare', price: 1800, arch: 'POWER BACK', artStyle: 'darkmatter' },
             { id: 'p22', name: 'George Kittle', pos: 'TE', ovr: 90, tier: 'epic', price: 2800, arch: 'POWER BACK', artStyle: 'retro' },
-            { id: 'p23', name: 'Penei Sewell', pos: 'OL', ovr: 89, tier: 'epic', price: 2400, arch: 'POWER BACK', archStyle: 'cyber' },
+            { id: 'p23', name: 'Penei Sewell', pos: 'OL', ovr: 89, tier: 'epic', price: 2400, arch: 'POWER BACK', artStyle: 'cyber' },
             { id: 'p24', name: 'Jalen Ramsey', pos: 'CB', ovr: 88, tier: 'rare', price: 1600, arch: 'LOCKDOWN', artStyle: 'frost' },
             { id: 'p25', name: 'Derwin James', pos: 'S', ovr: 87, tier: 'rare', price: 1400, arch: 'ZONE HAWK', artStyle: 'electric' },
             { id: 'p26', name: 'Harrison Butker', pos: 'K', ovr: 86, tier: 'rare', price: 1300, arch: 'FIELD GENERAL', artStyle: 'retro' },
@@ -586,7 +639,6 @@
             { id: 'p30', name: 'Brock Bowers', pos: 'TE', ovr: 84, tier: 'rare', price: 950, arch: 'IMPROVISER', artStyle: 'frost' }
         ];
 
-        // REQUIRED ROSTER POSITIONS
         const ROSTER_SLOTS = [
             { key: 'QB', name: 'Quarterback', cat: 'off' },
             { key: 'RB', name: 'Running Back', cat: 'off' },
@@ -601,22 +653,23 @@
             { key: 'K',  name: 'Kicker', cat: 'def' }
         ];
 
-        // APP GAME STATE
         let gameState = {
             selectedTeam: null,
             gold: 2500,
             wins: 0,
             losses: 0,
-            binder: [], // Empty starter roster
-            lineup: {},  // Empty starting lineup
-            marketplace: []
+            binder: [],
+            lineup: {},
+            marketplace: [],
+            aiTeams: []
         };
 
         let tempTeamChoice = null;
         let activeBinderFilter = 'ALL';
         let currentPackQueue = [];
+        let activeAiTeamView = null;
+        let selectedTradeTargetCard = null;
 
-        // INITIALIZATION
         window.addEventListener('DOMContentLoaded', () => {
             initTeamGrid();
             loadGame();
@@ -649,10 +702,10 @@
         function confirmTeamSelection() {
             if (!tempTeamChoice) return;
             gameState.selectedTeam = tempTeamChoice;
-            
-            // Empty starters default to empty lineup
             gameState.lineup = {};
             gameState.binder = [];
+
+            generateAiLeagueTeams();
 
             document.getElementById('teamSelectModal').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
@@ -662,11 +715,48 @@
             generateMarketplaceListings();
         }
 
+        function generateAiLeagueTeams() {
+            gameState.aiTeams = [];
+            const otherTeams = NFL_TEAMS.filter(t => t.code !== gameState.selectedTeam.code);
+
+            otherTeams.forEach(team => {
+                const owner = generateRandomUsername();
+                // Build a random roster of 8-12 cards for each team
+                const cardCount = Math.floor(Math.random() * 5) + 8;
+                let roster = [];
+                for (let i = 0; i < cardCount; i++) {
+                    const card = PLAYER_POOL[Math.floor(Math.random() * PLAYER_POOL.length)];
+                    const artStyle = card.artStyle || ART_VARIANTS[Math.floor(Math.random() * ART_VARIANTS.length)];
+                    roster.push({
+                        ...card,
+                        artStyle: artStyle,
+                        instanceId: 'ai_card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5)
+                    });
+                }
+
+                // Rank cards best to worst
+                roster.sort((a, b) => b.ovr - a.ovr);
+
+                // Calculate average OVR
+                const totalOvr = roster.reduce((sum, c) => sum + c.ovr, 0);
+                const teamOvr = Math.round(totalOvr / roster.length);
+
+                gameState.aiTeams.push({
+                    team: team,
+                    owner: owner,
+                    ovr: teamOvr,
+                    roster: roster
+                });
+            });
+
+            // Rank AI Teams Best to Worst OVR
+            gameState.aiTeams.sort((a, b) => b.ovr - a.ovr);
+        }
+
         function getOverall() {
             let total = 0;
             ROSTER_SLOTS.forEach(slot => {
                 const player = gameState.lineup[slot.key];
-                // Empty slots evaluate to 65 OVR
                 total += player ? player.ovr : 65;
             });
             return Math.round(total / ROSTER_SLOTS.length);
@@ -675,7 +765,6 @@
         function updateUI() {
             if (!gameState.selectedTeam) return;
 
-            // Header UI
             document.getElementById('myTeamName').innerText = `${gameState.selectedTeam.code} ${gameState.selectedTeam.name}`;
             const badge = document.getElementById('myTeamBadge');
             badge.innerText = gameState.selectedTeam.code;
@@ -690,11 +779,9 @@
             populateSellDropdown();
         }
 
-        // HELPER TO GENERATE SHARP MUT CARD HTML
         function generateMutCardHTML(card, isCompact = false) {
             const artStyle = card.artStyle || ART_VARIANTS[Math.floor(Math.random() * ART_VARIANTS.length)];
             const archetype = card.arch || ARCHETYPES[Math.floor(Math.random() * ARCHETYPES.length)];
-            const cardTeamCode = gameState.selectedTeam ? gameState.selectedTeam.code : 'NFL';
 
             if (isCompact) {
                 return `
@@ -702,7 +789,6 @@
                         <div class="holo-overlay"></div>
                         <div class="scanlines"></div>
                         
-                        <!-- TOP RATING STACK -->
                         <div class="flex justify-between items-start z-10">
                             <div class="flex flex-col leading-none">
                                 <span class="font-sports text-3xl text-white font-bold drop-shadow-md">${card.ovr}</span>
@@ -711,12 +797,10 @@
                             <span class="font-tech text-[9px] font-black text-slate-300 border border-slate-600 px-1 bg-slate-950/80 rounded">UT</span>
                         </div>
 
-                        <!-- CENTER ICON -->
                         <div class="text-center z-10 my-auto opacity-70">
                             <i class="fa-solid fa-user-ninja text-3xl text-white"></i>
                         </div>
 
-                        <!-- BOTTOM PLAYER DETAILS -->
                         <div class="z-10 bg-slate-950/80 p-1 rounded border-t border-slate-700/50">
                             <div class="font-sports text-base text-white font-bold leading-none truncate uppercase tracking-wide">${card.name}</div>
                             <div class="text-[8px] font-tech font-bold text-amber-400 uppercase leading-none mt-0.5 truncate">${archetype}</div>
@@ -730,7 +814,6 @@
                     <div class="holo-overlay"></div>
                     <div class="scanlines"></div>
 
-                    <!-- TOP MUT RATING STACK -->
                     <div class="flex justify-between items-start z-10">
                         <div class="flex flex-col leading-none">
                             <span class="font-sports text-4xl text-white font-bold drop-shadow-md leading-none">${card.ovr}</span>
@@ -741,16 +824,14 @@
                         </div>
                     </div>
 
-                    <!-- CENTER PLAYER SILHOUETTE -->
                     <div class="text-center z-10 my-auto opacity-80">
                         <i class="fa-solid fa-user-shield text-4xl text-slate-200 drop-shadow"></i>
                     </div>
 
-                    <!-- BOTTOM SHARP CARD FOOTER -->
                     <div class="z-10 bg-slate-950/85 p-1.5 rounded-lg border-t-2 border-slate-700/60 backdrop-blur-sm">
                         <div class="flex items-center justify-between">
                             <div class="font-sports text-lg text-white font-bold leading-none truncate uppercase tracking-wider">${card.name}</div>
-                            <span class="font-tech text-[9px] font-bold text-slate-400 uppercase bg-slate-900 px-1 rounded border border-slate-800">${cardTeamCode}</span>
+                            <span class="font-tech text-[9px] font-bold text-slate-400 uppercase bg-slate-900 px-1 rounded border border-slate-800">MUT</span>
                         </div>
                         <div class="text-[9px] font-tech font-bold text-amber-400 uppercase tracking-widest mt-0.5">${archetype}</div>
                     </div>
@@ -758,9 +839,8 @@
             `;
         }
 
-        // NAVIGATION
         function switchTab(tab) {
-            ['packs', 'roster', 'market', 'sim'].forEach(t => {
+            ['packs', 'roster', 'teams', 'market', 'sim'].forEach(t => {
                 document.getElementById(`view-${t}`).classList.add('hidden');
                 document.getElementById(`tab-${t}`).classList.remove('text-amber-400', 'bg-slate-800');
                 document.getElementById(`tab-${t}`).classList.add('text-slate-400');
@@ -771,11 +851,188 @@
             activeBtn.classList.add('text-amber-400', 'bg-slate-800');
             activeBtn.classList.remove('text-slate-400');
 
+            if (tab === 'teams') renderTeamsDirectory();
             if (tab === 'market') renderMarketplace();
             if (tab === 'sim') initSimView();
         }
 
-        // PACK OPENING SYSTEM
+        // LEAGUE TEAMS DIRECTORY & AI ROSTER INSPECTOR
+        function renderTeamsDirectory() {
+            const grid = document.getElementById('teamsLeagueRankingsGrid');
+            grid.innerHTML = '';
+
+            if (!gameState.aiTeams || gameState.aiTeams.length === 0) {
+                generateAiLeagueTeams();
+            }
+
+            gameState.aiTeams.forEach((aiTeam, rank) => {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-900 border border-slate-800 hover:border-amber-400/80 rounded-2xl p-4 flex justify-between items-center cursor-pointer transition shadow-xl group';
+                card.onclick = () => openAiRosterModal(aiTeam);
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="font-sports text-2xl font-bold text-slate-500 group-hover:text-amber-400">#${rank + 1}</span>
+                        <div class="w-12 h-12 rounded-full flex items-center justify-center font-sports text-2xl text-white font-bold border-2 border-slate-700" style="background-color: ${aiTeam.team.color}">
+                            ${aiTeam.team.code}
+                        </div>
+                        <div>
+                            <h3 class="font-sports text-2xl text-white leading-none uppercase group-hover:text-amber-400">${aiTeam.team.name}</h3>
+                            <span class="text-[10px] text-slate-400 block">${aiTeam.owner}</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-sports text-3xl text-amber-400 font-bold leading-none block">${aiTeam.ovr} OVR</span>
+                        <span class="text-[9px] text-slate-500 uppercase font-bold">${aiTeam.roster.length} Cards</span>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function openAiRosterModal(aiTeam) {
+            activeAiTeamView = aiTeam;
+            document.getElementById('modalAiTeamTitle').innerText = aiTeam.team.name;
+            document.getElementById('modalAiTeamOwner').innerText = `Owner: ${aiTeam.owner} (${aiTeam.ovr} OVR)`;
+            const badge = document.getElementById('modalAiTeamBadge');
+            badge.innerText = aiTeam.team.code;
+            badge.style.backgroundColor = aiTeam.team.color;
+
+            const grid = document.getElementById('aiTeamCardGrid');
+            grid.innerHTML = '';
+
+            // Roster ranked strictly from best to worst
+            aiTeam.roster.sort((a, b) => b.ovr - a.ovr);
+
+            aiTeam.roster.forEach(card => {
+                const container = document.createElement('div');
+                container.className = 'flex flex-col space-y-1 cursor-pointer group';
+                container.onclick = () => openTradeModal(card);
+
+                container.innerHTML = `
+                    ${generateMutCardHTML(card)}
+                    <button class="w-full py-1 bg-amber-500/20 group-hover:bg-amber-500 border border-amber-500/40 text-amber-400 group-hover:text-slate-950 text-[10px] font-bold rounded transition">
+                        Bid / Trade
+                    </button>
+                `;
+
+                grid.appendChild(container);
+            });
+
+            document.getElementById('aiRosterModal').classList.remove('hidden');
+        }
+
+        function closeAiRosterModal() {
+            document.getElementById('aiRosterModal').classList.add('hidden');
+        }
+
+        // TRADE / BID NEGOTIATION LOGIC
+        function openTradeModal(targetCard) {
+            selectedTradeTargetCard = targetCard;
+            const container = document.getElementById('tradeTargetCardContainer');
+            container.innerHTML = generateMutCardHTML(targetCard);
+
+            document.getElementById('tradeBidGoldInput').value = Math.round(targetCard.price * 0.8);
+            document.getElementById('tradePendingStatus').classList.add('hidden');
+            document.getElementById('tradeActionButtons').classList.remove('hidden');
+
+            // Populate user bench offer dropdown
+            const select = document.getElementById('tradeOfferCardSelect');
+            select.innerHTML = '';
+
+            const unequipped = gameState.binder.filter(card => 
+                !Object.values(gameState.lineup).some(equipped => equipped && equipped.instanceId === card.instanceId)
+            );
+
+            if (unequipped.length === 0) {
+                select.innerHTML = `<option value="">No bench players available</option>`;
+            } else {
+                unequipped.forEach(card => {
+                    const opt = document.createElement('option');
+                    opt.value = card.instanceId;
+                    opt.innerText = `${card.name} (${card.pos} - ${card.ovr} OVR)`;
+                    select.appendChild(opt);
+                });
+            }
+
+            document.getElementById('tradeModal').classList.remove('hidden');
+        }
+
+        function closeTradeModal() {
+            document.getElementById('tradeModal').classList.add('hidden');
+        }
+
+        function submitTradeProposal(type) {
+            document.getElementById('tradePendingStatus').classList.remove('hidden');
+            document.getElementById('tradeActionButtons').classList.add('hidden');
+
+            setTimeout(() => {
+                let accepted = false;
+                let feedback = '';
+
+                if (type === 'bid') {
+                    const offerGold = parseInt(document.getElementById('tradeBidGoldInput').value) || 0;
+                    if (gameState.gold < offerGold) {
+                        alert("Insufficient Gold funds for this bid!");
+                        document.getElementById('tradePendingStatus').classList.add('hidden');
+                        document.getElementById('tradeActionButtons').classList.remove('hidden');
+                        return;
+                    }
+
+                    // AI evaluates cash offer vs card market price
+                    if (offerGold >= selectedTradeTargetCard.price * 0.9) {
+                        accepted = true;
+                        gameState.gold -= offerGold;
+                        feedback = `ACCEPTED! ${activeAiTeamView.owner} accepted your cash offer of ${offerGold} Gold!`;
+                    } else {
+                        feedback = `DECLINED! ${activeAiTeamView.owner}: "That cash offer is too low for ${selectedTradeTargetCard.name}!"`;
+                    }
+                } else {
+                    const instanceId = document.getElementById('tradeOfferCardSelect').value;
+                    const offeredCard = gameState.binder.find(c => c.instanceId === instanceId);
+
+                    if (!offeredCard) {
+                        alert("Select a valid bench player!");
+                        document.getElementById('tradePendingStatus').classList.add('hidden');
+                        document.getElementById('tradeActionButtons').classList.remove('hidden');
+                        return;
+                    }
+
+                    // AI evaluates trade fairness by OVR
+                    if (offeredCard.ovr >= selectedTradeTargetCard.ovr - 2) {
+                        accepted = true;
+                        
+                        // Swap cards
+                        const userIdx = gameState.binder.findIndex(c => c.instanceId === offeredCard.instanceId);
+                        gameState.binder.splice(userIdx, 1);
+
+                        feedback = `ACCEPTED! Trade completed! Swapped ${offeredCard.name} for ${selectedTradeTargetCard.name}!`;
+                    } else {
+                        feedback = `DECLINED! ${activeAiTeamView.owner}: "I need a player closer to ${selectedTradeTargetCard.ovr} OVR to make this trade!"`;
+                    }
+                }
+
+                alert(feedback);
+
+                if (accepted) {
+                    // Remove from AI team and add to user binder
+                    const aiIdx = activeAiTeamView.roster.findIndex(c => c.instanceId === selectedTradeTargetCard.instanceId);
+                    if (aiIdx !== -1) activeAiTeamView.roster.splice(aiIdx, 1);
+
+                    gameState.binder.push(selectedTradeTargetCard);
+                    saveGame();
+                    updateUI();
+                    closeTradeModal();
+                    openAiRosterModal(activeAiTeamView);
+                } else {
+                    document.getElementById('tradePendingStatus').classList.add('hidden');
+                    document.getElementById('tradeActionButtons').classList.remove('hidden');
+                }
+            }, 2000);
+        }
+
+        // PACK BUYING
         function buyPack(type) {
             let cost = 0;
             let packCount = 3;
@@ -813,7 +1070,6 @@
             gameState.gold -= cost;
             updateUI();
 
-            // Pull Cards
             currentPackQueue = [];
             let pool = PLAYER_POOL;
             if (filterFn) pool = PLAYER_POOL.filter(filterFn);
@@ -840,7 +1096,6 @@
                     card = pool[Math.floor(Math.random() * pool.length)];
                 }
 
-                // Unique instance ID and random Art Variant
                 const randomVariant = card.artStyle || ART_VARIANTS[Math.floor(Math.random() * ART_VARIANTS.length)];
                 const cardInstance = { 
                     ...card, 
@@ -862,19 +1117,17 @@
             closeBtn.classList.add('hidden');
             overlay.classList.remove('hidden');
 
-            currentPackQueue.forEach((card, index) => {
+            currentPackQueue.forEach((card) => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'w-44 h-64 perspective-1000 cursor-pointer';
                 
                 wrapper.innerHTML = `
                     <div class="card-inner relative w-full h-full duration-700 transform-style-3d shadow-2xl rounded-xl">
-                        <!-- BACK OF CARD -->
                         <div class="absolute inset-0 bg-slate-900 border-2 border-amber-400 rounded-xl flex flex-col items-center justify-center backface-hidden shadow-2xl">
                             <i class="fa-solid fa-football text-amber-400 text-5xl mb-2"></i>
                             <span class="font-sports text-2xl text-white tracking-widest">MUT CARD</span>
                             <span class="text-[10px] text-slate-400 font-tech">CLICK TO REVEAL</span>
                         </div>
-                        <!-- FRONT OF CARD -->
                         <div class="absolute inset-0 backface-hidden rotate-y-180">
                             ${generateMutCardHTML(card)}
                         </div>
@@ -914,7 +1167,7 @@
             updateUI();
         }
 
-        // ROSTER & LINEUP SYSTEM
+        // ROSTER LOGIC
         function renderLineups() {
             const offGrid = document.getElementById('offenseLineupGrid');
             const defGrid = document.getElementById('defenseLineupGrid');
@@ -974,7 +1227,6 @@
                     if (slot.key === 'WR2' && eligible.length > 1 && gameState.lineup['WR1']?.instanceId === eligible[0].instanceId) {
                         gameState.lineup['WR2'] = eligible[1];
                     } else if (slot.key === 'WR2' && eligible.length === 1 && gameState.lineup['WR1']?.instanceId === eligible[0].instanceId) {
-                        // Skip if duplicate single WR
                     } else {
                         gameState.lineup[slot.key] = eligible[0];
                     }
@@ -985,7 +1237,7 @@
             updateUI();
         }
 
-        // BINDER SYSTEM
+        // BINDER LOGIC
         function filterBinder(pos) {
             activeBinderFilter = pos;
             document.querySelectorAll('#binderFilterButtons button').forEach(b => b.classList.remove('bg-amber-500', 'text-slate-950'));
@@ -1072,7 +1324,7 @@
             }
         }
 
-        // MARKETPLACE AUCTION SYSTEM
+        // MARKETPLACE LOGIC
         function generateMarketplaceListings() {
             gameState.marketplace = [];
             for (let i = 0; i < 6; i++) {
@@ -1418,7 +1670,7 @@
             container.prepend(item);
         }
 
-        // SAVE / LOAD SYSTEM
+        // SAVE SYSTEM
         function saveGame() {
             localStorage.setItem('nfl_card_dynasty_save', JSON.stringify(gameState));
         }
@@ -1454,4 +1706,4 @@
 </body>
 </html>
 
-```
+
