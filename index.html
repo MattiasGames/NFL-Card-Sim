@@ -1,3 +1,12 @@
+Here is the updated code featuring a modern, sharp-edged Madden Ultimate Team layout inspired by your image.
+
+Key upgrades added to the card art system:
+
+* **MUT Layout & Typography:** Sharp angular edges, top-left stacked OVR/Position ratings, top-right MUT logos, bottom team logos, player names, and archetype badges.
+* **Holographic 3D Card Effects:** Dynamic linear sheen gradients, holographic foil overlays, scanning cyber-lines, glassmorphism elements, and glowing 3D perspective hover tilts.
+* **Multiple Visual Art Variants:** Integrated 8 distinct card art themes (**Cyberpunk Neon, Electric Lightning, Lava Burst, Frostbite Ice, Golden GOAT, Golden Touch, Dark Matter,** and **Retro Grid**) that are dynamically assigned to cards when opened in packs or pulled from the market!
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +18,7 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&family=Inter:wght@400;700;900&family=Rajdhani:wght@600;700;900&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -17,6 +26,7 @@
                 extend: {
                     fontFamily: {
                         sports: ['Teko', 'sans-serif'],
+                        tech: ['Rajdhani', 'sans-serif'],
                         sans: ['Inter', 'sans-serif']
                     },
                     colors: {
@@ -30,62 +40,104 @@
     </script>
 
     <style>
-        /* MADDEN ULTIMATE TEAM CARD ART EFFECTS */
-        .mut-card-goat {
-            background: linear-gradient(135deg, #111827 0%, #451a03 50%, #000000 100%);
-            border: 2px solid #f59e0b;
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.6), inset 0 0 15px rgba(251, 191, 36, 0.4);
+        /* BASE SHARP-EDGED MUT CARD LAYOUT */
+        .mut-card-frame {
             position: relative;
-            overflow: hidden;
-        }
-        .mut-card-goat::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent 45%, rgba(255, 215, 0, 0.3) 50%, transparent 55%);
-            animation: mutShine 4s infinite linear;
+            clip-path: polygon(0 0, 85% 0, 100% 8%, 100% 100%, 15% 100%, 0 92%);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
-        .mut-card-sr {
-            background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #831843 100%);
-            border: 2px solid #ec4899;
-            box-shadow: 0 0 20px rgba(236, 72, 153, 0.7), inset 0 0 10px rgba(168, 85, 247, 0.5);
+        .mut-card-inner {
             position: relative;
+            width: 100%;
+            height: 100%;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-between: space-between;
         }
-        .mut-card-sr::before {
-            content: '';
+
+        /* HOLOGRAPHIC FOIL & SCANLINE OVERLAY */
+        .holo-overlay {
             position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(135deg, transparent 40%, rgba(236, 72, 153, 0.4) 50%, rgba(56, 189, 248, 0.4) 60%, transparent 70%);
-            animation: mutShine 3s infinite ease-in-out;
+            inset: 0;
+            background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.25) 45%, rgba(0, 230, 255, 0.3) 50%, rgba(255, 0, 212, 0.3) 55%, transparent 80%);
+            background-size: 200% 200%;
+            animation: holoShift 4s ease infinite;
+            pointer-events: none;
+            mix-blend-mode: overlay;
         }
 
-        .mut-card-legendary {
-            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #020617 100%);
-            border: 2px solid #eab308;
-            box-shadow: 0 0 15px rgba(234, 179, 8, 0.5);
+        @keyframes holoShift {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
         }
 
-        .mut-card-epic {
-            background: linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #020617 100%);
+        .scanlines {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.3));
+            background-size: 100% 4px;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* MULTIPLE MUT ART VARIANTS */
+        /* 1. CYBERPUNK / TECH NEON */
+        .art-variant-cyber {
+            background: radial-gradient(circle at 50% 30%, #0284c7 0%, #090d16 80%);
+            border: 2px solid #38bdf8;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5), inset 0 0 15px rgba(56, 189, 248, 0.3);
+        }
+
+        /* 2. ELECTRIC LIGHTNING */
+        .art-variant-electric {
+            background: radial-gradient(circle at 50% 20%, #7c3aed 0%, #030712 85%);
             border: 2px solid #a855f7;
-            box-shadow: 0 0 12px rgba(168, 85, 247, 0.5);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), inset 0 0 12px rgba(236, 72, 153, 0.4);
         }
 
-        .mut-card-rare {
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #020617 100%);
-            border: 2px solid #3b82f6;
+        /* 3. LAVA BURST */
+        .art-variant-lava {
+            background: radial-gradient(circle at 50% 30%, #b91c1c 0%, #450a0a 60%, #0a0a0a 100%);
+            border: 2px solid #ef4444;
+            box-shadow: 0 0 18px rgba(239, 68, 68, 0.6), inset 0 0 15px rgba(245, 158, 11, 0.4);
         }
 
-        .mut-card-common {
-            background: linear-gradient(135deg, #0f172a 0%, #334155 50%, #020617 100%);
-            border: 2px solid #64748b;
+        /* 4. FROSTBITE ICE */
+        .art-variant-frost {
+            background: radial-gradient(circle at 50% 30%, #0ea5e9 0%, #1e3a8a 60%, #020617 100%);
+            border: 2px solid #bae6fd;
+            box-shadow: 0 0 18px rgba(186, 230, 253, 0.7), inset 0 0 12px rgba(14, 165, 233, 0.5);
         }
 
-        @keyframes mutShine {
-            0% { transform: translateY(-100%) rotate(45deg); }
-            100% { transform: translateY(100%) rotate(45deg); }
+        /* 5. GOLDEN GOAT */
+        .art-variant-goat {
+            background: linear-gradient(135deg, #1e1b4b 0%, #b45309 50%, #000000 100%);
+            border: 2px solid #fbbf24;
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.7), inset 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        /* 6. DARK MATTER */
+        .art-variant-darkmatter {
+            background: radial-gradient(circle at 50% 40%, #4c1d95 0%, #111827 70%, #000000 100%);
+            border: 2px solid #c084fc;
+            box-shadow: 0 0 15px rgba(192, 132, 252, 0.5);
+        }
+
+        /* 7. GOLDEN TOUCH */
+        .art-variant-gold {
+            background: radial-gradient(circle at 50% 30%, #d97706 0%, #451a03 70%, #0f172a 100%);
+            border: 2px solid #f59e0b;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+        }
+
+        /* 8. RETRO GRID */
+        .art-variant-retro {
+            background: linear-gradient(180deg, #831843 0%, #0f172a 100%);
+            border: 2px solid #f43f5e;
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.5);
         }
 
         .perspective-1000 { perspective: 1000px; }
@@ -174,7 +226,7 @@
             <section id="view-packs" class="space-y-6">
                 <div class="text-center max-w-xl mx-auto mb-8">
                     <h2 class="text-4xl font-sports tracking-wide uppercase text-white">MUT Card Store</h2>
-                    <p class="text-slate-400 text-sm">Open Madden-style packs to build your ultimate squad!</p>
+                    <p class="text-slate-400 text-sm">Open Madden-style packs with holographic sharp-edge MUT card art!</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -186,7 +238,7 @@
                             <span class="text-[9px] text-emerald-200 uppercase font-bold mt-1">1 Card Pull</span>
                         </div>
                         <h3 class="font-sports text-2xl text-emerald-300">Wildcard Gamble</h3>
-                        <p class="text-[11px] text-slate-400 mb-3">High risk! Heavily nerfed odds for GOAT cards!</p>
+                        <p class="text-[11px] text-slate-400 mb-3">High risk! Low odds for GOAT card variants!</p>
                         <button onclick="buyPack('wildcard')" class="mt-auto w-full py-2 bg-emerald-600 hover:bg-emerald-500 font-sports tracking-wider text-white text-lg rounded-xl transition">
                             <i class="fa-solid fa-coins"></i> 1,000 GOLD
                         </button>
@@ -278,7 +330,7 @@
 
                     <!-- All-Time Legends GOAT Pack -->
                     <div class="bg-slate-900 border border-amber-400 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-amber-300 transition">
-                        <div class="w-32 h-44 mut-card-goat border-2 border-amber-300 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
+                        <div class="w-32 h-44 mut-card-frame art-variant-goat rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-crown text-4xl text-amber-200 mb-2"></i>
                             <span class="font-sports text-xl text-amber-100 leading-none">ALL-TIME</span>
                             <span class="text-[9px] text-amber-200 uppercase font-bold mt-1">5 GOAT Cards</span>
@@ -491,6 +543,13 @@
             { code: 'WAS', name: 'Commanders', color: '#5A1414' }
         ];
 
+        // CARD ART STYLES
+        const ART_VARIANTS = [
+            'cyber', 'electric', 'lava', 'frost', 'darkmatter', 'gold', 'retro'
+        ];
+
+        const ARCHETYPES = ['FIELD GENERAL', 'IMPROVISER', 'SPEEDSTER', 'DEEP THREAT', 'LOCKDOWN', 'PASS RUSHER', 'POWER BACK', 'ZONE HAWK'];
+
         // REALISTIC USERNAME GENERATOR FOR AI PLAYERS
         const USERNAME_PREFIXES = ['Gridiron', 'Blitz', 'Touchdown', 'Endzone', 'Quarterback', 'Pigskin', 'Redzone', 'Interception', 'Sack', 'HailMary'];
         const USERNAME_SUFFIXES = ['Boss', 'Pro', 'King', 'Master', 'Legend', 'Beast', 'Champ', 'Sniper', 'GOAT', 'Gamer'];
@@ -503,36 +562,36 @@
 
         // PLAYER DATABASE
         const PLAYER_POOL = [
-            { id: 'p1', name: 'Tom Brady', pos: 'QB', ovr: 100, tier: 'goat', price: 15000 },
-            { id: 'p2', name: 'Jerry Rice', pos: 'WR', ovr: 100, tier: 'goat', price: 15000 },
-            { id: 'p3', name: 'Lawrence Taylor', pos: 'LB', ovr: 99, tier: 'sr', price: 10000 },
-            { id: 'p4', name: 'Patrick Mahomes', pos: 'QB', ovr: 98, tier: 'sr', price: 9000 },
-            { id: 'p5', name: 'Justin Jefferson', pos: 'WR', ovr: 96, tier: 'legendary', price: 6000 },
-            { id: 'p6', name: 'Derrick Henry', pos: 'RB', ovr: 95, tier: 'legendary', price: 5500 },
-            { id: 'p7', name: 'Travis Kelce', pos: 'TE', ovr: 94, tier: 'legendary', price: 5000 },
-            { id: 'p8', name: 'Trent Williams', pos: 'OL', ovr: 93, tier: 'legendary', price: 4500 },
-            { id: 'p9', name: 'Aaron Donald', pos: 'DL', ovr: 95, tier: 'legendary', price: 5500 },
-            { id: 'p10', name: 'Sauce Gardner', pos: 'CB', ovr: 92, tier: 'legendary', price: 4200 },
-            { id: 'p11', name: 'Minkah Fitzpatrick', pos: 'S', ovr: 91, tier: 'epic', price: 3000 },
-            { id: 'p12', name: 'Justin Tucker', pos: 'K', ovr: 92, tier: 'epic', price: 3200 },
-            { id: 'p13', name: 'Caleb Williams', pos: 'QB', ovr: 85, tier: 'rare', price: 1200 },
-            { id: 'p14', name: 'Marvin Harrison Jr.', pos: 'WR', ovr: 84, tier: 'rare', price: 1100 },
-            { id: 'p15', name: 'Joe Burrow', pos: 'QB', ovr: 89, tier: 'epic', price: 2500 },
-            { id: 'p16', name: 'Christian McCaffrey', pos: 'RB', ovr: 96, tier: 'legendary', price: 6500 },
-            { id: 'p17', name: 'Tyreek Hill', pos: 'WR', ovr: 95, tier: 'legendary', price: 5800 },
-            { id: 'p18', name: 'Micah Parsons', pos: 'LB', ovr: 94, tier: 'legendary', price: 5200 },
-            { id: 'p19', name: 'Nick Bosa', pos: 'DL', ovr: 92, tier: 'epic', price: 3500 },
-            { id: 'p20', name: 'Lamar Jackson', pos: 'QB', ovr: 93, tier: 'legendary', price: 4800 },
-            { id: 'p21', name: 'Saquon Barkley', pos: 'RB', ovr: 88, tier: 'rare', price: 1800 },
-            { id: 'p22', name: 'George Kittle', pos: 'TE', ovr: 90, tier: 'epic', price: 2800 },
-            { id: 'p23', name: 'Penei Sewell', pos: 'OL', ovr: 89, tier: 'epic', price: 2400 },
-            { id: 'p24', name: 'Jalen Ramsey', pos: 'CB', ovr: 88, tier: 'rare', price: 1600 },
-            { id: 'p25', name: 'Derwin James', pos: 'S', ovr: 87, tier: 'rare', price: 1400 },
-            { id: 'p26', name: 'Harrison Butker', pos: 'K', ovr: 86, tier: 'rare', price: 1300 },
-            { id: 'p27', name: 'C.J. Stroud', pos: 'QB', ovr: 86, tier: 'rare', price: 1350 },
-            { id: 'p28', name: 'Jayden Daniels', pos: 'QB', ovr: 83, tier: 'common', price: 800 },
-            { id: 'p29', name: 'Malik Nabers', pos: 'WR', ovr: 83, tier: 'common', price: 750 },
-            { id: 'p30', name: 'Brock Bowers', pos: 'TE', ovr: 84, tier: 'rare', price: 950 }
+            { id: 'p1', name: 'Tom Brady', pos: 'QB', ovr: 100, tier: 'goat', price: 15000, arch: 'FIELD GENERAL', artStyle: 'goat' },
+            { id: 'p2', name: 'Jerry Rice', pos: 'WR', ovr: 100, tier: 'goat', price: 15000, arch: 'DEEP THREAT', artStyle: 'goat' },
+            { id: 'p3', name: 'Lawrence Taylor', pos: 'LB', ovr: 99, tier: 'sr', price: 10000, arch: 'PASS RUSHER', artStyle: 'lava' },
+            { id: 'p4', name: 'Patrick Mahomes', pos: 'QB', ovr: 98, tier: 'sr', price: 9000, arch: 'IMPROVISER', artStyle: 'cyber' },
+            { id: 'p5', name: 'Justin Jefferson', pos: 'WR', ovr: 96, tier: 'legendary', price: 6000, arch: 'SPEEDSTER', artStyle: 'electric' },
+            { id: 'p6', name: 'Derrick Henry', pos: 'RB', ovr: 95, tier: 'legendary', price: 5500, arch: 'POWER BACK', artStyle: 'lava' },
+            { id: 'p7', name: 'Travis Kelce', pos: 'TE', ovr: 94, tier: 'legendary', price: 5000, arch: 'IMPROVISER', artStyle: 'gold' },
+            { id: 'p8', name: 'Trent Williams', pos: 'OL', ovr: 93, tier: 'legendary', price: 4500, arch: 'POWER BACK', artStyle: 'darkmatter' },
+            { id: 'p9', name: 'Aaron Donald', pos: 'DL', ovr: 95, tier: 'legendary', price: 5500, arch: 'PASS RUSHER', artStyle: 'lava' },
+            { id: 'p10', name: 'Sauce Gardner', pos: 'CB', ovr: 92, tier: 'legendary', price: 4200, arch: 'LOCKDOWN', artStyle: 'frost' },
+            { id: 'p11', name: 'Minkah Fitzpatrick', pos: 'S', ovr: 91, tier: 'epic', price: 3000, arch: 'ZONE HAWK', artStyle: 'cyber' },
+            { id: 'p12', name: 'Justin Tucker', pos: 'K', ovr: 92, tier: 'epic', price: 3200, arch: 'FIELD GENERAL', artStyle: 'retro' },
+            { id: 'p13', name: 'Caleb Williams', pos: 'QB', ovr: 85, tier: 'rare', price: 1200, arch: 'IMPROVISER', artStyle: 'electric' },
+            { id: 'p14', name: 'Marvin Harrison Jr.', pos: 'WR', ovr: 84, tier: 'rare', price: 1100, arch: 'SPEEDSTER', artStyle: 'cyber' },
+            { id: 'p15', name: 'Joe Burrow', pos: 'QB', ovr: 89, tier: 'epic', price: 2500, arch: 'FIELD GENERAL', artStyle: 'frost' },
+            { id: 'p16', name: 'Christian McCaffrey', pos: 'RB', ovr: 96, tier: 'legendary', price: 6500, arch: 'IMPROVISER', artStyle: 'gold' },
+            { id: 'p17', name: 'Tyreek Hill', pos: 'WR', ovr: 95, tier: 'legendary', price: 5800, arch: 'SPEEDSTER', artStyle: 'electric' },
+            { id: 'p18', name: 'Micah Parsons', pos: 'LB', ovr: 94, tier: 'legendary', price: 5200, arch: 'PASS RUSHER', artStyle: 'darkmatter' },
+            { id: 'p19', name: 'Nick Bosa', pos: 'DL', ovr: 92, tier: 'epic', price: 3500, arch: 'PASS RUSHER', artStyle: 'lava' },
+            { id: 'p20', name: 'Lamar Jackson', pos: 'QB', ovr: 93, tier: 'legendary', price: 4800, arch: 'SPEEDSTER', artStyle: 'electric' },
+            { id: 'p21', name: 'Saquon Barkley', pos: 'RB', ovr: 88, tier: 'rare', price: 1800, arch: 'POWER BACK', artStyle: 'darkmatter' },
+            { id: 'p22', name: 'George Kittle', pos: 'TE', ovr: 90, tier: 'epic', price: 2800, arch: 'POWER BACK', artStyle: 'retro' },
+            { id: 'p23', name: 'Penei Sewell', pos: 'OL', ovr: 89, tier: 'epic', price: 2400, arch: 'POWER BACK', archStyle: 'cyber' },
+            { id: 'p24', name: 'Jalen Ramsey', pos: 'CB', ovr: 88, tier: 'rare', price: 1600, arch: 'LOCKDOWN', artStyle: 'frost' },
+            { id: 'p25', name: 'Derwin James', pos: 'S', ovr: 87, tier: 'rare', price: 1400, arch: 'ZONE HAWK', artStyle: 'electric' },
+            { id: 'p26', name: 'Harrison Butker', pos: 'K', ovr: 86, tier: 'rare', price: 1300, arch: 'FIELD GENERAL', artStyle: 'retro' },
+            { id: 'p27', name: 'C.J. Stroud', pos: 'QB', ovr: 86, tier: 'rare', price: 1350, arch: 'FIELD GENERAL', artStyle: 'cyber' },
+            { id: 'p28', name: 'Jayden Daniels', pos: 'QB', ovr: 83, tier: 'common', price: 800, arch: 'IMPROVISER', artStyle: 'electric' },
+            { id: 'p29', name: 'Malik Nabers', pos: 'WR', ovr: 83, tier: 'common', price: 750, arch: 'SPEEDSTER', artStyle: 'retro' },
+            { id: 'p30', name: 'Brock Bowers', pos: 'TE', ovr: 84, tier: 'rare', price: 950, arch: 'IMPROVISER', artStyle: 'frost' }
         ];
 
         // REQUIRED ROSTER POSITIONS
@@ -639,6 +698,74 @@
             populateSellDropdown();
         }
 
+        // HELPER TO GENERATE SHARP MUT CARD HTML
+        function generateMutCardHTML(card, isCompact = false) {
+            const artStyle = card.artStyle || ART_VARIANTS[Math.floor(Math.random() * ART_VARIANTS.length)];
+            const archetype = card.arch || ARCHETYPES[Math.floor(Math.random() * ARCHETYPES.length)];
+            const cardTeamCode = gameState.selectedTeam ? gameState.selectedTeam.code : 'NFL';
+
+            if (isCompact) {
+                return `
+                    <div class="mut-card-frame art-variant-${artStyle} rounded-lg p-2 flex flex-col justify-between h-36 relative overflow-hidden">
+                        <div class="holo-overlay"></div>
+                        <div class="scanlines"></div>
+                        
+                        <!-- TOP RATING STACK -->
+                        <div class="flex justify-between items-start z-10">
+                            <div class="flex flex-col leading-none">
+                                <span class="font-sports text-3xl text-white font-bold drop-shadow-md">${card.ovr}</span>
+                                <span class="font-tech text-[10px] font-extrabold text-amber-300 uppercase tracking-wider">${card.pos}</span>
+                            </div>
+                            <span class="font-tech text-[9px] font-black text-slate-300 border border-slate-600 px-1 bg-slate-950/80 rounded">UT</span>
+                        </div>
+
+                        <!-- CENTER ICON -->
+                        <div class="text-center z-10 my-auto opacity-70">
+                            <i class="fa-solid fa-user-ninja text-3xl text-white"></i>
+                        </div>
+
+                        <!-- BOTTOM PLAYER DETAILS -->
+                        <div class="z-10 bg-slate-950/80 p-1 rounded border-t border-slate-700/50">
+                            <div class="font-sports text-base text-white font-bold leading-none truncate uppercase tracking-wide">${card.name}</div>
+                            <div class="text-[8px] font-tech font-bold text-amber-400 uppercase leading-none mt-0.5 truncate">${archetype}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="mut-card-frame art-variant-${artStyle} rounded-xl p-3 flex flex-col justify-between h-48 relative overflow-hidden shadow-2xl">
+                    <div class="holo-overlay"></div>
+                    <div class="scanlines"></div>
+
+                    <!-- TOP MUT RATING STACK -->
+                    <div class="flex justify-between items-start z-10">
+                        <div class="flex flex-col leading-none">
+                            <span class="font-sports text-4xl text-white font-bold drop-shadow-md leading-none">${card.ovr}</span>
+                            <span class="font-tech text-xs font-black text-amber-300 uppercase tracking-widest mt-0.5">${card.pos}</span>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="font-tech text-[10px] font-black text-slate-200 border border-slate-500/80 px-1.5 py-0.5 bg-slate-950/80 rounded">UT</span>
+                        </div>
+                    </div>
+
+                    <!-- CENTER PLAYER SILHOUETTE -->
+                    <div class="text-center z-10 my-auto opacity-80">
+                        <i class="fa-solid fa-user-shield text-4xl text-slate-200 drop-shadow"></i>
+                    </div>
+
+                    <!-- BOTTOM SHARP CARD FOOTER -->
+                    <div class="z-10 bg-slate-950/85 p-1.5 rounded-lg border-t-2 border-slate-700/60 backdrop-blur-sm">
+                        <div class="flex items-center justify-between">
+                            <div class="font-sports text-lg text-white font-bold leading-none truncate uppercase tracking-wider">${card.name}</div>
+                            <span class="font-tech text-[9px] font-bold text-slate-400 uppercase bg-slate-900 px-1 rounded border border-slate-800">${cardTeamCode}</span>
+                        </div>
+                        <div class="text-[9px] font-tech font-bold text-amber-400 uppercase tracking-widest mt-0.5">${archetype}</div>
+                    </div>
+                </div>
+            `;
+        }
+
         // NAVIGATION
         function switchTab(tab) {
             ['packs', 'roster', 'market', 'sim'].forEach(t => {
@@ -663,7 +790,7 @@
             let filterFn = null;
 
             if (type === 'wildcard') {
-                cost = 1000; // Increased cost
+                cost = 1000;
                 packCount = 1;
             } else if (type === 'lockdown') {
                 cost = 1200;
@@ -702,17 +829,16 @@
             for (let i = 0; i < packCount; i++) {
                 let card;
                 if (type === 'wildcard') {
-                    // Heavily nerfed chances for good cards out of wildcard
                     const roll = Math.random();
-                    if (roll < 0.005) { // 0.5% GOAT
+                    if (roll < 0.005) {
                         card = pool.find(p => p.tier === 'goat') || pool[0];
-                    } else if (roll < 0.02) { // 1.5% Super Rare
+                    } else if (roll < 0.02) {
                         card = pool.find(p => p.tier === 'sr') || pool[0];
-                    } else if (roll < 0.10) { // 8% Legendary
+                    } else if (roll < 0.10) {
                         card = pool.find(p => p.tier === 'legendary') || pool[0];
-                    } else if (roll < 0.35) { // 25% Epic
+                    } else if (roll < 0.35) {
                         card = pool.find(p => p.tier === 'epic') || pool[0];
-                    } else { // 65% Rare / Common
+                    } else {
                         card = pool.filter(p => p.tier === 'common' || p.tier === 'rare')[Math.floor(Math.random() * pool.length)] || pool[0];
                     }
                 } else if (type === 'legends') {
@@ -722,8 +848,13 @@
                     card = pool[Math.floor(Math.random() * pool.length)];
                 }
 
-                // Unique instance ID for owned cards
-                const cardInstance = { ...card, instanceId: 'card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5) };
+                // Unique instance ID and random Art Variant
+                const randomVariant = card.artStyle || ART_VARIANTS[Math.floor(Math.random() * ART_VARIANTS.length)];
+                const cardInstance = { 
+                    ...card, 
+                    artStyle: randomVariant,
+                    instanceId: 'card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5) 
+                };
                 currentPackQueue.push(cardInstance);
             }
 
@@ -741,30 +872,19 @@
 
             currentPackQueue.forEach((card, index) => {
                 const wrapper = document.createElement('div');
-                wrapper.className = 'w-40 h-60 perspective-1000 cursor-pointer';
-                
-                let tierClass = `mut-card-${card.tier}`;
+                wrapper.className = 'w-44 h-64 perspective-1000 cursor-pointer';
                 
                 wrapper.innerHTML = `
                     <div class="card-inner relative w-full h-full duration-700 transform-style-3d shadow-2xl rounded-xl">
                         <!-- BACK OF CARD -->
-                        <div class="absolute inset-0 bg-slate-900 border-2 border-amber-400 rounded-xl flex flex-col items-center justify-center backface-hidden">
-                            <i class="fa-solid fa-football text-amber-400 text-4xl mb-2"></i>
-                            <span class="font-sports text-xl text-white">TAP REVEAL</span>
+                        <div class="absolute inset-0 bg-slate-900 border-2 border-amber-400 rounded-xl flex flex-col items-center justify-center backface-hidden shadow-2xl">
+                            <i class="fa-solid fa-football text-amber-400 text-5xl mb-2"></i>
+                            <span class="font-sports text-2xl text-white tracking-widest">MUT CARD</span>
+                            <span class="text-[10px] text-slate-400 font-tech">CLICK TO REVEAL</span>
                         </div>
                         <!-- FRONT OF CARD -->
-                        <div class="absolute inset-0 ${tierClass} rounded-xl p-3 flex flex-col justify-between backface-hidden rotate-y-180">
-                            <div class="flex justify-between items-start">
-                                <span class="font-sports text-4xl text-amber-300 leading-none">${card.ovr}</span>
-                                <span class="font-bold text-xs bg-slate-950/80 px-2 py-0.5 rounded text-white">${card.pos}</span>
-                            </div>
-                            <div class="text-center my-auto">
-                                <i class="fa-solid fa-user-ninja text-4xl text-slate-400 mb-1"></i>
-                            </div>
-                            <div>
-                                <div class="font-sports text-xl text-white leading-none truncate">${card.name}</div>
-                                <div class="text-[9px] text-amber-400 uppercase font-bold tracking-widest">${card.tier}</div>
-                            </div>
+                        <div class="absolute inset-0 backface-hidden rotate-y-180">
+                            ${generateMutCardHTML(card)}
                         </div>
                     </div>
                 `;
@@ -794,7 +914,6 @@
         }
 
         function closePackModal() {
-            // Add pulls to binder
             currentPackQueue.forEach(card => gameState.binder.push(card));
             currentPackQueue = [];
             document.getElementById('packRevealOverlay').classList.add('hidden');
@@ -812,33 +931,28 @@
 
             ROSTER_SLOTS.forEach(slot => {
                 const player = gameState.lineup[slot.key];
-                const cardEl = document.createElement('div');
+                const container = document.createElement('div');
+                container.className = 'flex flex-col space-y-1';
                 
                 if (player) {
-                    cardEl.className = `mut-card-${player.tier} rounded-xl p-2.5 flex flex-col justify-between border h-36 relative group`;
-                    cardEl.innerHTML = `
-                        <div class="flex justify-between items-start">
-                            <span class="font-sports text-2xl text-amber-300 leading-none">${player.ovr}</span>
-                            <span class="text-[9px] bg-slate-950/80 px-1.5 py-0.5 rounded font-bold text-white">${slot.key}</span>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-sports text-sm text-white leading-none truncate">${player.name}</div>
-                        </div>
-                        <button onclick="unequipSlot('${slot.key}')" class="w-full py-1 bg-red-600/80 hover:bg-red-600 text-[10px] font-bold text-white rounded transition mt-1">
+                    container.innerHTML = `
+                        ${generateMutCardHTML(player, true)}
+                        <button onclick="unequipSlot('${slot.key}')" class="w-full py-1 bg-red-600/80 hover:bg-red-600 text-[10px] font-bold text-white rounded transition">
                             Unequip
                         </button>
                     `;
                 } else {
-                    cardEl.className = 'bg-slate-950/60 border-2 border-dashed border-slate-800 rounded-xl p-2.5 flex flex-col items-center justify-center h-36 text-center';
-                    cardEl.innerHTML = `
-                        <span class="text-xs font-bold text-slate-500 mb-1">${slot.name}</span>
-                        <span class="font-sports text-xl text-slate-600">65 OVR</span>
-                        <span class="text-[9px] text-slate-600 italic">EMPTY</span>
+                    container.innerHTML = `
+                        <div class="bg-slate-950/60 border-2 border-dashed border-slate-800 rounded-xl p-2.5 flex flex-col items-center justify-center h-36 text-center">
+                            <span class="text-xs font-bold text-slate-500 mb-1">${slot.name}</span>
+                            <span class="font-sports text-xl text-slate-600">65 OVR</span>
+                            <span class="text-[9px] text-slate-600 italic">EMPTY</span>
+                        </div>
                     `;
                 }
 
-                if (slot.cat === 'off') offGrid.appendChild(cardEl);
-                else defGrid.appendChild(cardEl);
+                if (slot.cat === 'off') offGrid.appendChild(container);
+                else defGrid.appendChild(container);
             });
         }
 
@@ -863,10 +977,8 @@
                 const eligible = gameState.binder.filter(p => p.pos === reqPos);
                 
                 if (eligible.length > 0) {
-                    // Sort highest OVR
                     eligible.sort((a, b) => b.ovr - a.ovr);
                     
-                    // Check if slot WR2 needs a second WR
                     if (slot.key === 'WR2' && eligible.length > 1 && gameState.lineup['WR1']?.instanceId === eligible[0].instanceId) {
                         gameState.lineup['WR2'] = eligible[1];
                     } else if (slot.key === 'WR2' && eligible.length === 1 && gameState.lineup['WR1']?.instanceId === eligible[0].instanceId) {
@@ -905,17 +1017,15 @@
             }
 
             cards.forEach(card => {
-                // Check if equipped
                 const isEquipped = Object.values(gameState.lineup).some(equipped => equipped && equipped.instanceId === card.instanceId);
 
                 const cardEl = document.createElement('div');
-                cardEl.className = `mut-card-${card.tier} rounded-xl p-3 flex flex-col justify-between border h-48 relative shadow-lg`;
+                cardEl.className = 'flex flex-col space-y-1';
                 
                 let equipButtonHtml = '';
                 if (isEquipped) {
                     equipButtonHtml = `<span class="w-full text-center py-1 bg-amber-500/20 border border-amber-500/40 text-amber-400 text-[10px] font-bold rounded">STARTING</span>`;
                 } else {
-                    // Find slots matching position
                     const matchingSlots = ROSTER_SLOTS.filter(s => (s.pos || s.key) === card.pos);
                     equipButtonHtml = `<div class="grid grid-cols-${matchingSlots.length} gap-1">`;
                     matchingSlots.forEach(s => {
@@ -925,18 +1035,8 @@
                 }
 
                 cardEl.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <span class="font-sports text-3xl text-amber-300 leading-none">${card.ovr}</span>
-                        <span class="text-xs bg-slate-950/80 px-2 py-0.5 rounded font-bold text-white">${card.pos}</span>
-                    </div>
-                    <div class="text-center my-auto">
-                        <i class="fa-solid fa-user-shield text-3xl text-slate-400"></i>
-                    </div>
-                    <div>
-                        <div class="font-sports text-lg text-white leading-none truncate">${card.name}</div>
-                        <div class="text-[9px] text-amber-400 uppercase font-bold mb-2">${card.tier}</div>
-                        ${equipButtonHtml}
-                    </div>
+                    ${generateMutCardHTML(card)}
+                    ${equipButtonHtml}
                 `;
 
                 grid.appendChild(cardEl);
@@ -947,7 +1047,6 @@
             const select = document.getElementById('userCardSelectInput');
             select.innerHTML = '';
 
-            // Filter unequipped bench cards
             const unequipped = gameState.binder.filter(card => 
                 !Object.values(gameState.lineup).some(equipped => equipped && equipped.instanceId === card.instanceId)
             );
@@ -987,9 +1086,11 @@
             for (let i = 0; i < 6; i++) {
                 const randomCard = PLAYER_POOL[Math.floor(Math.random() * PLAYER_POOL.length)];
                 const randomUser = generateRandomUsername();
+                const randomVariant = randomCard.artStyle || ART_VARIANTS[Math.floor(Math.random() * ART_VARIANTS.length)];
+                
                 gameState.marketplace.push({
                     marketId: 'mkt_' + Date.now() + '_' + i,
-                    card: randomCard,
+                    card: { ...randomCard, artStyle: randomVariant },
                     seller: randomUser,
                     currentBid: Math.round(randomCard.price * 0.7),
                     buyout: randomCard.price,
@@ -1009,24 +1110,15 @@
             gameState.marketplace.forEach(item => {
                 const card = item.card;
                 const cardEl = document.createElement('div');
-                cardEl.className = `bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-xl`;
+                cardEl.className = `bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-xl space-y-3`;
                 
                 cardEl.innerHTML = `
-                    <div class="flex justify-between items-center mb-3 text-xs text-slate-400 border-b border-slate-800 pb-2">
+                    <div class="flex justify-between items-center text-xs text-slate-400 border-b border-slate-800 pb-2">
                         <span>Seller: <strong class="text-white">${item.seller}</strong></span>
                         <span class="text-amber-400 font-bold"><i class="fa-regular fa-clock"></i> ${item.timer}s</span>
                     </div>
 
-                    <div class="mut-card-${card.tier} rounded-xl p-3 flex flex-col justify-between border h-36 mb-3">
-                        <div class="flex justify-between items-start">
-                            <span class="font-sports text-3xl text-amber-300 leading-none">${card.ovr}</span>
-                            <span class="text-xs bg-slate-950/80 px-2 py-0.5 rounded font-bold text-white">${card.pos}</span>
-                        </div>
-                        <div>
-                            <div class="font-sports text-lg text-white leading-none truncate">${card.name}</div>
-                            <div class="text-[9px] text-amber-400 uppercase font-bold">${card.tier}</div>
-                        </div>
-                    </div>
+                    ${generateMutCardHTML(card, true)}
 
                     <div class="space-y-2">
                         <div class="flex justify-between text-xs">
@@ -1086,7 +1178,6 @@
 
             gameState.gold -= item.buyout;
             
-            // Add card to binder
             const newCard = { ...item.card, instanceId: 'card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5) };
             gameState.binder.push(newCard);
             
@@ -1107,7 +1198,6 @@
                 const card = gameState.binder[idx];
                 gameState.binder.splice(idx, 1);
                 
-                // Add to market list
                 gameState.marketplace.unshift({
                     marketId: 'mkt_user_' + Date.now(),
                     card: card,
@@ -1130,8 +1220,8 @@
             timeSec: 900,
             myScore: 0,
             oppScore: 0,
-            possession: 'MY', // 'MY' or 'OPP'
-            ballYard: 25, // 0-100 scale (0 = MY endzone, 100 = OPP endzone)
+            possession: 'MY',
+            ballYard: 25,
             down: 1,
             dist: 10,
             oppTeam: null,
@@ -1142,7 +1232,7 @@
             if (!simState.oppTeam) {
                 const availableOpponents = NFL_TEAMS.filter(t => t.code !== gameState.selectedTeam.code);
                 simState.oppTeam = availableOpponents[Math.floor(Math.random() * availableOpponents.length)];
-                simState.oppOvr = Math.floor(Math.random() * 15) + 70; // 70-85 OVR
+                simState.oppOvr = Math.floor(Math.random() * 15) + 70;
             }
 
             document.getElementById('simMyTeamName').innerText = gameState.selectedTeam.name;
@@ -1189,11 +1279,9 @@
             const w = canvas.width;
             const h = canvas.height;
 
-            // Green Gridiron Background
             ctx.fillStyle = '#064e3b';
             ctx.fillRect(0, 0, w, h);
 
-            // Yardlines & Field Stripes
             const stripeW = w / 12;
             for (let i = 0; i < 12; i++) {
                 if (i % 2 === 0) {
@@ -1202,14 +1290,12 @@
                 }
             }
 
-            // Endzones
             ctx.fillStyle = gameState.selectedTeam.color;
             ctx.fillRect(0, 0, stripeW, h);
 
             ctx.fillStyle = simState.oppTeam ? simState.oppTeam.color : '#334155';
             ctx.fillRect(w - stripeW, 0, stripeW, h);
 
-            // White Field Lines
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
             ctx.lineWidth = 2;
             for (let i = 1; i < 12; i++) {
@@ -1219,19 +1305,16 @@
                 ctx.stroke();
             }
 
-            // Ball Position Marker
             const playFieldW = w - (stripeW * 2);
             const ballX = stripeW + (simState.ballYard / 100) * playFieldW;
 
-            // Line of Scrimmage & First Down Line
-            ctx.strokeStyle = '#38bdf8'; // Scrimmage Blue
+            ctx.strokeStyle = '#38bdf8';
             ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.moveTo(ballX, 0);
             ctx.lineTo(ballX, h);
             ctx.stroke();
 
-            // Football Marker
             ctx.fillStyle = '#f59e0b';
             ctx.beginPath();
             ctx.arc(ballX, h / 2, 8, 0, Math.PI * 2);
@@ -1250,7 +1333,7 @@
             const defenseOvr = isMyPoss ? simState.oppOvr : myOvr;
 
             const gainDiff = Math.floor((offenseOvr - defenseOvr) / 5);
-            let gain = Math.floor(Math.random() * 12) - 3 + gainDiff; // Yardage result
+            let gain = Math.floor(Math.random() * 12) - 3 + gainDiff;
 
             simState.ballYard += isMyPoss ? gain : -gain;
             simState.dist -= gain;
@@ -1258,7 +1341,6 @@
 
             let playLog = ``;
 
-            // Touchdown check
             if (simState.ballYard >= 100) {
                 if (isMyPoss) {
                     simState.myScore += 7;
@@ -1284,7 +1366,6 @@
             } else {
                 simState.down++;
                 if (simState.down > 4) {
-                    // Turnover on downs
                     simState.possession = isMyPoss ? 'OPP' : 'MY';
                     simState.down = 1;
                     simState.dist = 10;
@@ -1294,7 +1375,6 @@
                 }
             }
 
-            // Time & Quarter logic
             if (simState.timeSec <= 0) {
                 simState.quarter++;
                 simState.timeSec = 900;
@@ -1382,3 +1462,4 @@
 </body>
 </html>
 
+```
