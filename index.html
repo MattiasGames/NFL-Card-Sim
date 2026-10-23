@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,6 +60,31 @@
             background-size: 100% 4px;
             pointer-events: none;
             opacity: 0.6;
+        }
+
+        /* PULL ANIMATIONS */
+        @keyframes epicGlow {
+            0%, 100% { box-shadow: 0 0 15px #f59e0b, 0 0 30px #f59e0b; }
+            50% { box-shadow: 0 0 25px #fbbf24, 0 0 50px #fbbf24; }
+        }
+
+        @keyframes goatShake {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            20% { transform: translate(-5px, 5px) rotate(-2deg); }
+            40% { transform: translate(5px, -5px) rotate(2deg); }
+            60% { transform: translate(-5px, -5px) rotate(-1deg); }
+            80% { transform: translate(5px, 5px) rotate(1deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        .anim-epic-pull {
+            animation: epicGlow 1.5s infinite ease-in-out;
+            border: 3px solid #f59e0b !important;
+        }
+
+        .anim-goat-pull {
+            animation: goatShake 0.4s ease-in-out infinite, epicGlow 1s infinite ease-in-out;
+            border: 3px solid #eab308 !important;
         }
 
         .art-variant-cyber { background: radial-gradient(circle at 50% 30%, #0284c7 0%, #090d16 80%); border: 2px solid #38bdf8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); }
@@ -170,7 +194,7 @@
                             <span class="text-[9px] text-emerald-200 uppercase font-bold mt-1">1 Card Pull</span>
                         </div>
                         <h3 class="font-sports text-2xl text-emerald-300">Wildcard Gamble</h3>
-                        <p class="text-[11px] text-slate-400 mb-3">High risk! Low odds for GOAT card variants!</p>
+                        <p class="text-[11px] text-slate-400 mb-3">Extreme risk! 0.01% odds for GOATs!</p>
                         <button onclick="buyPack('wildcard')" class="mt-auto w-full py-2 bg-emerald-600 hover:bg-emerald-500 font-sports tracking-wider text-white text-lg rounded-xl transition">
                             <i class="fa-solid fa-coins"></i> 1,000 GOLD
                         </button>
@@ -271,6 +295,9 @@
 
             <!-- PACK OPENING OVERLAY -->
             <div id="packRevealOverlay" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl hidden flex flex-col items-center justify-center p-4">
+                <div id="pullBanner" class="hidden text-center mb-4 transition-all">
+                    <span id="pullBannerText" class="font-sports text-5xl tracking-widest text-amber-400 uppercase drop-shadow-lg animate-bounce">ELITE PULL!</span>
+                </div>
                 <h2 class="text-3xl font-sports text-slate-400 uppercase tracking-widest mb-2" id="packOpeningTitle">Opening Pack...</h2>
                 <p class="text-slate-500 text-sm mb-6">Click cards to reveal your pulled players</p>
 
@@ -552,9 +579,10 @@
             return `${pre}${suf}_${num}`;
         }
 
-        // EXPONENTIAL PRICING LOGIC (fixes market value based on OVR)
+        // STRICT ECONOMY PRICING FORMULA (70s quick sell for 25-80 coins max)
         function calcPrice(ovr) {
-            return Math.round(Math.pow(ovr, 2.25) / 3);
+            if (ovr < 80) return Math.round((ovr - 68) * 6.5); // 70 OVR = 13 coins, 79 OVR = 71 coins
+            return Math.round(Math.pow(ovr, 2.5) / 12);
         }
 
         const BASE_PLAYER_POOL = [
@@ -573,8 +601,6 @@
             { id: 'p6', name: 'Derrick Henry', pos: 'RB', ovr: 95, tier: 'legendary', arch: 'POWER BACK', artStyle: 'lava' },
             { id: 'p9', name: 'Aaron Donald', pos: 'DL', ovr: 95, tier: 'legendary', arch: 'PASS RUSHER', artStyle: 'lava' },
             { id: 'p17', name: 'Tyreek Hill', pos: 'WR', ovr: 95, tier: 'legendary', arch: 'SPEEDSTER', artStyle: 'electric' },
-            { id: 'p39', name: 'Amon-Ra St. Brown', pos: 'WR', ovr: 95, tier: 'legendary', arch: 'SPEEDSTER', artStyle: 'retro' },
-            { id: 'p59', name: 'A.J. Brown', pos: 'WR', ovr: 95, tier: 'legendary', arch: 'DEEP THREAT', artStyle: 'electric' },
 
             // MID-TIER (80-94 OVR)
             { id: 'p7', name: 'Travis Kelce', pos: 'TE', ovr: 94, tier: 'legendary', arch: 'IMPROVISER', artStyle: 'gold' },
@@ -586,9 +612,8 @@
             { id: 'p15', name: 'Joe Burrow', pos: 'QB', ovr: 89, tier: 'epic', arch: 'FIELD GENERAL', artStyle: 'frost' },
             { id: 'p21', name: 'Saquon Barkley', pos: 'RB', ovr: 88, tier: 'rare', arch: 'POWER BACK', artStyle: 'darkmatter' },
             { id: 'p24', name: 'Jalen Ramsey', pos: 'CB', ovr: 88, tier: 'rare', arch: 'LOCKDOWN', artStyle: 'frost' },
-            { id: 'p27', name: 'C.J. Stroud', pos: 'QB', ovr: 86, tier: 'rare', arch: 'FIELD GENERAL', artStyle: 'cyber' },
 
-            // NEW 60 BUDGET & COMMON PLAYERS (70-79 OVR)
+            // COMMON/BUDGET CARDS (70-79 OVR)
             { id: 'b1', name: 'Gardner Minshew', pos: 'QB', ovr: 72, tier: 'common', arch: 'IMPROVISER', artStyle: 'retro' },
             { id: 'b2', name: 'Zach Wilson', pos: 'QB', ovr: 71, tier: 'common', arch: 'IMPROVISER', artStyle: 'cyber' },
             { id: 'b3', name: 'Desmond Ridder', pos: 'QB', ovr: 70, tier: 'common', arch: 'FIELD GENERAL', artStyle: 'retro' },
@@ -651,7 +676,6 @@
             { id: 'b60', name: 'Eddy Piñeiro', pos: 'K', ovr: 76, tier: 'rare', arch: 'FIELD GENERAL', artStyle: 'retro' }
         ];
 
-        // Automatically bind dynamic prices
         const PLAYER_POOL = BASE_PLAYER_POOL.map(p => ({
             ...p,
             price: calcPrice(p.ovr)
@@ -1066,7 +1090,7 @@
                 if (Math.random() < 0.4) {
                     if (listing.seller === 'YOU') {
                         if (listing.currentBid < listing.buyout * 0.9) {
-                            listing.currentBid += 100;
+                            listing.currentBid += 10;
                         } else {
                             gameState.gold += listing.buyout;
                             alert(`AUCTION SOLD! An AI user bought out your ${listing.card.name} for ${listing.buyout} Gold!`);
@@ -1075,7 +1099,7 @@
                             return;
                         }
                     } else {
-                        listing.currentBid += 50;
+                        listing.currentBid += 10;
                     }
                 }
 
@@ -1103,7 +1127,7 @@
             }
         }
 
-        // REBALANCED BALANCED PACK PROBABILITIES LOGIC
+        // HEAVILY NERFED PACK SPAWN RATES (Pulling 90s is rare!)
         function buyPack(type) {
             let cost = 0;
             let packCount = 3;
@@ -1140,31 +1164,28 @@
                 const roll = Math.random();
 
                 if (type === 'silver') {
-                    // 75% Common, 20% Rare, 4.5% Epic, 0.5% Legendary
-                    if (roll < 0.75 && commons.length) card = commons[Math.floor(Math.random() * commons.length)];
-                    else if (roll < 0.95 && rares.length) card = rares[Math.floor(Math.random() * rares.length)];
-                    else if (roll < 0.995 && epics.length) card = epics[Math.floor(Math.random() * epics.length)];
+                    // 88% Common, 11% Rare, 0.99% Epic, 0.01% Legend
+                    if (roll < 0.88 && commons.length) card = commons[Math.floor(Math.random() * commons.length)];
+                    else if (roll < 0.99 && rares.length) card = rares[Math.floor(Math.random() * rares.length)];
+                    else if (roll < 0.999 && epics.length) card = epics[Math.floor(Math.random() * epics.length)];
                     else card = legends[Math.floor(Math.random() * legends.length)] || pool[0];
                 } else if (type === 'gold') {
-                    // 30% Common, 50% Rare, 17% Epic, 3% Legendary
-                    if (roll < 0.30 && commons.length) card = commons[Math.floor(Math.random() * commons.length)];
-                    else if (roll < 0.80 && rares.length) card = rares[Math.floor(Math.random() * rares.length)];
-                    else if (roll < 0.97 && epics.length) card = epics[Math.floor(Math.random() * epics.length)];
+                    // 55% Common, 38% Rare, 6.9% Epic, 0.1% Legend
+                    if (roll < 0.55 && commons.length) card = commons[Math.floor(Math.random() * commons.length)];
+                    else if (roll < 0.93 && rares.length) card = rares[Math.floor(Math.random() * rares.length)];
+                    else if (roll < 0.999 && epics.length) card = epics[Math.floor(Math.random() * epics.length)];
                     else card = legends[Math.floor(Math.random() * legends.length)] || pool[0];
                 } else if (type === 'legends') {
-                    // Guaranteed High End
-                    if (roll < 0.60 && epics.length) card = epics[Math.floor(Math.random() * epics.length)];
+                    if (roll < 0.70 && epics.length) card = epics[Math.floor(Math.random() * epics.length)];
                     else card = legends[Math.floor(Math.random() * legends.length)] || pool[0];
                 } else if (type === 'wildcard') {
-                    // High risk 0.1% GOAT roll
-                    if (roll < 0.001) card = pool.find(p => p.ovr >= 99) || legends[0];
-                    else if (roll < 0.05) card = legends[Math.floor(Math.random() * legends.length)];
-                    else if (roll < 0.30) card = rares[Math.floor(Math.random() * rares.length)];
+                    if (roll < 0.0001) card = pool.find(p => p.ovr >= 99) || legends[0];
+                    else if (roll < 0.01) card = legends[Math.floor(Math.random() * legends.length)];
+                    else if (roll < 0.15) card = rares[Math.floor(Math.random() * rares.length)];
                     else card = commons[Math.floor(Math.random() * commons.length)] || pool[0];
                 } else {
-                    // Targeted Packs (Lockdown, Ice, Trenches, Rookies)
-                    if (roll < 0.65 && commons.length) card = commons[Math.floor(Math.random() * commons.length)];
-                    else if (roll < 0.90 && rares.length) card = rares[Math.floor(Math.random() * rares.length)];
+                    if (roll < 0.78 && commons.length) card = commons[Math.floor(Math.random() * commons.length)];
+                    else if (roll < 0.97 && rares.length) card = rares[Math.floor(Math.random() * rares.length)];
                     else card = epics[Math.floor(Math.random() * epics.length)] || pool[0];
                 }
 
@@ -1186,8 +1207,10 @@
             const overlay = document.getElementById('packRevealOverlay');
             const container = document.getElementById('revealedCardsContainer');
             const closeBtn = document.getElementById('closePackBtn');
+            const banner = document.getElementById('pullBanner');
 
             container.innerHTML = '';
+            banner.classList.add('hidden');
             closeBtn.classList.add('hidden');
             overlay.classList.remove('hidden');
 
@@ -1195,8 +1218,12 @@
                 const wrapper = document.createElement('div');
                 wrapper.className = 'w-44 h-64 perspective-1000 cursor-pointer';
                 
+                let extraClass = '';
+                if (card.ovr >= 94) extraClass = 'anim-goat-pull';
+                else if (card.ovr >= 88) extraClass = 'anim-epic-pull';
+
                 wrapper.innerHTML = `
-                    <div class="card-inner relative w-full h-full duration-700 transform-style-3d shadow-2xl rounded-xl">
+                    <div class="card-inner relative w-full h-full duration-700 transform-style-3d shadow-2xl rounded-xl ${extraClass}">
                         <div class="absolute inset-0 bg-slate-900 border-2 border-amber-400 rounded-xl flex flex-col items-center justify-center backface-hidden shadow-2xl">
                             <i class="fa-solid fa-football text-amber-400 text-5xl mb-2"></i>
                             <span class="font-sports text-2xl text-white tracking-widest">MUT CARD</span>
@@ -1212,6 +1239,16 @@
                     const inner = wrapper.querySelector('.card-inner');
                     if (!inner.classList.contains('rotate-y-180')) {
                         inner.classList.add('rotate-y-180');
+
+                        // PULL ANIMATION TRIGGER
+                        if (card.ovr >= 94) {
+                            banner.classList.remove('hidden');
+                            document.getElementById('pullBannerText').innerText = `🔥 LEGENDARY GOAT PULL! (${card.name}) 🔥`;
+                        } else if (card.ovr >= 88) {
+                            banner.classList.remove('hidden');
+                            document.getElementById('pullBannerText').innerText = `⭐ ELITE CARD PULL! (${card.name}) ⭐`;
+                        }
+
                         checkPackAllRevealed();
                     }
                 };
@@ -1375,7 +1412,7 @@
             unequipped.forEach(card => {
                 const opt = document.createElement('option');
                 opt.value = card.instanceId;
-                opt.innerText = `${card.name} (${card.pos} - ${card.ovr} OVR) - QuickSell: ${Math.round(card.price * 0.4)} Gold`;
+                opt.innerText = `${card.name} (${card.pos} - ${card.ovr} OVR) - QuickSell: ${card.price} Gold`;
                 select.appendChild(opt);
             });
         }
@@ -1388,8 +1425,7 @@
             const idx = gameState.binder.findIndex(c => c.instanceId === instanceId);
             if (idx !== -1) {
                 const card = gameState.binder[idx];
-                const sellValue = Math.round(card.price * 0.4);
-                gameState.gold += sellValue;
+                gameState.gold += card.price;
                 gameState.binder.splice(idx, 1);
                 saveGame();
                 updateUI();
@@ -1447,7 +1483,7 @@
 
                         <div class="grid grid-cols-2 gap-2 pt-2">
                             <button onclick="bidOnMarket('${item.marketId}')" class="py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold text-xs rounded-lg border border-slate-700 transition">
-                                Bid +100
+                                Bid +10
                             </button>
                             <button onclick="buyoutMarket('${item.marketId}')" class="py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition">
                                 Buyout
@@ -1464,13 +1500,13 @@
             const item = gameState.marketplace.find(m => m.marketId === marketId);
             if (!item) return;
 
-            const bidAmount = item.currentBid + 100;
+            const bidAmount = item.currentBid + 10;
             if (gameState.gold < bidAmount) {
                 alert("Insufficient Gold!");
                 return;
             }
 
-            gameState.gold -= 100;
+            gameState.gold -= 10;
             item.currentBid = bidAmount;
             
             if (item.currentBid >= item.buyout) {
@@ -1517,8 +1553,8 @@
                     marketId: 'mkt_user_' + Date.now(),
                     card: card,
                     seller: 'YOU',
-                    currentBid: Math.round(card.price * 0.5),
-                    buyout: Math.round(card.price * 1.1),
+                    currentBid: Math.round(card.price * 0.8),
+                    buyout: Math.round(card.price * 1.2),
                     timer: 60
                 });
 
@@ -1775,5 +1811,3 @@
     </script>
 </body>
 </html>
-
-
