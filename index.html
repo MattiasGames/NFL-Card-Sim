@@ -1,24 +1,4 @@
-Here is the updated code fixing all three systems:
 
-### What Was Fixed & Enhanced:
-
-1. **Dynamic Opponent Scoring & Reactive Simulation:**
-* Rewrote the play simulation engine to calculate drive success probabilities dynamically based on **`Your OVR` vs `Opponent OVR**`.
-* Opponent teams now attempt field goals and long passing plays with realistic scoring rates according to ratings disparities.
-
-
-2. **AI Auction House Pickup System:**
-* AI buyers now actively inspect user auction listings every **10 seconds**.
-* If your listing is priced fairly relative to card OVR and market value, AI buyers will place bids or buy it out automatically.
-
-
-3. **Multi-Card Trading System (Up to 3-for-1):**
-* Replaced single-card selection with a multi-card checkbox system allowing you to select **1, 2, or 3 cards** to trade for an AI target player.
-* AI valuation logic evaluates the total combined value/OVR of your offered cards against the target card and only accepts if the trade is fair.
-
-
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -602,7 +582,67 @@ Here is the updated code fixing all three systems:
             { id: 'p27', name: 'C.J. Stroud', pos: 'QB', ovr: 86, tier: 'rare', price: 1350, arch: 'FIELD GENERAL', artStyle: 'cyber' },
             { id: 'p28', name: 'Jayden Daniels', pos: 'QB', ovr: 83, tier: 'common', price: 800, arch: 'IMPROVISER', artStyle: 'electric' },
             { id: 'p29', name: 'Malik Nabers', pos: 'WR', ovr: 83, tier: 'common', price: 750, arch: 'SPEEDSTER', artStyle: 'retro' },
-            { id: 'p30', name: 'Brock Bowers', pos: 'TE', ovr: 84, tier: 'rare', price: 950, arch: 'IMPROVISER', artStyle: 'frost' }
+            { id: 'p30', name: 'Brock Bowers', pos: 'TE', ovr: 84, tier: 'rare', price: 950, arch: 'IMPROVISER', artStyle: 'frost' },
+            { id: 'p31', name: 'Josh Allen', pos: 'QB', ovr: 97, tier: 'sr', price: 8000, arch: 'FIELD GENERAL', artStyle: 'cyber' },
+            { id: 'p32', name: 'Myles Garrett', pos: 'DL', ovr: 98, tier: 'sr', price: 9000, arch: 'PASS RUSHER', artStyle: 'lava' },
+            { id: 'p33', name: "Ja'Marr Chase", pos: 'WR', ovr: 99, tier: 'sr', price: 10000, arch: 'DEEP THREAT', artStyle: 'electric' },
+            { id: 'p34', name: 'Fred Warner', pos: 'LB', ovr: 97, tier: 'sr', price: 8000, arch: 'LOCKDOWN', artStyle: 'frost' },
+            { id: 'p35', name: 'Maxx Crosby', pos: 'DL', ovr: 97, tier: 'sr', price: 8000, arch: 'PASS RUSHER', artStyle: 'darkmatter' },
+            { id: 'p36', name: 'Pat Surtain II', pos: 'CB', ovr: 97, tier: 'sr', price: 8000, arch: 'LOCKDOWN', artStyle: 'cyber' },
+            { id: 'p37', name: 'Lane Johnson', pos: 'OL', ovr: 97, tier: 'sr', price: 8000, arch: 'POWER BACK', artStyle: 'gold' },
+            { id: 'p38', name: 'Christian Gonzalez', pos: 'CB', ovr: 92, tier: 'epic', price: 3500, arch: 'LOCKDOWN', artStyle: 'electric' },
+            { id: 'p39', name: 'Amon-Ra St. Brown', pos: 'WR', ovr: 95, tier: 'legendary', price: 5800, arch: 'SPEEDSTER', artStyle: 'retro' },
+            { id: 'p40', name: 'Bijan Robinson', pos: 'RB', ovr: 92, tier: 'epic', price: 3500, arch: 'IMPROVISER', artStyle: 'gold' },
+            { id: 'p41', name: 'Cameron Heyward', pos: 'DL', ovr: 92, tier: 'epic', price: 3500, arch: 'POWER BACK', artStyle: 'lava' },
+            { id: 'p42', name: 'Will Anderson Jr.', pos: 'DL', ovr: 89, tier: 'epic', price: 2400, arch: 'PASS RUSHER', artStyle: 'darkmatter' },
+            { id: 'p43', name: 'Jeffery Simmons', pos: 'DL', ovr: 88, tier: 'rare', price: 1800, arch: 'POWER BACK', artStyle: 'lava' },
+            { id: 'p44', name: 'Trent McDuffie', pos: 'CB', ovr: 94, tier: 'legendary', price: 5000, arch: 'LOCKDOWN', artStyle: 'frost' },
+            { id: 'p45', name: 'Derek Stingley Jr.', pos: 'CB', ovr: 91, tier: 'epic', price: 3000, arch: 'LOCKDOWN', artStyle: 'cyber' },
+            { id: 'p46', name: 'Drake Maye', pos: 'QB', ovr: 82, tier: 'common', price: 700, arch: 'IMPROVISER', artStyle: 'electric' },
+            { id: 'p47', name: 'Jaxon Smith-Njigba', pos: 'WR', ovr: 88, tier: 'rare', price: 1800, arch: 'SPEEDSTER', artStyle: 'retro' },
+            { id: 'p48', name: 'Devon Witherspoon', pos: 'CB', ovr: 89, tier: 'epic', price: 2400, arch: 'LOCKDOWN', artStyle: 'electric' },
+            { id: 'p49', name: 'Trey McBride', pos: 'TE', ovr: 91, tier: 'epic', price: 3000, arch: 'IMPROVISER', artStyle: 'frost' },
+            { id: 'p50', name: 'Nico Collins', pos: 'WR', ovr: 89, tier: 'epic', price: 2400, arch: 'DEEP THREAT', artStyle: 'cyber' },
+            { id: 'p51', name: 'Kenneth Walker III', pos: 'RB', ovr: 88, tier: 'rare', price: 1800, arch: 'POWER BACK', artStyle: 'darkmatter' },
+            { id: 'p52', name: 'Jahmyr Gibbs', pos: 'RB', ovr: 92, tier: 'epic', price: 3500, arch: 'SPEEDSTER', artStyle: 'electric' },
+            { id: 'p53', name: 'Bobby Wagner', pos: 'LB', ovr: 87, tier: 'rare', price: 1500, arch: 'FIELD GENERAL', artStyle: 'retro' },
+            { id: 'p54', name: 'Jake Matthews', pos: 'OL', ovr: 83, tier: 'common', price: 750, arch: 'POWER BACK', artStyle: 'gold' },
+            { id: 'p55', name: 'Cooper DeJean', pos: 'CB', ovr: 84, tier: 'rare', price: 1100, arch: 'ZONE HAWK', artStyle: 'cyber' },
+            { id: 'p56', name: 'Jalen Hurts', pos: 'QB', ovr: 88, tier: 'rare', price: 1800, arch: 'IMPROVISER', artStyle: 'electric' },
+            { id: 'p57', name: 'T.J. Watt', pos: 'LB', ovr: 97, tier: 'sr', price: 8000, arch: 'PASS RUSHER', artStyle: 'lava' },
+            { id: 'p58', name: 'Chris Jones', pos: 'DL', ovr: 97, tier: 'sr', price: 8000, arch: 'POWER BACK', artStyle: 'darkmatter' },
+            { id: 'p59', name: 'A.J. Brown', pos: 'WR', ovr: 95, tier: 'legendary', price: 5800, arch: 'DEEP THREAT', artStyle: 'electric' },
+            { id: 'p60', name: 'Dexter Lawrence', pos: 'DL', ovr: 95, tier: 'legendary', price: 5800, arch: 'POWER BACK', artStyle: 'lava' },
+            { id: 'p61', name: 'CeeDee Lamb', pos: 'WR', ovr: 96, tier: 'legendary', price: 6000, arch: 'SPEEDSTER', artStyle: 'gold' },
+            { id: 'p62', name: 'Roquan Smith', pos: 'LB', ovr: 95, tier: 'legendary', price: 5800, arch: 'FIELD GENERAL', artStyle: 'frost' },
+            { id: 'p63', name: 'Zack Martin', pos: 'OL', ovr: 97, tier: 'sr', price: 8000, arch: 'POWER BACK', artStyle: 'gold' },
+            { id: 'p64', name: 'Jessie Bates III', pos: 'S', ovr: 97, tier: 'sr', price: 8000, arch: 'ZONE HAWK', artStyle: 'frost' },
+            { id: 'p65', name: 'Mark Andrews', pos: 'TE', ovr: 94, tier: 'legendary', price: 5000, arch: 'IMPROVISER', artStyle: 'cyber' },
+            { id: 'p66', name: 'Quinnen Williams', pos: 'DL', ovr: 94, tier: 'legendary', price: 5000, arch: 'POWER BACK', artStyle: 'lava' },
+            { id: 'p67', name: 'Antoine Winfield Jr.', pos: 'S', ovr: 94, tier: 'legendary', price: 5000, arch: 'ZONE HAWK', artStyle: 'frost' },
+            { id: 'p68', name: 'Laremy Tunsil', pos: 'OL', ovr: 94, tier: 'legendary', price: 5000, arch: 'POWER BACK', artStyle: 'darkmatter' },
+            { id: 'p69', name: 'Tristan Wirfs', pos: 'OL', ovr: 94, tier: 'legendary', price: 5000, arch: 'POWER BACK', artStyle: 'gold' },
+            { id: 'p70', name: 'Davante Adams', pos: 'WR', ovr: 94, tier: 'legendary', price: 5000, arch: 'DEEP THREAT', artStyle: 'electric' },
+            { id: 'p71', name: 'Frank Ragnow', pos: 'OL', ovr: 93, tier: 'legendary', price: 4500, arch: 'POWER BACK', artStyle: 'retro' },
+            { id: 'p72', name: 'Creed Humphrey', pos: 'OL', ovr: 93, tier: 'legendary', price: 4500, arch: 'POWER BACK', artStyle: 'gold' },
+            { id: 'p73', name: 'Jaire Alexander', pos: 'CB', ovr: 93, tier: 'legendary', price: 4500, arch: 'LOCKDOWN', artStyle: 'cyber' },
+            { id: 'p74', name: 'Demario Davis', pos: 'LB', ovr: 92, tier: 'epic', price: 3500, arch: 'FIELD GENERAL', artStyle: 'darkmatter' },
+            { id: 'p75', name: 'Justin Madubuike', pos: 'DL', ovr: 92, tier: 'epic', price: 3500, arch: 'PASS RUSHER', artStyle: 'lava' },
+            { id: 'p76', name: "L'Jarius Sneed", pos: 'CB', ovr: 92, tier: 'epic', price: 3500, arch: 'LOCKDOWN', artStyle: 'frost' },
+            { id: 'p77', name: 'Stefon Diggs', pos: 'WR', ovr: 92, tier: 'epic', price: 3500, arch: 'SPEEDSTER', artStyle: 'electric' },
+            { id: 'p78', name: 'Dak Prescott', pos: 'QB', ovr: 90, tier: 'epic', price: 2800, arch: 'FIELD GENERAL', artStyle: 'cyber' },
+            { id: 'p79', name: 'T.J. Hockenson', pos: 'TE', ovr: 91, tier: 'epic', price: 3000, arch: 'IMPROVISER', artStyle: 'frost' },
+            { id: 'p80', name: 'Nick Chubb', pos: 'RB', ovr: 96, tier: 'legendary', price: 6000, arch: 'POWER BACK', artStyle: 'lava' },
+            { id: 'p81', name: 'Jordan Mailata', pos: 'OL', ovr: 96, tier: 'legendary', price: 6000, arch: 'POWER BACK', artStyle: 'gold' },
+            { id: 'p82', name: 'Xavier McKinney', pos: 'S', ovr: 93, tier: 'legendary', price: 4500, arch: 'ZONE HAWK', artStyle: 'cyber' },
+            { id: 'p83', name: 'Trey Hendrickson', pos: 'DL', ovr: 89, tier: 'epic', price: 2400, arch: 'PASS RUSHER', artStyle: 'lava' },
+            { id: 'p84', name: 'Budda Baker', pos: 'S', ovr: 92, tier: 'epic', price: 3500, arch: 'ZONE HAWK', artStyle: 'electric' },
+            { id: 'p85', name: 'Chris Lindstrom', pos: 'OL', ovr: 94, tier: 'legendary', price: 5000, arch: 'POWER BACK', artStyle: 'gold' },
+            { id: 'p86', name: 'Josh Jacobs', pos: 'RB', ovr: 90, tier: 'epic', price: 2800, arch: 'POWER BACK', artStyle: 'darkmatter' },
+            { id: 'p87', name: 'David Njoku', pos: 'TE', ovr: 90, tier: 'epic', price: 2800, arch: 'IMPROVISER', artStyle: 'retro' },
+            { id: 'p88', name: 'Justin Herbert', pos: 'QB', ovr: 87, tier: 'rare', price: 1500, arch: 'FIELD GENERAL', artStyle: 'cyber' },
+            { id: 'p89', name: 'Brock Purdy', pos: 'QB', ovr: 85, tier: 'rare', price: 1200, arch: 'FIELD GENERAL', artStyle: 'frost' },
+            { id: 'p90', name: 'Kyle Juszczyk', pos: 'RB', ovr: 88, tier: 'rare', price: 1800, arch: 'POWER BACK', artStyle: 'gold' }
         ];
 
         const ROSTER_SLOTS = [
@@ -639,7 +679,7 @@ Here is the updated code fixing all three systems:
         window.addEventListener('DOMContentLoaded', () => {
             initTeamGrid();
             loadGame();
-            setInterval(processAiMarketPurchases, 10000); // AI market buying tick every 10s
+            setInterval(processAiMarketPurchases, 10000);
         });
 
         function initTeamGrid() {
@@ -887,7 +927,6 @@ Here is the updated code fixing all three systems:
             document.getElementById('aiRosterModal').classList.add('hidden');
         }
 
-        // MULTI-CARD TRADE & BID MODAL LOGIC (UP TO 3 CARDS)
         function openTradeModal(targetCard) {
             selectedTradeTargetCard = targetCard;
             const container = document.getElementById('tradeTargetCardContainer');
@@ -970,15 +1009,12 @@ Here is the updated code fixing all three systems:
                     const offeredCardIds = Array.from(checkedBoxes).map(cb => cb.value);
                     const offeredCards = gameState.binder.filter(c => offeredCardIds.includes(c.instanceId));
 
-                    // Fair trade evaluation: Sum of offered card prices / OVR vs target card
                     const combinedPrice = offeredCards.reduce((sum, c) => sum + c.price, 0);
                     const maxOfferedOvr = Math.max(...offeredCards.map(c => c.ovr));
 
-                    // Fair trade rule: combined price >= 95% target price AND max offered card OVR is close
                     if (combinedPrice >= selectedTradeTargetCard.price * 0.95 && maxOfferedOvr >= selectedTradeTargetCard.ovr - 6) {
                         accepted = true;
                         
-                        // Remove offered cards from binder
                         offeredCards.forEach(c => {
                             const idx = gameState.binder.findIndex(b => b.instanceId === c.instanceId);
                             if (idx !== -1) gameState.binder.splice(idx, 1);
@@ -1008,7 +1044,6 @@ Here is the updated code fixing all three systems:
             }, 2000);
         }
 
-        // MARKETPLACE & AUTOMATED AI MARKET BUYING ENGINE
         function processAiMarketPurchases() {
             if (!gameState.marketplace || gameState.marketplace.length === 0) return;
 
@@ -1016,14 +1051,11 @@ Here is the updated code fixing all three systems:
             gameState.marketplace.forEach((listing, index) => {
                 listing.timer -= 10;
 
-                // AI buyer evaluation: 40% chance every tick an AI bids or buys user items priced fairly
                 if (Math.random() < 0.4) {
                     if (listing.seller === 'YOU') {
-                        // AI bids or buys out user listing
                         if (listing.currentBid < listing.buyout * 0.9) {
                             listing.currentBid += 100;
                         } else {
-                            // AI Buyout purchase!
                             gameState.gold += listing.buyout;
                             alert(`AUCTION SOLD! An AI user bought out your ${listing.card.name} for ${listing.buyout} Gold!`);
                             gameState.marketplace.splice(index, 1);
@@ -1031,14 +1063,12 @@ Here is the updated code fixing all three systems:
                             return;
                         }
                     } else {
-                        // Regular AI bidding on listings
                         listing.currentBid += 50;
                     }
                 }
 
                 if (listing.timer <= 0) {
                     if (listing.seller === 'YOU') {
-                        // Expired listing returns gold for current bid
                         gameState.gold += listing.currentBid;
                         alert(`AUCTION ENDED! Your auction for ${listing.card.name} sold for ${listing.currentBid} Gold!`);
                     }
@@ -1047,7 +1077,6 @@ Here is the updated code fixing all three systems:
                 }
             });
 
-            // Refill marketplace if low
             if (gameState.marketplace.length < 5) {
                 generateMarketplaceListings();
                 updated = true;
@@ -1462,7 +1491,6 @@ Here is the updated code fixing all three systems:
             }
         }
 
-        // ESPN GAMECAST SIMULATOR WITH REACTIVE OPPONENT SCORING ENGINE
         let simState = {
             active: false,
             quarter: 1,
@@ -1581,13 +1609,11 @@ Here is the updated code fixing all three systems:
             const offenseOvr = isMyPoss ? myOvr : simState.oppOvr;
             const defenseOvr = isMyPoss ? simState.oppOvr : myOvr;
 
-            // Reactive yardage calculation based on OVR difference
             const ovrDiff = offenseOvr - defenseOvr;
             const baseGain = Math.floor(Math.random() * 10) + 1; 
             const bonusGain = Math.round(ovrDiff / 4);
             let gain = baseGain + bonusGain;
 
-            // Field Position direction
             if (isMyPoss) {
                 simState.ballYard += gain;
             } else {
@@ -1599,7 +1625,6 @@ Here is the updated code fixing all three systems:
 
             let playLog = ``;
 
-            // Dynamic Scoring Logic
             if (isMyPoss && simState.ballYard >= 100) {
                 simState.myScore += 7;
                 playLog = `TOUCHDOWN ${gameState.selectedTeam.name}! (+7 PTS)`;
@@ -1609,7 +1634,6 @@ Here is the updated code fixing all three systems:
                 playLog = `TOUCHDOWN ${simState.oppTeam.name}! (+7 PTS)`;
                 resetDrive();
             } else if (!isMyPoss && simState.ballYard <= 35 && simState.down === 4 && Math.random() < 0.8) {
-                // Opponent attempts and makes Field Goal
                 simState.oppScore += 3;
                 playLog = `FIELD GOAL GOOD by ${simState.oppTeam.name}! (+3 PTS)`;
                 resetDrive();
@@ -1715,5 +1739,5 @@ Here is the updated code fixing all three systems:
 </body>
 </html>
 
-```
+
 
