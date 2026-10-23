@@ -1,4 +1,24 @@
+Here is the updated code fixing all three systems:
 
+### What Was Fixed & Enhanced:
+
+1. **Dynamic Opponent Scoring & Reactive Simulation:**
+* Rewrote the play simulation engine to calculate drive success probabilities dynamically based on **`Your OVR` vs `Opponent OVR**`.
+* Opponent teams now attempt field goals and long passing plays with realistic scoring rates according to ratings disparities.
+
+
+2. **AI Auction House Pickup System:**
+* AI buyers now actively inspect user auction listings every **10 seconds**.
+* If your listing is priced fairly relative to card OVR and market value, AI buyers will place bids or buy it out automatically.
+
+
+3. **Multi-Card Trading System (Up to 3-for-1):**
+* Replaced single-card selection with a multi-card checkbox system allowing you to select **1, 2, or 3 cards** to trade for an AI target player.
+* AI valuation logic evaluates the total combined value/OVR of your offered cards against the target card and only accepts if the trade is fair.
+
+
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,7 +52,6 @@
     </script>
 
     <style>
-        /* BASE SHARP-EDGED MUT CARD LAYOUT */
         .mut-card-frame {
             position: relative;
             clip-path: polygon(0 0, 85% 0, 100% 8%, 100% 100%, 15% 100%, 0 92%);
@@ -64,54 +83,14 @@
             opacity: 0.6;
         }
 
-        /* MULTIPLE MUT ART VARIANTS */
-        .art-variant-cyber {
-            background: radial-gradient(circle at 50% 30%, #0284c7 0%, #090d16 80%);
-            border: 2px solid #38bdf8;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
-        }
-
-        .art-variant-electric {
-            background: radial-gradient(circle at 50% 20%, #7c3aed 0%, #030712 85%);
-            border: 2px solid #a855f7;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
-        }
-
-        .art-variant-lava {
-            background: radial-gradient(circle at 50% 30%, #b91c1c 0%, #450a0a 60%, #0a0a0a 100%);
-            border: 2px solid #ef4444;
-            box-shadow: 0 0 18px rgba(239, 68, 68, 0.6);
-        }
-
-        .art-variant-frost {
-            background: radial-gradient(circle at 50% 30%, #0ea5e9 0%, #1e3a8a 60%, #020617 100%);
-            border: 2px solid #bae6fd;
-            box-shadow: 0 0 18px rgba(186, 230, 253, 0.7);
-        }
-
-        .art-variant-goat {
-            background: linear-gradient(135deg, #1e1b4b 0%, #b45309 50%, #000000 100%);
-            border: 2px solid #fbbf24;
-            box-shadow: 0 0 25px rgba(251, 191, 36, 0.7);
-        }
-
-        .art-variant-darkmatter {
-            background: radial-gradient(circle at 50% 40%, #4c1d95 0%, #111827 70%, #000000 100%);
-            border: 2px solid #c084fc;
-            box-shadow: 0 0 15px rgba(192, 132, 252, 0.5);
-        }
-
-        .art-variant-gold {
-            background: radial-gradient(circle at 50% 30%, #d97706 0%, #451a03 70%, #0f172a 100%);
-            border: 2px solid #f59e0b;
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
-        }
-
-        .art-variant-retro {
-            background: linear-gradient(180deg, #831843 0%, #0f172a 100%);
-            border: 2px solid #f43f5e;
-            box-shadow: 0 0 15px rgba(244, 63, 94, 0.5);
-        }
+        .art-variant-cyber { background: radial-gradient(circle at 50% 30%, #0284c7 0%, #090d16 80%); border: 2px solid #38bdf8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); }
+        .art-variant-electric { background: radial-gradient(circle at 50% 20%, #7c3aed 0%, #030712 85%); border: 2px solid #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.6); }
+        .art-variant-lava { background: radial-gradient(circle at 50% 30%, #b91c1c 0%, #450a0a 60%, #0a0a0a 100%); border: 2px solid #ef4444; box-shadow: 0 0 18px rgba(239, 68, 68, 0.6); }
+        .art-variant-frost { background: radial-gradient(circle at 50% 30%, #0ea5e9 0%, #1e3a8a 60%, #020617 100%); border: 2px solid #bae6fd; box-shadow: 0 0 18px rgba(186, 230, 253, 0.7); }
+        .art-variant-goat { background: linear-gradient(135deg, #1e1b4b 0%, #b45309 50%, #000000 100%); border: 2px solid #fbbf24; box-shadow: 0 0 25px rgba(251, 191, 36, 0.7); }
+        .art-variant-darkmatter { background: radial-gradient(circle at 50% 40%, #4c1d95 0%, #111827 70%, #000000 100%); border: 2px solid #c084fc; box-shadow: 0 0 15px rgba(192, 132, 252, 0.5); }
+        .art-variant-gold { background: radial-gradient(circle at 50% 30%, #d97706 0%, #451a03 70%, #0f172a 100%); border: 2px solid #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.5); }
+        .art-variant-retro { background: linear-gradient(180deg, #831843 0%, #0f172a 100%); border: 2px solid #f43f5e; box-shadow: 0 0 15px rgba(244, 63, 94, 0.5); }
 
         .perspective-1000 { perspective: 1000px; }
         .transform-style-3d { transform-style: preserve-3d; }
@@ -204,7 +183,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Wildcard Gamble Pack -->
                     <div class="bg-slate-900 border border-emerald-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-emerald-400 transition">
                         <div class="w-32 h-44 bg-gradient-to-br from-emerald-800 via-teal-900 to-slate-950 border-2 border-emerald-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-dice text-4xl text-emerald-300 mb-2"></i>
@@ -218,7 +196,6 @@
                         </button>
                     </div>
 
-                    <!-- Lock Down Defense Pack -->
                     <div class="bg-slate-900 border border-cyan-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-cyan-400 transition">
                         <div class="w-32 h-44 bg-gradient-to-br from-cyan-800 via-blue-950 to-slate-950 border-2 border-cyan-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-lock text-4xl text-cyan-300 mb-2"></i>
@@ -232,7 +209,6 @@
                         </button>
                     </div>
 
-                    <!-- Ice Pack (WRs / TEs) -->
                     <div class="bg-slate-900 border border-sky-400 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-sky-300 transition">
                         <div class="w-32 h-44 bg-gradient-to-br from-sky-600 via-indigo-900 to-slate-950 border-2 border-sky-300 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-snowflake text-4xl text-sky-200 mb-2"></i>
@@ -246,7 +222,6 @@
                         </button>
                     </div>
 
-                    <!-- Rookie Phenoms Pack -->
                     <div class="bg-slate-900 border border-purple-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-purple-400 transition">
                         <div class="w-32 h-44 bg-gradient-to-br from-purple-800 via-indigo-950 to-slate-950 border-2 border-purple-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-graduation-cap text-4xl text-purple-300 mb-2"></i>
@@ -260,7 +235,6 @@
                         </button>
                     </div>
 
-                    <!-- Trench Pack (OL / RB) -->
                     <div class="bg-slate-900 border border-orange-500/60 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-orange-400 transition">
                         <div class="w-32 h-44 bg-gradient-to-br from-orange-800 via-stone-900 to-slate-950 border-2 border-orange-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-shield text-4xl text-orange-300 mb-2"></i>
@@ -274,7 +248,6 @@
                         </button>
                     </div>
 
-                    <!-- Standard Pro Pack -->
                     <div class="bg-slate-900 border border-slate-700 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-slate-400 transition">
                         <div class="w-32 h-44 bg-gradient-to-br from-slate-600 to-slate-950 border-2 border-slate-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-box-open text-4xl text-slate-300 mb-2"></i>
@@ -288,7 +261,6 @@
                         </button>
                     </div>
 
-                    <!-- All-Pro Pack -->
                     <div class="bg-slate-900 border border-amber-500/50 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-amber-400 transition">
                         <div class="w-32 h-44 bg-gradient-to-br from-amber-500 via-amber-700 to-slate-950 border-2 border-amber-400 rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-box-open text-4xl text-amber-300 mb-2"></i>
@@ -302,7 +274,6 @@
                         </button>
                     </div>
 
-                    <!-- All-Time Legends GOAT Pack -->
                     <div class="bg-slate-900 border border-amber-400 rounded-2xl p-4 flex flex-col items-center text-center relative overflow-hidden group hover:border-amber-300 transition">
                         <div class="w-32 h-44 mut-card-frame art-variant-goat rounded-xl flex flex-col items-center justify-center p-2 my-2 shadow-xl group-hover:scale-105 transition transform">
                             <i class="fa-solid fa-crown text-4xl text-amber-200 mb-2"></i>
@@ -378,7 +349,7 @@
             <section id="view-teams" class="hidden space-y-6">
                 <div class="border-b border-slate-800 pb-4">
                     <h2 class="text-3xl font-sports tracking-wide uppercase text-white">NFL Franchise Directory</h2>
-                    <p class="text-xs text-slate-400">View all AI franchises ranked best-to-worst by Team Overall (OVR). Select a team to inspect their roster or negotiate trades and cash bids!</p>
+                    <p class="text-xs text-slate-400">View all AI franchises ranked best-to-worst by Team Overall (OVR). Select a team to inspect their roster or negotiate 1-to-3 card trades and cash bids!</p>
                 </div>
 
                 <div id="teamsLeagueRankingsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4"></div>
@@ -398,37 +369,37 @@
                         <button onclick="closeAiRosterModal()" class="text-slate-400 hover:text-white text-xl p-2"><i class="fa-solid fa-xmark"></i></button>
                     </div>
 
-                    <p class="text-xs text-slate-400 mb-3">Cards listed in order of highest OVR. Click any card to initiate a bid or trade proposal!</p>
+                    <p class="text-xs text-slate-400 mb-3">Cards listed in order of highest OVR. Click any card to initiate a bid or multi-card trade proposal!</p>
 
                     <div id="aiTeamCardGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 overflow-y-auto p-2 flex-grow min-h-[300px]"></div>
                 </div>
             </div>
 
-            <!-- TRADE / BID NEGOTIATION MODAL -->
+            <!-- MULTI-CARD TRADE / BID NEGOTIATION MODAL -->
             <div id="tradeModal" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl hidden flex flex-col items-center justify-center p-4">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col space-y-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-3xl w-full p-6 shadow-2xl flex flex-col space-y-4">
                     <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                         <h3 class="font-sports text-2xl text-white uppercase"><i class="fa-solid fa-handshake text-amber-400 mr-2"></i> Trade / Bid Offer</h3>
                         <button onclick="closeTradeModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="text-center">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="text-center md:col-span-1">
                             <span class="text-xs text-slate-400 block mb-2 font-bold">Target Player:</span>
                             <div id="tradeTargetCardContainer"></div>
                         </div>
 
-                        <div class="space-y-4 flex flex-col justify-center">
+                        <div class="space-y-4 md:col-span-2 flex flex-col justify-center">
                             <div>
                                 <label class="text-xs text-slate-400 block font-bold mb-1">Cash Bid Offer (Gold):</label>
                                 <input type="number" id="tradeBidGoldInput" placeholder="Enter gold offer" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-amber-400 font-bold" />
                             </div>
 
-                            <div class="text-center text-xs text-slate-500 font-bold uppercase">- OR -</div>
+                            <div class="text-center text-xs text-slate-500 font-bold uppercase">- OR SELECT UP TO 3 BENCH CARDS TO TRADE -</div>
 
-                            <div>
-                                <label class="text-xs text-slate-400 block font-bold mb-1">Offer Player Trade (Bench):</label>
-                                <select id="tradeOfferCardSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-slate-200"></select>
+                            <div class="space-y-1">
+                                <label class="text-xs text-slate-400 block font-bold">Select 1 to 3 Players from Bench:</label>
+                                <div id="multiTradeCardChecklist" class="max-h-36 overflow-y-auto bg-slate-950 border border-slate-800 rounded-xl p-2 space-y-1 text-xs"></div>
                             </div>
                         </div>
                     </div>
@@ -437,7 +408,7 @@
                         <div class="text-amber-400 font-sports text-xl uppercase tracking-wider flex items-center justify-center gap-2">
                             <i class="fa-solid fa-spinner animate-spin"></i> PENDING PROPOSAL ANALYSIS...
                         </div>
-                        <p class="text-[11px] text-slate-400">AI Front Office is evaluating your offer against their depth chart...</p>
+                        <p class="text-[11px] text-slate-400">AI Front Office is evaluating your offer against player value and roster needs...</p>
                     </div>
 
                     <div id="tradeActionButtons" class="pt-2 flex gap-3">
@@ -468,7 +439,7 @@
 
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 h-fit space-y-4">
                         <h3 class="font-sports text-2xl text-white">List or Quick-Sell Card</h3>
-                        <p class="text-xs text-slate-400">Post bench cards to auction. AI buyers will place bids on your listings!</p>
+                        <p class="text-xs text-slate-400">Post bench cards to auction. AI buyers will automatically inspect and bid on fair prices!</p>
                         
                         <div id="sellCardSelector" class="space-y-3">
                             <label class="text-xs text-slate-400 block font-semibold">Select Bench Player:</label>
@@ -495,8 +466,6 @@
                 </div>
 
                 <div class="max-w-5xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
-                    
-                    <!-- ESPN BROADCAST SCOREBUG -->
                     <div class="bg-slate-950 border-2 border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-xl relative overflow-hidden">
                         
                         <!-- MY TEAM -->
@@ -531,12 +500,10 @@
                         </div>
                     </div>
 
-                    <!-- ESPN GAMECAST 2D CANVAS FOOTBALL FIELD -->
                     <div class="relative w-full rounded-xl overflow-hidden border-2 border-slate-700 bg-emerald-950 shadow-2xl" style="height: 220px;">
                         <canvas id="espnFieldCanvas" class="w-full h-full block"></canvas>
                     </div>
 
-                    <!-- CONTROL BUTTONS & LIVE DRIVE FEED -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 md:col-span-1 flex flex-col justify-center space-y-3">
                             <button id="simPlayBtn" onclick="runNextPlay()" class="w-full py-3 bg-red-600 hover:bg-red-500 font-sports tracking-wider text-2xl font-bold text-white rounded-xl shadow-lg transition">
@@ -558,7 +525,6 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // NFL TEAMS DATABASE
         const NFL_TEAMS = [
             { code: 'ARI', name: 'Cardinals', color: '#97233F' },
             { code: 'ATL', name: 'Falcons', color: '#A71930' },
@@ -673,6 +639,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             initTeamGrid();
             loadGame();
+            setInterval(processAiMarketPurchases, 10000); // AI market buying tick every 10s
         });
 
         function initTeamGrid() {
@@ -721,7 +688,6 @@
 
             otherTeams.forEach(team => {
                 const owner = generateRandomUsername();
-                // Build a random roster of 8-12 cards for each team
                 const cardCount = Math.floor(Math.random() * 5) + 8;
                 let roster = [];
                 for (let i = 0; i < cardCount; i++) {
@@ -734,10 +700,7 @@
                     });
                 }
 
-                // Rank cards best to worst
                 roster.sort((a, b) => b.ovr - a.ovr);
-
-                // Calculate average OVR
                 const totalOvr = roster.reduce((sum, c) => sum + c.ovr, 0);
                 const teamOvr = Math.round(totalOvr / roster.length);
 
@@ -749,7 +712,6 @@
                 });
             });
 
-            // Rank AI Teams Best to Worst OVR
             gameState.aiTeams.sort((a, b) => b.ovr - a.ovr);
         }
 
@@ -856,7 +818,6 @@
             if (tab === 'sim') initSimView();
         }
 
-        // LEAGUE TEAMS DIRECTORY & AI ROSTER INSPECTOR
         function renderTeamsDirectory() {
             const grid = document.getElementById('teamsLeagueRankingsGrid');
             grid.innerHTML = '';
@@ -902,7 +863,6 @@
             const grid = document.getElementById('aiTeamCardGrid');
             grid.innerHTML = '';
 
-            // Roster ranked strictly from best to worst
             aiTeam.roster.sort((a, b) => b.ovr - a.ovr);
 
             aiTeam.roster.forEach(card => {
@@ -927,36 +887,47 @@
             document.getElementById('aiRosterModal').classList.add('hidden');
         }
 
-        // TRADE / BID NEGOTIATION LOGIC
+        // MULTI-CARD TRADE & BID MODAL LOGIC (UP TO 3 CARDS)
         function openTradeModal(targetCard) {
             selectedTradeTargetCard = targetCard;
             const container = document.getElementById('tradeTargetCardContainer');
             container.innerHTML = generateMutCardHTML(targetCard);
 
-            document.getElementById('tradeBidGoldInput').value = Math.round(targetCard.price * 0.8);
+            document.getElementById('tradeBidGoldInput').value = Math.round(targetCard.price * 0.95);
             document.getElementById('tradePendingStatus').classList.add('hidden');
             document.getElementById('tradeActionButtons').classList.remove('hidden');
 
-            // Populate user bench offer dropdown
-            const select = document.getElementById('tradeOfferCardSelect');
-            select.innerHTML = '';
+            const checklistContainer = document.getElementById('multiTradeCardChecklist');
+            checklistContainer.innerHTML = '';
 
             const unequipped = gameState.binder.filter(card => 
                 !Object.values(gameState.lineup).some(equipped => equipped && equipped.instanceId === card.instanceId)
             );
 
             if (unequipped.length === 0) {
-                select.innerHTML = `<option value="">No bench players available</option>`;
+                checklistContainer.innerHTML = `<div class="text-slate-500 italic p-1">No bench players available for trade</div>`;
             } else {
                 unequipped.forEach(card => {
-                    const opt = document.createElement('option');
-                    opt.value = card.instanceId;
-                    opt.innerText = `${card.name} (${card.pos} - ${card.ovr} OVR)`;
-                    select.appendChild(opt);
+                    const row = document.createElement('label');
+                    row.className = 'flex items-center gap-2 bg-slate-900 p-1.5 rounded cursor-pointer hover:bg-slate-800 transition';
+                    row.innerHTML = `
+                        <input type="checkbox" name="tradeCardCheckbox" value="${card.instanceId}" onchange="limitTradeCheckboxCount(this)" class="accent-amber-400 rounded">
+                        <span class="text-white font-bold">${card.name}</span>
+                        <span class="text-amber-400 font-sports ml-auto text-sm">${card.ovr} OVR</span>
+                    `;
+                    checklistContainer.appendChild(row);
                 });
             }
 
             document.getElementById('tradeModal').classList.remove('hidden');
+        }
+
+        function limitTradeCheckboxCount(checkbox) {
+            const checkedBoxes = document.querySelectorAll('input[name="tradeCardCheckbox"]:checked');
+            if (checkedBoxes.length > 3) {
+                checkbox.checked = false;
+                alert("You can trade a maximum of 3 cards for 1 card!");
+            }
         }
 
         function closeTradeModal() {
@@ -980,7 +951,6 @@
                         return;
                     }
 
-                    // AI evaluates cash offer vs card market price
                     if (offerGold >= selectedTradeTargetCard.price * 0.9) {
                         accepted = true;
                         gameState.gold -= offerGold;
@@ -989,34 +959,40 @@
                         feedback = `DECLINED! ${activeAiTeamView.owner}: "That cash offer is too low for ${selectedTradeTargetCard.name}!"`;
                     }
                 } else {
-                    const instanceId = document.getElementById('tradeOfferCardSelect').value;
-                    const offeredCard = gameState.binder.find(c => c.instanceId === instanceId);
-
-                    if (!offeredCard) {
-                        alert("Select a valid bench player!");
+                    const checkedBoxes = document.querySelectorAll('input[name="tradeCardCheckbox"]:checked');
+                    if (checkedBoxes.length === 0) {
+                        alert("Select between 1 and 3 bench cards to offer!");
                         document.getElementById('tradePendingStatus').classList.add('hidden');
                         document.getElementById('tradeActionButtons').classList.remove('hidden');
                         return;
                     }
 
-                    // AI evaluates trade fairness by OVR
-                    if (offeredCard.ovr >= selectedTradeTargetCard.ovr - 2) {
+                    const offeredCardIds = Array.from(checkedBoxes).map(cb => cb.value);
+                    const offeredCards = gameState.binder.filter(c => offeredCardIds.includes(c.instanceId));
+
+                    // Fair trade evaluation: Sum of offered card prices / OVR vs target card
+                    const combinedPrice = offeredCards.reduce((sum, c) => sum + c.price, 0);
+                    const maxOfferedOvr = Math.max(...offeredCards.map(c => c.ovr));
+
+                    // Fair trade rule: combined price >= 95% target price AND max offered card OVR is close
+                    if (combinedPrice >= selectedTradeTargetCard.price * 0.95 && maxOfferedOvr >= selectedTradeTargetCard.ovr - 6) {
                         accepted = true;
                         
-                        // Swap cards
-                        const userIdx = gameState.binder.findIndex(c => c.instanceId === offeredCard.instanceId);
-                        gameState.binder.splice(userIdx, 1);
+                        // Remove offered cards from binder
+                        offeredCards.forEach(c => {
+                            const idx = gameState.binder.findIndex(b => b.instanceId === c.instanceId);
+                            if (idx !== -1) gameState.binder.splice(idx, 1);
+                        });
 
-                        feedback = `ACCEPTED! Trade completed! Swapped ${offeredCard.name} for ${selectedTradeTargetCard.name}!`;
+                        feedback = `ACCEPTED! ${activeAiTeamView.owner} accepted your ${offeredCards.length}-card trade offer for ${selectedTradeTargetCard.name}!`;
                     } else {
-                        feedback = `DECLINED! ${activeAiTeamView.owner}: "I need a player closer to ${selectedTradeTargetCard.ovr} OVR to make this trade!"`;
+                        feedback = `DECLINED! ${activeAiTeamView.owner}: "This multi-card deal does not give me enough value for ${selectedTradeTargetCard.name}!"`;
                     }
                 }
 
                 alert(feedback);
 
                 if (accepted) {
-                    // Remove from AI team and add to user binder
                     const aiIdx = activeAiTeamView.roster.findIndex(c => c.instanceId === selectedTradeTargetCard.instanceId);
                     if (aiIdx !== -1) activeAiTeamView.roster.splice(aiIdx, 1);
 
@@ -1032,35 +1008,73 @@
             }, 2000);
         }
 
-        // PACK BUYING
+        // MARKETPLACE & AUTOMATED AI MARKET BUYING ENGINE
+        function processAiMarketPurchases() {
+            if (!gameState.marketplace || gameState.marketplace.length === 0) return;
+
+            let updated = false;
+            gameState.marketplace.forEach((listing, index) => {
+                listing.timer -= 10;
+
+                // AI buyer evaluation: 40% chance every tick an AI bids or buys user items priced fairly
+                if (Math.random() < 0.4) {
+                    if (listing.seller === 'YOU') {
+                        // AI bids or buys out user listing
+                        if (listing.currentBid < listing.buyout * 0.9) {
+                            listing.currentBid += 100;
+                        } else {
+                            // AI Buyout purchase!
+                            gameState.gold += listing.buyout;
+                            alert(`AUCTION SOLD! An AI user bought out your ${listing.card.name} for ${listing.buyout} Gold!`);
+                            gameState.marketplace.splice(index, 1);
+                            updated = true;
+                            return;
+                        }
+                    } else {
+                        // Regular AI bidding on listings
+                        listing.currentBid += 50;
+                    }
+                }
+
+                if (listing.timer <= 0) {
+                    if (listing.seller === 'YOU') {
+                        // Expired listing returns gold for current bid
+                        gameState.gold += listing.currentBid;
+                        alert(`AUCTION ENDED! Your auction for ${listing.card.name} sold for ${listing.currentBid} Gold!`);
+                    }
+                    gameState.marketplace.splice(index, 1);
+                    updated = true;
+                }
+            });
+
+            // Refill marketplace if low
+            if (gameState.marketplace.length < 5) {
+                generateMarketplaceListings();
+                updated = true;
+            }
+
+            if (updated) {
+                saveGame();
+                updateUI();
+                if (!document.getElementById('view-market').classList.contains('hidden')) {
+                    renderMarketplace();
+                }
+            }
+        }
+
         function buyPack(type) {
             let cost = 0;
             let packCount = 3;
             let filterFn = null;
 
-            if (type === 'wildcard') {
-                cost = 1000;
-                packCount = 1;
-            } else if (type === 'lockdown') {
-                cost = 1200;
-                filterFn = p => ['DL', 'LB', 'CB', 'S'].includes(p.pos);
-            } else if (type === 'ice') {
-                cost = 1800;
-                filterFn = p => ['WR', 'TE'].includes(p.pos);
-            } else if (type === 'rookies') {
-                cost = 1400;
-                filterFn = p => p.ovr <= 86;
-            } else if (type === 'trench') {
-                cost = 1500;
-                filterFn = p => ['OL', 'RB'].includes(p.pos);
-            } else if (type === 'silver') {
-                cost = 750;
-            } else if (type === 'gold') {
-                cost = 2500;
-            } else if (type === 'legends') {
-                cost = 10000;
-                packCount = 5;
-            }
+            if (type === 'wildcard') { cost = 1000; packCount = 1; }
+            else if (type === 'lockdown') { cost = 1200; filterFn = p => ['DL', 'LB', 'CB', 'S'].includes(p.pos); }
+            else if (type === 'ice') { cost = 1800; filterFn = p => ['WR', 'TE'].includes(p.pos); }
+            else if (type === 'rookies') { cost = 1400; filterFn = p => p.ovr <= 86; }
+            else if (type === 'trench') { cost = 1500; filterFn = p => ['OL', 'RB'].includes(p.pos); }
+            else if (type === 'silver') { cost = 750; }
+            else if (type === 'gold') { cost = 2500; }
+            else if (type === 'legends') { cost = 10000; packCount = 5; }
 
             if (gameState.gold < cost) {
                 alert("Insufficient Gold!");
@@ -1078,17 +1092,11 @@
                 let card;
                 if (type === 'wildcard') {
                     const roll = Math.random();
-                    if (roll < 0.005) {
-                        card = pool.find(p => p.tier === 'goat') || pool[0];
-                    } else if (roll < 0.02) {
-                        card = pool.find(p => p.tier === 'sr') || pool[0];
-                    } else if (roll < 0.10) {
-                        card = pool.find(p => p.tier === 'legendary') || pool[0];
-                    } else if (roll < 0.35) {
-                        card = pool.find(p => p.tier === 'epic') || pool[0];
-                    } else {
-                        card = pool.filter(p => p.tier === 'common' || p.tier === 'rare')[Math.floor(Math.random() * pool.length)] || pool[0];
-                    }
+                    if (roll < 0.005) card = pool.find(p => p.tier === 'goat') || pool[0];
+                    else if (roll < 0.02) card = pool.find(p => p.tier === 'sr') || pool[0];
+                    else if (roll < 0.10) card = pool.find(p => p.tier === 'legendary') || pool[0];
+                    else if (roll < 0.35) card = pool.find(p => p.tier === 'epic') || pool[0];
+                    else card = pool.filter(p => p.tier === 'common' || p.tier === 'rare')[Math.floor(Math.random() * pool.length)] || pool[0];
                 } else if (type === 'legends') {
                     const topCards = pool.filter(p => p.tier === 'goat' || p.tier === 'sr' || p.tier === 'legendary');
                     card = topCards[Math.floor(Math.random() * topCards.length)];
@@ -1167,7 +1175,6 @@
             updateUI();
         }
 
-        // ROSTER LOGIC
         function renderLineups() {
             const offGrid = document.getElementById('offenseLineupGrid');
             const defGrid = document.getElementById('defenseLineupGrid');
@@ -1237,7 +1244,6 @@
             updateUI();
         }
 
-        // BINDER LOGIC
         function filterBinder(pos) {
             activeBinderFilter = pos;
             document.querySelectorAll('#binderFilterButtons button').forEach(b => b.classList.remove('bg-amber-500', 'text-slate-950'));
@@ -1324,7 +1330,6 @@
             }
         }
 
-        // MARKETPLACE LOGIC
         function generateMarketplaceListings() {
             gameState.marketplace = [];
             for (let i = 0; i < 6; i++) {
@@ -1457,7 +1462,7 @@
             }
         }
 
-        // ESPN GAMECAST SIMULATOR
+        // ESPN GAMECAST SIMULATOR WITH REACTIVE OPPONENT SCORING ENGINE
         let simState = {
             active: false,
             quarter: 1,
@@ -1576,46 +1581,51 @@
             const offenseOvr = isMyPoss ? myOvr : simState.oppOvr;
             const defenseOvr = isMyPoss ? simState.oppOvr : myOvr;
 
-            const gainDiff = Math.floor((offenseOvr - defenseOvr) / 5);
-            let gain = Math.floor(Math.random() * 12) - 3 + gainDiff;
+            // Reactive yardage calculation based on OVR difference
+            const ovrDiff = offenseOvr - defenseOvr;
+            const baseGain = Math.floor(Math.random() * 10) + 1; 
+            const bonusGain = Math.round(ovrDiff / 4);
+            let gain = baseGain + bonusGain;
 
-            simState.ballYard += isMyPoss ? gain : -gain;
+            // Field Position direction
+            if (isMyPoss) {
+                simState.ballYard += gain;
+            } else {
+                simState.ballYard -= gain;
+            }
+
             simState.dist -= gain;
             simState.timeSec -= 30;
 
             let playLog = ``;
 
-            if (simState.ballYard >= 100) {
-                if (isMyPoss) {
-                    simState.myScore += 7;
-                    playLog = `TOUCHDOWN ${gameState.selectedTeam.name}! (+7 PTS)`;
-                } else {
-                    simState.oppScore += 7;
-                    playLog = `TOUCHDOWN ${simState.oppTeam.name}! (+7 PTS)`;
-                }
+            // Dynamic Scoring Logic
+            if (isMyPoss && simState.ballYard >= 100) {
+                simState.myScore += 7;
+                playLog = `TOUCHDOWN ${gameState.selectedTeam.name}! (+7 PTS)`;
                 resetDrive();
-            } else if (simState.ballYard <= 0) {
-                if (!isMyPoss) {
-                    simState.myScore += 7;
-                    playLog = `TOUCHDOWN ${gameState.selectedTeam.name}! (+7 PTS)`;
-                } else {
-                    simState.oppScore += 7;
-                    playLog = `TOUCHDOWN ${simState.oppTeam.name}! (+7 PTS)`;
-                }
+            } else if (!isMyPoss && simState.ballYard <= 0) {
+                simState.oppScore += 7;
+                playLog = `TOUCHDOWN ${simState.oppTeam.name}! (+7 PTS)`;
+                resetDrive();
+            } else if (!isMyPoss && simState.ballYard <= 35 && simState.down === 4 && Math.random() < 0.8) {
+                // Opponent attempts and makes Field Goal
+                simState.oppScore += 3;
+                playLog = `FIELD GOAL GOOD by ${simState.oppTeam.name}! (+3 PTS)`;
                 resetDrive();
             } else if (simState.dist <= 0) {
                 simState.down = 1;
                 simState.dist = 10;
-                playLog = `Gained ${gain} yards - FIRST DOWN!`;
+                playLog = `${isMyPoss ? gameState.selectedTeam.code : simState.oppTeam.code} gained ${gain} yards - FIRST DOWN!`;
             } else {
                 simState.down++;
                 if (simState.down > 4) {
                     simState.possession = isMyPoss ? 'OPP' : 'MY';
                     simState.down = 1;
                     simState.dist = 10;
-                    playLog = `Turnover on Downs! Ball flipped.`;
+                    playLog = `Turnover on Downs! Ball flipped to ${simState.possession === 'MY' ? gameState.selectedTeam.code : simState.oppTeam.code}.`;
                 } else {
-                    playLog = `Gained ${gain} yards. Down ${simState.down}`;
+                    playLog = `${isMyPoss ? gameState.selectedTeam.code : simState.oppTeam.code} gained ${gain} yards. Down ${simState.down}`;
                 }
             }
 
@@ -1670,7 +1680,6 @@
             container.prepend(item);
         }
 
-        // SAVE SYSTEM
         function saveGame() {
             localStorage.setItem('nfl_card_dynasty_save', JSON.stringify(gameState));
         }
@@ -1706,4 +1715,5 @@
 </body>
 </html>
 
+```
 
